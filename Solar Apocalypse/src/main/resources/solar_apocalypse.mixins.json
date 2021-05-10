@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.smushytaco.solar_apocalypse.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AllMobsBurnInDaylight",
+    "BurnableBlocksBurnInDaylight",
+    "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
+    "IceBlocksMeltInDaylight",
+    "LeavesBlockDecayInDaylight",
+    "PlayersBurnDuringTheDaylight",
+    "SnowLayersMeltInDaylight",
+    "WaterIsFiniteAndEvaporatesInDaylight"
+  ]
+}
