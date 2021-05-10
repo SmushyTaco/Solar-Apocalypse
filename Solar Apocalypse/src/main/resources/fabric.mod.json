@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "solar_apocalypse",
+  "version": "${version}",
+  "name": "Solar Apocalypse",
+  "description": "This mod starts a Solar Apocalypse. Water is no longer infinite. For the first two days nothing happens. From the third day and beyond grass and mycelium start turning to dirt when exposed to the daylight. From the fifth day and beyond flammable blocks get set on fire when exposed to daylight, blocks that melt will melt when exposed to daylight, and water will evaporate when exposed to daylight. From the seventh day and beyond mobs and players will burn when exposed to daylight.",
+  "authors": [
+    "SmushyTaco"
+  ],
+  "contact": {
+    "homepage": "https://www.smushytaco.com/",
+    "issues": "https://www.curseforge.com/minecraft/mc-mods/solar-apocalypse-refabricated/issues/",
+    "sources": "https://github.com/realSmushyTaco/Solar-Apocalypse/"
+  },
+  "license": "GNU Lesser General Public License version 3 (LGPLv3)",
+  "icon": "assets/solar_apocalypse/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.smushytaco.solar_apocalypse.SolarApocalypse"
+      }
+    ]
+  },
+  "mixins": [
+    "solar_apocalypse.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "fabric-language-kotlin": ">=1.5.0+kotlin.1.4.31",
+    "minecraft": "1.16.x"
+  }
+}
