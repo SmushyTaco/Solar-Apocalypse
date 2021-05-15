@@ -1,5 +1,5 @@
 package com.smushytaco.solar_apocalypse.mixins;
-import com.smushytaco.solar_apocalypse.SolarApocalypse;
+import com.smushytaco.solar_apocalypse.Sunscreen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -20,13 +20,13 @@ public abstract class AllMobsBurnInDaylight extends LivingEntity {
     @Inject(method = "isAffectedByDaylight", at = @At("RETURN"), cancellable = true)
     private void hookIsAffectedByDaylight(CallbackInfoReturnable<Boolean> cir) {
         double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < 7.0D || !isAlive() || isOnFire() || world.isRaining() || world.isNight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(SolarApocalypse.INSTANCE.getSUNSCREEN())) return;
+        if (worldAge < 7.0D || !isAlive() || isOnFire() || world.isRaining() || world.isNight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(Sunscreen.INSTANCE)) return;
         cir.setReturnValue(true);
     }
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void hookTickMovement(CallbackInfo ci) {
         double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < 7.0D || !isAlive() || isOnFire() || world.isRaining() || world.isNight() || !isAffectedByDaylight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(SolarApocalypse.INSTANCE.getSUNSCREEN())) return;
+        if (worldAge < 7.0D || !isAlive() || isOnFire() || world.isRaining() || world.isNight() || !isAffectedByDaylight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(Sunscreen.INSTANCE)) return;
         setOnFireFor(8);
     }
 }

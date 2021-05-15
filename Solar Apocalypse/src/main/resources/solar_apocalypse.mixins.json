@@ -7,11 +7,13 @@
   },
   "mixins": [
     "AllMobsBurnInDaylight",
-    "BurnableBlocksBurnInDaylight",
+    "BurnableBlocksBurnInDaylightAndClayTurnsToTerracottaInDaylight",
+    "ClayHasRandomTick",
     "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
     "IceBlocksMeltInDaylight",
     "LeavesBlockDecayInDaylight",
     "PlayersBurnDuringTheDaylight",
+    "SandTurnsToDust",
     "SnowLayersMeltInDaylight",
     "WaterIsFiniteAndEvaporatesInDaylight"
   ]
