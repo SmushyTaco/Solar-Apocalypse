@@ -1,4 +1,5 @@
 package com.smushytaco.solar_apocalypse.mixins;
+import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import net.minecraft.block.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import java.util.Random;
 @Mixin(AbstractBlock.class)
 public abstract class BurnableBlocksBurnInDaylightAndClayTurnsToTerracottaInDaylight {
@@ -28,7 +30,7 @@ public abstract class BurnableBlocksBurnInDaylightAndClayTurnsToTerracottaInDayl
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockPos blockPos = pos.offset(Direction.UP);
         double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < 5.0D || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
+        if (worldAge < SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay() || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         if (state.getMaterial().isBurnable() && world.getBlockState(blockPos).isAir()) {
             BlockState blockState = AbstractFireBlock.getState(world, blockPos);
             world.setBlockState(blockPos, blockState, 11);
