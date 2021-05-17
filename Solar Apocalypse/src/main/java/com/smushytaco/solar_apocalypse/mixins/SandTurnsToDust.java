@@ -19,7 +19,7 @@ public abstract class SandTurnsToDust extends Block {
         super.randomTick(state, world, pos, random);
         BlockPos blockPos = pos.offset(Direction.UP);
         double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < 5.0D || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
+        if (worldAge < SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay() || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         world.setBlockState(pos, SolarApocalypse.INSTANCE.getDUST().getDefaultState());
     }
     @Override

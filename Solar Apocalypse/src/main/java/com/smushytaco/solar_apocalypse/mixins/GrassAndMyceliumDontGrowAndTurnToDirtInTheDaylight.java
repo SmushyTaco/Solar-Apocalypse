@@ -1,4 +1,5 @@
 package com.smushytaco.solar_apocalypse.mixins;
+import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SpreadableBlock;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +17,7 @@ public abstract class GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight {
         BlockPos blockPos = pos.offset(Direction.UP);
         World world = (World) worldView;
         double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < 3.0D || world.isNight() || !world.isSkyVisible(blockPos)) return;
+        if (worldAge < SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay() || world.isNight() || !world.isSkyVisible(blockPos)) return;
         cir.setReturnValue(false);
     }
 }
