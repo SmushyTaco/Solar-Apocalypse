@@ -1,4 +1,5 @@
 package com.smushytaco.solar_apocalypse
+import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.configuration_support.ModConfiguration
 import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.annotation.Config
@@ -27,8 +28,7 @@ object SolarApocalypse : ModInitializer {
         Registry.register(Registry.STATUS_EFFECT, Identifier(MOD_ID, "sunscreen"), Sunscreen)
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             val world = newPlayer.world
-            val worldAge = world.timeOfDay / 24000.0
-            if (worldAge < config.mobsAndPlayersBurnInDaylightDay || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || !world.isSkyVisible(newPlayer.blockPos) || newPlayer.hasStatusEffect(Sunscreen)) return@AfterRespawn
+            if (!world.isOldEnough(config.mobsAndPlayersBurnInDaylightDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || !world.isSkyVisible(newPlayer.blockPos) || newPlayer.hasStatusEffect(Sunscreen)) return@AfterRespawn
             newPlayer.addStatusEffect(StatusEffectInstance(Sunscreen, 2400, 0, false, false, true))
         })
     }

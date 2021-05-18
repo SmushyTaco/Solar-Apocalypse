@@ -1,5 +1,6 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
+import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SandBlock;
@@ -18,8 +19,7 @@ public abstract class SandTurnsToDust extends Block {
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         super.randomTick(state, world, pos, random);
         BlockPos blockPos = pos.offset(Direction.UP);
-        double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay() || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
+        if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         world.setBlockState(pos, SolarApocalypse.INSTANCE.getDUST().getDefaultState());
     }
     @Override

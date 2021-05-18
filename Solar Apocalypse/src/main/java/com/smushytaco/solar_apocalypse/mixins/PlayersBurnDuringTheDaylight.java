@@ -1,6 +1,7 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.Sunscreen;
+import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,8 +20,7 @@ public abstract class PlayersBurnDuringTheDaylight extends LivingEntity {
     public abstract boolean isCreative();
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void hookTickMovement(CallbackInfo ci) {
-        double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay() || !isAlive() || isOnFire() || world.isRaining() || isSpectator() || isCreative() || world.isNight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(Sunscreen.INSTANCE)) return;
+        if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) || !isAlive() || isOnFire() || world.isRaining() || isSpectator() || isCreative() || world.isNight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(Sunscreen.INSTANCE)) return;
         setOnFireFor(8);
     }
 }

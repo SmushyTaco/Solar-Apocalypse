@@ -1,5 +1,6 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
+import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.Fluid;
@@ -13,9 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import java.util.Random;
-
 import static net.minecraft.block.Block.dropStacks;
 @Mixin(WaterFluid.class)
 public abstract class WaterIsFiniteAndEvaporatesInDaylight extends Fluid {
@@ -28,8 +27,7 @@ public abstract class WaterIsFiniteAndEvaporatesInDaylight extends Fluid {
     @Override
     protected void onRandomTick(World world, BlockPos pos, FluidState state, Random random) {
         BlockPos blockPos = pos.offset(Direction.UP);
-        double worldAge = world.getTimeOfDay() / 24000.0D;
-        if (worldAge < SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay() || state.getFluid() != Fluids.WATER || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
+        if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || state.getFluid() != Fluids.WATER || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         BlockState blockState = world.getBlockState(pos);
         Material material = blockState.getMaterial();
         if (blockState.getBlock() instanceof FluidDrainable) {
