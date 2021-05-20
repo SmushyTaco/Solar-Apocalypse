@@ -7,14 +7,23 @@
   },
   "mixins": [
     "AllMobsBurnInDaylight",
-    "BurnableBlocksBurnInDaylightAndClayTurnsToTerracottaInDaylight",
-    "ClayHasRandomTick",
+    "BambooBlockIsDestroyedInDaylight",
+    "BambooSaplingBlockIsDestroyedInDaylight",
+    "BlocksAreModifiedInDaylight",
+    "CertainBlocksHaveRandomTick",
+    "CocoaBlocksAreDestroyedInDaylight",
+    "CropsAreDestroyedInDaylight",
     "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
     "IceBlocksMeltInDaylight",
     "LeavesBlockDecayInDaylight",
+    "PlantBlocksAreDestroyedInDaylight",
     "PlayersBurnDuringTheDaylight",
     "SandTurnsToDust",
     "SnowLayersMeltInDaylight",
+    "StemBlocksAreDestroyedInDaylight",
+    "SugarCaneIsDestroyedInDaylight",
+    "SweetBerryBushBlockIsDestroyedInDaylight",
+    "VineBlockIsDestroyedInDaylight",
     "WaterIsFiniteAndEvaporatesInDaylight"
   ]
 }
