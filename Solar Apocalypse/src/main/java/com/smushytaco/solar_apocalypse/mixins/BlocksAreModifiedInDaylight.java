@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 @Mixin(AbstractBlock.class)
-public abstract class BurnableBlocksBurnInDaylightAndClayTurnsToTerracottaInDaylight {
+public abstract class BlocksAreModifiedInDaylight {
     @Mutable
     @Final
     @Shadow
@@ -36,6 +36,12 @@ public abstract class BurnableBlocksBurnInDaylightAndClayTurnsToTerracottaInDayl
         }
         if (state.getBlock() == Blocks.CLAY) {
             world.setBlockState(pos, Blocks.TERRACOTTA.getDefaultState());
+        } else if (state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.GRASS_PATH) {
+            world.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
+        } else if (state.getBlock() == Blocks.FARMLAND) {
+            FarmlandBlock.setToDirt(state, world, pos);
+        } else if (state.getBlock() instanceof GourdBlock || state.getBlock() instanceof CarvedPumpkinBlock) {
+            world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
     }
 }
