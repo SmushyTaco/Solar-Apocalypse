@@ -36,7 +36,7 @@ public abstract class BlocksAreModifiedInDaylight {
         }
         if (state.getBlock() == Blocks.CLAY) {
             world.setBlockState(pos, Blocks.TERRACOTTA.getDefaultState());
-        } else if (state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.GRASS_PATH) {
+        } else if (state.getBlock() == Blocks.DIRT) {
             world.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
         } else if (state.getBlock() == Blocks.FARMLAND) {
             FarmlandBlock.setToDirt(state, world, pos);
