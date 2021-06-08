@@ -33,11 +33,11 @@ public abstract class WaterIsFiniteAndEvaporatesInDaylight extends Fluid {
         if (blockState.getBlock() instanceof FluidDrainable) {
             ((FluidDrainable)blockState.getBlock()).tryDrainFluid(world, pos, blockState);
         } else if (blockState.getBlock() instanceof FluidBlock) {
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         } else if (material == Material.UNDERWATER_PLANT || material == Material.REPLACEABLE_UNDERWATER_PLANT) {
-            BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? world.getBlockEntity(pos) : null;
+            BlockEntity blockEntity = blockState.hasBlockEntity() ? world.getBlockEntity(pos) : null;
             dropStacks(blockState, world, pos, blockEntity);
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         }
     }
 }

@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SpreadableBlock.class)
 public abstract class GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight {
     @Inject(method = "canSurvive", at = @At("RETURN"), cancellable = true)
-    private static void hookCanSurvive(BlockState state, WorldView worldView, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    private static void hookCanSurvive(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockPos blockPos = pos.offset(Direction.UP);
-        World world = (World) worldView;
-        if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay()) || world.isNight() || !world.isSkyVisible(blockPos)) return;
+        World realWorld = (World) world;
+        if (!WorldDayCalculation.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay()) || realWorld.isNight() || !realWorld.isSkyVisible(blockPos)) return;
         cir.setReturnValue(false);
     }
 }

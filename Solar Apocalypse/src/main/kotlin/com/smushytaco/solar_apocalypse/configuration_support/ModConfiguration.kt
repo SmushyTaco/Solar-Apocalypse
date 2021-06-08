@@ -11,4 +11,6 @@ class ModConfiguration: ConfigData {
     val blocksAndWaterAreAffectedByDaylightDay = 5.0
     @Comment("Default value is 7.0. The number it's set to is the day this phase starts. If set to a negative number the phase will never start.")
     val mobsAndPlayersBurnInDaylightDay = 7.0
+    @Comment("Default value is NONE. If set to NONE coarse dirt will never turn to sand. If set to any of the other options coarse dirt will turn to sand for the phase you chose. ")
+    val coarseDirtTurnsToSandPhase = CoarseDirtToSandOptions.NONE
 }

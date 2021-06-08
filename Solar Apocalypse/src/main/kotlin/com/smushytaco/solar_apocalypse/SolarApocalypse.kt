@@ -32,5 +32,5 @@ object SolarApocalypse : ModInitializer {
             newPlayer.addStatusEffect(StatusEffectInstance(Sunscreen, 2400, 0, false, false, true))
         })
     }
-    val DUST = FallingBlock(AbstractBlock.Settings.of(Material.AGGREGATE, MaterialColor.SAND).strength(0.5F).sounds(BlockSoundGroup.SAND))
+    val DUST = FallingBlock(AbstractBlock.Settings.of(Material.AGGREGATE, MapColor.PALE_YELLOW).strength(0.5F).sounds(BlockSoundGroup.SAND))
 }
