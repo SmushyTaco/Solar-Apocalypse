@@ -3,7 +3,7 @@
   "id": "solar_apocalypse",
   "version": "${version}",
   "name": "Solar Apocalypse",
-  "description": "This mod starts a Solar Apocalypse. Water is no longer infinite. For the first two days nothing happens. From the third day and beyond grass and mycelium start turning to dirt when exposed to the daylight. From the fifth day and beyond flammable blocks get set on fire in daylight, meltable blocks melt in daylight, water evaporates in daylight, and most blocks that are made of organic matter get destroyed in daylight. From the seventh day and beyond mobs and players will burn when exposed to daylight.",
+  "description": "This mod starts a Solar Apocalypse. Water is no longer infinite. For the first two days nothing happens. From the third day and beyond grass and mycelium start turning to dirt when exposed to the daylight. From the fifth day and beyond flammable blocks get set on fire in daylight, meltable blocks melt in daylight, water evaporates in daylight, and most blocks that are made of organic matter get destroyed in daylight. From the seventh day and beyond mobs and players will burn when exposed to daylight. You can also pick if Coarse Dirt turns to Sand and what phase that happens.",
   "authors": [
     "SmushyTaco (Creator and Maintainer)",
     "Pois1x (Graphic Designer)"
