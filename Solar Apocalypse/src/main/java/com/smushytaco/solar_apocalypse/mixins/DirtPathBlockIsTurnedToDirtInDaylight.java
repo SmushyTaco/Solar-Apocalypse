@@ -3,16 +3,16 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.GrassPathBlock;
+import net.minecraft.block.DirtPathBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import java.util.Random;
 @SuppressWarnings("deprecation")
-@Mixin(GrassPathBlock.class)
-public abstract class GrassPathBlockIsTurnedToDirtInDaylight extends Block {
-    public GrassPathBlockIsTurnedToDirtInDaylight(Settings settings) {
+@Mixin(DirtPathBlock.class)
+public abstract class DirtPathBlockIsTurnedToDirtInDaylight extends Block {
+    public DirtPathBlockIsTurnedToDirtInDaylight(Settings settings) {
         super(settings);
     }
     @Override

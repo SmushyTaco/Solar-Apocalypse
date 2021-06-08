@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "com.smushytaco.solar_apocalypse.mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "injectors": {
     "defaultRequire": 1
   },
@@ -14,7 +14,7 @@
     "CocoaBlocksAreDestroyedInDaylight",
     "CropsAreDestroyedInDaylight",
     "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
-    "GrassPathBlockIsTurnedToDirtInDaylight",
+    "DirtPathBlockIsTurnedToDirtInDaylight",
     "IceBlocksMeltInDaylight",
     "LeavesBlockDecayInDaylight",
     "PlantBlocksAreDestroyedInDaylight",
