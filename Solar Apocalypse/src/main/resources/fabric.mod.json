@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://www.smushytaco.com/",
     "issues": "https://www.curseforge.com/minecraft/mc-mods/solar-apocalypse-refabricated/issues/",
-    "sources": "https://github.com/realSmushyTaco/Solar-Apocalypse/"
+    "sources": "https://github.com/SmushyTaco/Solar-Apocalypse/"
   },
   "license": "GNU Lesser General Public License version 3 (LGPLv3)",
   "icon": "assets/solar_apocalypse/icon.png",
@@ -31,13 +31,14 @@
     "solar_apocalypse.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.11.3",
+    "fabricloader": ">=0.12.12",
     "fabric": "*",
-    "fabric-language-kotlin": ">=1.6.1+kotlin.1.5.10",
-    "minecraft": "1.17.x",
-    "cloth-config2": ">=5.0.34"
+    "fabric-language-kotlin": ">=1.7.1+kotlin.1.6.10",
+    "minecraft": "1.18.x",
+    "cloth-config2": ">=6.1.48",
+    "java": ">=17"
   },
   "suggests": {
-    "modmenu": ">=1.14.13+build.22"
+    "modmenu": ">=3.0.1"
   }
 }
