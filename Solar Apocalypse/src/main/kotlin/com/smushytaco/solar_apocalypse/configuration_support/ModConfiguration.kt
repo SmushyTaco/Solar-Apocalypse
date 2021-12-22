@@ -13,4 +13,6 @@ class ModConfiguration: ConfigData {
     val mobsAndPlayersBurnInDaylightDay = 7.0
     @Comment("Default value is NONE. If set to NONE coarse dirt will never turn to sand. If set to any of the other options coarse dirt will turn to sand for the phase you chose. ")
     val coarseDirtTurnsToSandPhase = CoarseDirtToSandOptions.NONE
+    @Comment("Default value is \"minecraft:overworld\". All dimensions listed here will be effected by the Solar Apocalypse mod.")
+    val dimensionWhitelist = listOf("minecraft:overworld")
 }
