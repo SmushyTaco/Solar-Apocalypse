@@ -4,6 +4,7 @@
   "text.autoconfig.solar_apocalypse.option.blocksAndWaterAreAffectedByDaylightDay": "Blocks And Water Are Affected By Daylight Day",
   "text.autoconfig.solar_apocalypse.option.mobsAndPlayersBurnInDaylightDay": "Mobs And Players Burn In Daylight Day",
   "text.autoconfig.solar_apocalypse.option.coarseDirtTurnsToSandPhase": "Coarse Dirt Turns To Sand Phase",
+  "text.autoconfig.solar_apocalypse.option.dimensionWhitelist": "Dimension Whitelist",
   "block.solar_apocalypse.dust": "Dust",
   "effect.solar_apocalypse.sunscreen": "Sunscreen"
 }
