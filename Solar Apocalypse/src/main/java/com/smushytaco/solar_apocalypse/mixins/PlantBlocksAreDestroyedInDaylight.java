@@ -8,8 +8,8 @@ import net.minecraft.block.PlantBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import java.util.Random;
 @SuppressWarnings("deprecation")
 @Mixin(PlantBlock.class)
 public abstract class PlantBlocksAreDestroyedInDaylight extends Block {

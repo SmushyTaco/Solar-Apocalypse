@@ -7,12 +7,12 @@ import net.minecraft.block.CocoaBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.Random;
 @Mixin(CocoaBlock.class)
 public abstract class CocoaBlocksAreDestroyedInDaylight {
     @Inject(method = "hasRandomTicks", at = @At("HEAD"), cancellable = true)
