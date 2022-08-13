@@ -7,8 +7,8 @@ import net.minecraft.block.DirtPathBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import java.util.Random;
 @SuppressWarnings("deprecation")
 @Mixin(DirtPathBlock.class)
 public abstract class DirtPathBlockIsTurnedToDirtInDaylight extends Block {
