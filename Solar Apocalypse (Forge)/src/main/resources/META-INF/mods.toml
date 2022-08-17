@@ -6,7 +6,7 @@
 
 modLoader="javafml" 
 
-loaderVersion="[40,)" 
+loaderVersion="[40,)"
 
 
 license="GNU Lesser General Public License version 3 (LGPLv3)"
@@ -43,7 +43,7 @@ This mod starts a Solar Apocalypse. Water is no longer infinite. For the first t
     
     mandatory=true 
     
-    versionRange="[40,)" 
+    versionRange="[40,)"
     
     ordering="NONE"
     
@@ -60,5 +60,5 @@ This mod starts a Solar Apocalypse. Water is no longer infinite. For the first t
 [[dependencies.solar_apocalypse]]
     modId="cloth_config"
     mandatory=true
-    versionRange="[6.2,6.3)"
+    versionRange="[6.2,)"
     side="BOTH"

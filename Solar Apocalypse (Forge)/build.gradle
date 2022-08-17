@@ -18,9 +18,9 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.4.1'
+version = '1.4.0'
 group = 'com.smushytaco.solar_apocalypse' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'solar_apocalypse-reforged'
+archivesBaseName = 'solar_apocalypse'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -158,7 +158,7 @@ dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.68'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.69'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation(fg.deobf("me.shedaniel.cloth:cloth-config-forge:6.2.62"))
     // Real mod deobf dependency examples - these get remapped to your current mappings
@@ -178,12 +178,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "examplemod",
-                "Specification-Vendor"    : "examplemodsareus",
+                "Specification-Title"     : "solar_apocalypse",
+                "Specification-Vendor"    : "SmushyTaco",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "examplemodsareus",
+                "Implementation-Vendor"   : "ZX_or__",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
                 "TweakOrder": 0,
