@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "solar_apocalypse:block/dust"
+      },
+      {
+        "model": "solar_apocalypse:block/dust",
+        "y": 90
+      },
+      {
+        "model": "solar_apocalypse:block/dust",
+        "y": 180
+      },
+      {
+        "model": "solar_apocalypse:block/dust",
+        "y": 270
+      }
+    ]
+  }
+}

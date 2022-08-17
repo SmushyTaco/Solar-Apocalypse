@@ -1,0 +1,33 @@
+{
+  "required": true,
+
+  "package": "com.smushytaco.solar_apocalypse.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "solar_apocalypse.refmap.json",
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AllMobsBurnInDaylight",
+    "BambooBlockIsDestroyedInDaylight",
+    "BambooSaplingBlockIsDestroyedInDaylight",
+    "BlocksAreModifiedInDaylight",
+    "CertainBlocksHaveRandomTick",
+    "CocoaBlocksAreDestroyedInDaylight",
+    "CropsAreDestroyedInDaylight",
+    "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
+    "DirtPathBlockIsTurnedToDirtInDaylight",
+    "IceBlocksMeltInDaylight",
+    "LeavesBlockDecayInDaylight",
+    "PlantBlocksAreDestroyedInDaylight",
+    "PlayersBurnDuringTheDaylight",
+    "SandTurnsToDust",
+    "SnowLayersMeltInDaylight",
+    "StemBlocksAreDestroyedInDaylight",
+    "SugarCaneIsDestroyedInDaylight",
+    "SweetBerryBushBlockIsDestroyedInDaylight",
+    "VineBlockIsDestroyedInDaylight",
+    "WaterIsFiniteAndEvaporatesInDaylight"
+  ]
+}

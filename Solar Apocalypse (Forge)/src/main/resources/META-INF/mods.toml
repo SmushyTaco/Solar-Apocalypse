@@ -1,0 +1,64 @@
+
+
+
+
+
+
+modLoader="javafml" 
+
+loaderVersion="[40,)" 
+
+
+license="GNU Lesser General Public License version 3 (LGPLv3)"
+
+
+
+[[mods]] 
+
+modId="solar_apocalypse" 
+
+
+
+version="${file.jarVersion}" 
+ 
+displayName="Solar Apocalypse: Reforged" 
+
+displayURL="https://www.curseforge.com/minecraft/mc-mods/solar-apocalypse-refabricated"
+
+
+
+logoFile="assets/solar_apocalypse/icon.png"
+
+#credits="Thanks for this example mod goes to Java"
+
+authors="SmushyTaco (Creator and Maintainer), Pois1x (Graphic Designer), ZX_or__ (ported to forge)"
+
+description='''
+This mod starts a Solar Apocalypse. Water is no longer infinite. For the first two days nothing happens. From the third day and beyond grass and mycelium start turning to dirt when exposed to the daylight. From the fifth day and beyond flammable blocks get set on fire in daylight, meltable blocks melt in daylight, water evaporates in daylight, and most blocks that are made of organic matter get destroyed in daylight. From the seventh day and beyond mobs and players will burn when exposed to daylight. You can also pick if Coarse Dirt turns to Sand and what phase that happens.
+'''
+
+[[dependencies.solar_apocalypse]]
+    
+    modId="forge" 
+    
+    mandatory=true 
+    
+    versionRange="[40,)" 
+    
+    ordering="NONE"
+    
+    side="BOTH"
+
+[[dependencies.solar_apocalypse]]
+    modId="minecraft"
+    mandatory=true
+
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.solar_apocalypse]]
+    modId="cloth_config"
+    mandatory=true
+    versionRange="[6.2,6.3)"
+    side="BOTH"
