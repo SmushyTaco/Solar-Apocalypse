@@ -1,0 +1,10 @@
+{
+  "text.autoconfig.solar_apocalypse.title": "太阳启示录配置文件",
+  "text.autoconfig.solar_apocalypse.option.myceliumAndGrassTurnToDirtInDaylightDay": "菌丝和草在白天变成泥土",
+  "text.autoconfig.solar_apocalypse.option.blocksAndWaterAreAffectedByDaylightDay": "方块和水受日光影响",
+  "text.autoconfig.solar_apocalypse.option.mobsAndPlayersBurnInDaylightDay": "生物和玩家在白天燃烧",
+  "text.autoconfig.solar_apocalypse.option.coarseDirtTurnsToSandPhase": "粗糙的土壤变成沙子",
+  "text.autoconfig.solar_apocalypse.option.dimensionWhitelist": "维度白名单",
+  "block.solar_apocalypse.dust": "尘土",
+  "effect.solar_apocalypse.sunscreen": "防晒"
+}
