@@ -41,7 +41,7 @@ public abstract class BlocksAreModifiedInDaylight {
             } else if (state.getBlock() == Blocks.DIRT) {
                 world.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
             } else if (state.getBlock() == Blocks.FARMLAND) {
-                FarmlandBlock.setToDirt(state, world, pos);
+                FarmlandBlock.setToDirt(null, state, world, pos);
             } else if (state.getBlock() instanceof GourdBlock || state.getBlock() instanceof CarvedPumpkinBlock) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             }
