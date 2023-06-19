@@ -20,19 +20,14 @@ public abstract class BlocksAreModifiedInDaylight {
     @Final
     @Shadow
     protected boolean randomTicks;
-    @Final
-    @Shadow
-    protected Material material;
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void hookInit(AbstractBlock.Settings settings, CallbackInfo ci) {
-        if (material.isBurnable()) randomTicks = true;
-    }
+    private void hookInit(AbstractBlock.Settings settings, CallbackInfo ci) { if (((GetBurnableAccessor) settings).getBurnable()) randomTicks = true; }
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockPos blockPos = pos.offset(Direction.UP);
         if (world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         if (WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay())) {
-            if (state.getMaterial().isBurnable() && world.getBlockState(blockPos).isAir()) {
+            if (state.isBurnable() && world.getBlockState(blockPos).isAir()) {
                 BlockState blockState = AbstractFireBlock.getState(world, blockPos);
                 world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
             }
@@ -40,10 +35,14 @@ public abstract class BlocksAreModifiedInDaylight {
                 world.setBlockState(pos, Blocks.TERRACOTTA.getDefaultState());
             } else if (state.getBlock() == Blocks.DIRT) {
                 world.setBlockState(pos, Blocks.COARSE_DIRT.getDefaultState());
+            } else if (state.getBlock() == Blocks.DIRT_PATH) {
+                world.setBlockState(pos, Blocks.DIRT.getDefaultState());
             } else if (state.getBlock() == Blocks.FARMLAND) {
                 FarmlandBlock.setToDirt(null, state, world, pos);
-            } else if (state.getBlock() instanceof GourdBlock || state.getBlock() instanceof CarvedPumpkinBlock) {
+            } else if (state.getBlock() instanceof GourdBlock || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() instanceof HayBlock) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
+            } else if (state.getBlock() instanceof SandBlock) {
+                world.setBlockState(pos, SolarApocalypse.INSTANCE.getDUST().getDefaultState());
             }
         }
         if (state.getBlock() == Blocks.COARSE_DIRT && SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() != CoarseDirtToSandOptions.NONE) {

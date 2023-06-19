@@ -13,18 +13,20 @@
     "CertainBlocksHaveRandomTick",
     "CocoaBlocksAreDestroyedInDaylight",
     "CropsAreDestroyedInDaylight",
+    "GetBurnableAccessor",
     "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
-    "DirtPathBlockIsTurnedToDirtInDaylight",
     "IceBlocksMeltInDaylight",
     "LeavesBlockDecayInDaylight",
-    "PlantBlocksAreDestroyedInDaylight",
     "PlayersBurnDuringTheDaylight",
-    "SandTurnsToDust",
     "SnowLayersMeltInDaylight",
     "StemBlocksAreDestroyedInDaylight",
     "SugarCaneIsDestroyedInDaylight",
     "SweetBerryBushBlockIsDestroyedInDaylight",
     "VineBlockIsDestroyedInDaylight",
+    "WaterEvaporatesInDaylight",
     "WaterIsFiniteAndEvaporatesInDaylight"
+  ],
+  "client": [
+    "client.BigSun"
   ]
 }

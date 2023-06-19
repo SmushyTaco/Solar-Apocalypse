@@ -13,14 +13,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public abstract class PlayersBurnDuringTheDaylight extends LivingEntity {
-    protected PlayersBurnDuringTheDaylight(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
-    }
+    protected PlayersBurnDuringTheDaylight(EntityType<? extends LivingEntity> entityType, World world) { super(entityType, world); }
     @Shadow
     public abstract boolean isCreative();
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void hookTickMovement(CallbackInfo ci) {
-        if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) || !isAlive() || isOnFire() || world.isRaining() || isSpectator() || isCreative() || world.isNight() || world.isClient || !world.isSkyVisible(getBlockPos()) || hasStatusEffect(Sunscreen.INSTANCE)) return;
+        if (!WorldDayCalculation.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) || !isAlive() || isOnFire() || getWorld().isRaining() || isSpectator() || isCreative() || getWorld().isNight() || getWorld().isClient || !getWorld().isSkyVisible(getBlockPos()) || hasStatusEffect(Sunscreen.INSTANCE)) return;
         setOnFireFor(8);
     }
 }
