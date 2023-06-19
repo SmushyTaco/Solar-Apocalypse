@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.block.*
+import net.minecraft.block.enums.Instrument
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
@@ -36,5 +37,5 @@ object SolarApocalypse : ModInitializer {
             newPlayer.addStatusEffect(StatusEffectInstance(Sunscreen, 2400, 0, false, false, true))
         })
     }
-    val DUST = FallingBlock(FabricBlockSettings.of(Material.AGGREGATE, MapColor.BLACK).strength(0.5F).sounds(BlockSoundGroup.SAND))
+    val DUST = FallingBlock(FabricBlockSettings.create().mapColor(MapColor.BLACK).instrument(Instrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND))
 }

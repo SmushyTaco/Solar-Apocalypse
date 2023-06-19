@@ -1,8 +1,11 @@
 {
   "text.autoconfig.solar_apocalypse.title": "Solar Apocalypse Configuration",
   "text.autoconfig.solar_apocalypse.option.myceliumAndGrassTurnToDirtInDaylightDay": "Mycelium And Grass Turn To Dirt In Daylight Day",
+  "text.autoconfig.solar_apocalypse.option.myceliumAndGrassTurnToDirtInDaylightSunSizeMultiplier": "Mycelium And Grass Turn To Dirt In Daylight Sun Size Multiplier",
   "text.autoconfig.solar_apocalypse.option.blocksAndWaterAreAffectedByDaylightDay": "Blocks And Water Are Affected By Daylight Day",
+  "text.autoconfig.solar_apocalypse.option.blocksAndWaterAreAffectedByDaylightSunSizeMultiplier": "Blocks And Water Are Affected By Daylight Sun Size Multiplier",
   "text.autoconfig.solar_apocalypse.option.mobsAndPlayersBurnInDaylightDay": "Mobs And Players Burn In Daylight Day",
+  "text.autoconfig.solar_apocalypse.option.mobsAndPlayersBurnInDaylightSunSizeMultiplier": "Mobs And Players Burn In Daylight Sun Size Multiplier",
   "text.autoconfig.solar_apocalypse.option.coarseDirtTurnsToSandPhase": "Coarse Dirt Turns To Sand Phase",
   "text.autoconfig.solar_apocalypse.option.dimensionWhitelist": "Dimension Whitelist",
   "block.solar_apocalypse.dust": "Dust",
