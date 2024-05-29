@@ -1,4 +1,5 @@
 package com.smushytaco.solar_apocalypse.mixins;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import com.smushytaco.solar_apocalypse.configuration_support.CoarseDirtToSandOptions;
@@ -39,20 +40,14 @@ public abstract class BlocksAreModifiedInDaylight {
                 world.setBlockState(pos, Blocks.DIRT.getDefaultState());
             } else if (state.getBlock() == Blocks.FARMLAND) {
                 FarmlandBlock.setToDirt(null, state, world, pos);
-            } else if (state.getBlock() instanceof GourdBlock || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() instanceof HayBlock) {
+            } else if (state.getBlock() instanceof PumpkinBlock || state.getBlock() == Blocks.MELON || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() instanceof HayBlock || state.getBlock() == Blocks.MUSHROOM_STEM || state.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK || state.getBlock() == Blocks.RED_MUSHROOM_BLOCK) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
-            } else if (state.getBlock() instanceof SandBlock) {
+            } else if (state.getBlock() == Blocks.SAND || state.getBlock() == Blocks.RED_SAND) {
                 world.setBlockState(pos, SolarApocalypse.INSTANCE.getDUST().getDefaultState());
             }
         }
-        if (state.getBlock() == Blocks.COARSE_DIRT && SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() != CoarseDirtToSandOptions.NONE) {
-            if (SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() == CoarseDirtToSandOptions.MYCELIUM_AND_GRASS_TURN_TO_DIRT_IN_DAYLIGHT_PHASE && WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay())) {
-                world.setBlockState(pos, Blocks.SAND.getDefaultState());
-            } else if (SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() == CoarseDirtToSandOptions.BLOCKS_AND_WATER_ARE_AFFECTED_BY_DAYLIGHT_PHASE && WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay())) {
-                world.setBlockState(pos, Blocks.SAND.getDefaultState());
-            } else if (SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() == CoarseDirtToSandOptions.MOBS_AND_PLAYERS_BURN_IN_DAYLIGHT_PHASE && WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay())) {
-                world.setBlockState(pos, Blocks.SAND.getDefaultState());
-            }
-        }
+        if (state.getBlock() == Blocks.COARSE_DIRT && SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() != CoarseDirtToSandOptions.NONE && ((SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() == CoarseDirtToSandOptions.MYCELIUM_AND_GRASS_TURN_TO_DIRT_IN_DAYLIGHT_PHASE && WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay())) || (SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() == CoarseDirtToSandOptions.BLOCKS_AND_WATER_ARE_AFFECTED_BY_DAYLIGHT_PHASE && WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay())) || (SolarApocalypse.INSTANCE.getConfig().getCoarseDirtTurnsToSandPhase() == CoarseDirtToSandOptions.MOBS_AND_PLAYERS_BURN_IN_DAYLIGHT_PHASE && WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay())))) world.setBlockState(pos, Blocks.SAND.getDefaultState());
     }
+    @ModifyReturnValue(method = "hasRandomTicks", at = @At("RETURN"))
+    private boolean hookHasRandomTicks(boolean original, BlockState state) { return state.getBlock() == Blocks.CLAY || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.DIRT_PATH || state.getBlock() == Blocks.COARSE_DIRT || state.getBlock() instanceof PumpkinBlock || state.getBlock() == Blocks.MELON || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() == Blocks.SAND || state.getBlock() == Blocks.RED_SAND || state.getBlock() == Blocks.MUSHROOM_STEM || state.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK || state.getBlock() == Blocks.RED_MUSHROOM_BLOCK || state.getBlock() instanceof HayBlock || original; }
 }

@@ -1,7 +1,6 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
-import com.smushytaco.solar_apocalypse.Sunscreen;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -18,8 +17,7 @@ public abstract class AllMobsBurnInDaylight extends LivingEntity {
     @Shadow
     protected boolean isAffectedByDaylight() { throw new AssertionError(); }
     @ModifyReturnValue(method = "isAffectedByDaylight", at = @At("RETURN"))
-    @SuppressWarnings("unused")
-    private boolean hookIsAffectedByDaylight(boolean original) { return WorldDayCalculation.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) && isAlive() && !isOnFire() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && getWorld().isSkyVisible(getBlockPos()) && !hasStatusEffect(Sunscreen.INSTANCE) || original; }
+    private boolean hookIsAffectedByDaylight(boolean original) { return WorldDayCalculation.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) && isAlive() && !isOnFire() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && getWorld().isSkyVisible(getBlockPos()) && !hasStatusEffect(SolarApocalypse.INSTANCE.getSunscreen()) || original; }
     @Inject(method = "tickMovement", at = @At("HEAD"))
-    private void hookTickMovement(CallbackInfo ci) { if (WorldDayCalculation.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) && isAlive() && !isOnFire() && !getWorld().isRaining() && !getWorld().isNight() && isAffectedByDaylight() && !getWorld().isClient && getWorld().isSkyVisible(getBlockPos()) && !hasStatusEffect(Sunscreen.INSTANCE)) setOnFireFor(8); }
+    private void hookTickMovement(CallbackInfo ci) { if (WorldDayCalculation.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) && isAlive() && !isOnFire() && !getWorld().isRaining() && !getWorld().isNight() && isAffectedByDaylight() && !getWorld().isClient && getWorld().isSkyVisible(getBlockPos()) && !hasStatusEffect(SolarApocalypse.INSTANCE.getSunscreen())) setOnFireFor(8); }
 }

@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SpreadableBlock.class)
 public abstract class GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight {
     @ModifyReturnValue(method = "canSurvive", at = @At("RETURN"))
-    @SuppressWarnings("unused")
     private static boolean hookCanSurvive(boolean original, BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.offset(Direction.UP);
         World realWorld = (World) world;

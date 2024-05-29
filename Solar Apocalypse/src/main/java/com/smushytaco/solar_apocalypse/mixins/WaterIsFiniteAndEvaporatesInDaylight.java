@@ -8,6 +8,5 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(WaterFluid.class)
 public abstract class WaterIsFiniteAndEvaporatesInDaylight extends Fluid {
     @ModifyReturnValue(method = "isInfinite", at = @At("RETURN"))
-    @SuppressWarnings("unused")
     private boolean hookIsInfinite(boolean original, World world) { return false; }
 }

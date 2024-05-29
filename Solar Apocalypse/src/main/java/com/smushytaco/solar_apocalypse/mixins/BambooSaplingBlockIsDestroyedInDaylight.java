@@ -1,7 +1,7 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
-import net.minecraft.block.BambooSaplingBlock;
+import net.minecraft.block.BambooShootBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ServerWorld;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-@Mixin(BambooSaplingBlock.class)
+@Mixin(BambooShootBlock.class)
 public abstract class BambooSaplingBlockIsDestroyedInDaylight {
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
