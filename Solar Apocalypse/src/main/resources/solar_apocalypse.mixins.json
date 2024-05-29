@@ -10,7 +10,6 @@
     "BambooBlockIsDestroyedInDaylight",
     "BambooSaplingBlockIsDestroyedInDaylight",
     "BlocksAreModifiedInDaylight",
-    "CertainBlocksHaveRandomTick",
     "CocoaBlocksAreDestroyedInDaylight",
     "CropsAreDestroyedInDaylight",
     "GetBurnableAccessor",

@@ -23,12 +23,6 @@
         "value": "com.smushytaco.solar_apocalypse.SolarApocalypse"
       }
     ],
-    "preLaunch": [
-      {
-        "adapter": "kotlin",
-        "value": "com.smushytaco.solar_apocalypse.SolarApocalypsePreLaunch"
-      }
-    ],
     "modmenu": [
       "com.smushytaco.solar_apocalypse.configuration_support.ModMenuIntegration"
     ]
@@ -42,8 +36,7 @@
     "fabric-language-kotlin": ">=${fabric_language_kotlin}",
     "minecraft": ">=${minecraft}",
     "java": ">=${java}",
-    "cloth-config2": ">=${clothconfig}",
-    "com_github_llamalad7_mixinextras": ">=${mixinextras}"
+    "cloth-config2": ">=${clothconfig}"
   },
   "suggests": {
     "modmenu": ">=${modmenu}"

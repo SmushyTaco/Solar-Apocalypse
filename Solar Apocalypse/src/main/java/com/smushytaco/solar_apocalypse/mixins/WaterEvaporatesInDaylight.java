@@ -20,17 +20,15 @@ import static net.minecraft.block.Block.dropStacks;
 @Mixin(Fluid.class)
 public abstract class WaterEvaporatesInDaylight {
     @ModifyReturnValue(method = "hasRandomTicks", at = @At("RETURN"))
-    @SuppressWarnings("ConstantConditions")
     protected boolean hookHasRandomTicks(boolean original) { return (Fluid) (Object) this instanceof WaterFluid || original; }
     @Inject(method = "onRandomTick", at = @At("HEAD"))
-    @SuppressWarnings("ConstantConditions")
     protected void onRandomTick(World world, BlockPos pos, FluidState state, Random random, CallbackInfo ci) {
         if (!((Fluid) (Object) this instanceof WaterFluid)) return;
         BlockPos blockPos = pos.offset(Direction.UP);
         if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || state.getFluid() != Fluids.WATER || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         BlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof FluidDrainable fluidDrainable) {
-            fluidDrainable.tryDrainFluid(world, pos, blockState);
+            fluidDrainable.tryDrainFluid(null, world, pos, blockState);
         } else if (blockState.getBlock() instanceof FluidBlock) {
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
         } else if (blockState.isOf(Blocks.KELP) || blockState.isOf(Blocks.KELP_PLANT) || blockState.isOf(Blocks.SEAGRASS) || blockState.isOf(Blocks.TALL_SEAGRASS)) {
