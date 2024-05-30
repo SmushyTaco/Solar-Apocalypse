@@ -4,7 +4,7 @@ plugins {
     id("fabric-loom")
     kotlin("jvm")
 }
-base { archivesName.set(project.extra["archives_base_name"] as String) }
+base.archivesName = project.extra["archives_base_name"] as String
 version = project.extra["mod_version"] as String
 group = project.extra["maven_group"] as String
 repositories {
@@ -26,19 +26,19 @@ tasks {
         options.encoding = "UTF-8"
         sourceCompatibility = javaVersion.toString()
         targetCompatibility = javaVersion.toString()
-        options.release.set(javaVersion.toString().toInt())
+        options.release = javaVersion.toString().toInt()
     }
     withType<JavaExec>().configureEach { defaultCharacterEncoding = "UTF-8" }
     withType<Javadoc>().configureEach { options.encoding = "UTF-8" }
     withType<Test>().configureEach { defaultCharacterEncoding = "UTF-8" }
-    withType<KotlinCompile>().configureEach { compilerOptions { jvmTarget.set(JvmTarget.valueOf("JVM_$javaVersion")) } }
+    withType<KotlinCompile>().configureEach { compilerOptions { jvmTarget = JvmTarget.valueOf("JVM_$javaVersion") } }
     jar { from("LICENSE") { rename { "${it}_${base.archivesName.get()}" } } }
     processResources {
         filesMatching("fabric.mod.json") { expand(mutableMapOf("version" to project.extra["mod_version"] as String, "fabricloader" to project.extra["loader_version"] as String, "fabric_api" to project.extra["fabric_version"] as String, "fabric_language_kotlin" to project.extra["fabric_language_kotlin_version"] as String, "minecraft" to project.extra["minecraft_version"] as String, "java" to project.extra["java_version"] as String, "modmenu" to project.extra["mod_menu_version"] as String, "clothconfig" to project.extra["cloth_config_version"] as String)) }
         filesMatching("*.mixins.json") { expand(mutableMapOf("java" to project.extra["java_version"] as String)) }
     }
     java {
-        toolchain { languageVersion.set(JavaLanguageVersion.of(javaVersion.toString())) }
+        toolchain { languageVersion = JavaLanguageVersion.of(javaVersion.toString()) }
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
         withSourcesJar()
