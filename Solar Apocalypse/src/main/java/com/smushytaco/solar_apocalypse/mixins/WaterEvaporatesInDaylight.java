@@ -25,7 +25,7 @@ public abstract class WaterEvaporatesInDaylight {
     protected void onRandomTick(World world, BlockPos pos, FluidState state, Random random, CallbackInfo ci) {
         if (!((Fluid) (Object) this instanceof WaterFluid)) return;
         BlockPos blockPos = pos.offset(Direction.UP);
-        if (!WorldDayCalculation.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || state.getFluid() != Fluids.WATER || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
+        if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || state.getFluid() != Fluids.WATER || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         BlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof FluidDrainable fluidDrainable) {
             fluidDrainable.tryDrainFluid(null, world, pos, blockState);
