@@ -8,7 +8,7 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.block.*
-import net.minecraft.block.enums.Instrument
+import net.minecraft.block.enums.NoteBlockInstrument
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.BlockItem
@@ -31,16 +31,16 @@ object SolarApocalypse : ModInitializer {
             GsonConfigSerializer(definition, configClass)
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
-        Registry.register(Registries.BLOCK, Identifier(MOD_ID, "dust"), DUST)
-        val dustBlockItem = Registry.register(Registries.ITEM, Identifier(MOD_ID, "dust"), BlockItem(DUST, Item.Settings()))
+        Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "dust"), DUST)
+        val dustBlockItem = Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "dust"), BlockItem(DUST, Item.Settings()))
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.add(dustBlockItem) })
-        Registry.register(Registries.STATUS_EFFECT, Identifier(MOD_ID, "sunscreen"), Sunscreen)
-        sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier(MOD_ID, "sunscreen")).get()
+        Registry.register(Registries.STATUS_EFFECT, Identifier.of(MOD_ID, "sunscreen"), Sunscreen)
+        sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier.of(MOD_ID, "sunscreen")).get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             val world = newPlayer.world
             if (!world.isOldEnough(config.mobsAndPlayersBurnInDaylightDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || !world.isSkyVisible(newPlayer.blockPos) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
             newPlayer.addStatusEffect(StatusEffectInstance(sunscreen, 2400, 0, false, false, true))
         })
     }
-    val DUST = ColoredFallingBlock(ColorCode(0x191919), AbstractBlock.Settings.create().mapColor(MapColor.BLACK).instrument(Instrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND))
+    val DUST = ColoredFallingBlock(ColorCode(0x191919), AbstractBlock.Settings.create().mapColor(MapColor.BLACK).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND))
 }
