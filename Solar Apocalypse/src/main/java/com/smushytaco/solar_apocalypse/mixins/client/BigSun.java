@@ -25,11 +25,11 @@ public abstract class BigSun {
     private VertexConsumer bigSunGenerator(BufferBuilder instance, Matrix4f matrix, float x, float y, float z, Operation<VertexConsumer> original) {
         if (client.world == null) return original.call(instance, matrix, x, y, z);
         if (WorldDayCalculation.INSTANCE.isOldEnough(client.world, SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay())) {
-            original.call(instance, matrix, x * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightSunSizeMultiplier()), y, z * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightSunSizeMultiplier()));
+            return original.call(instance, matrix, x * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightSunSizeMultiplier()), y, z * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightSunSizeMultiplier()));
         } else if (WorldDayCalculation.INSTANCE.isOldEnough(client.world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay())) {
-            original.call(instance, matrix, x * Math.abs(SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightSunSizeMultiplier()), y, z * Math.abs(SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightSunSizeMultiplier()));
+            return original.call(instance, matrix, x * Math.abs(SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightSunSizeMultiplier()), y, z * Math.abs(SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightSunSizeMultiplier()));
         } else if (WorldDayCalculation.INSTANCE.isOldEnough(client.world, SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay())) {
-            original.call(instance, matrix, x * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightSunSizeMultiplier()), y, z * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightSunSizeMultiplier()));
+            return original.call(instance, matrix, x * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightSunSizeMultiplier()), y, z * Math.abs(SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightSunSizeMultiplier()));
         }
         return original.call(instance, matrix, x, y, z);
     }
