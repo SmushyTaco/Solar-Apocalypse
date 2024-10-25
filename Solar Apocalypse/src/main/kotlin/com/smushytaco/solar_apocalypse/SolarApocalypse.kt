@@ -16,6 +16,8 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemGroups
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
+import net.minecraft.registry.RegistryKey
+import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.ColorCode
@@ -31,8 +33,8 @@ object SolarApocalypse : ModInitializer {
             GsonConfigSerializer(definition, configClass)
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
-        Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "dust"), DUST)
-        val dustBlockItem = Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "dust"), BlockItem(DUST, Item.Settings()))
+        Registry.register(Registries.BLOCK, DUST_IDENTIFIER, DUST)
+        val dustBlockItem = Registry.register(Registries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Settings().useBlockPrefixedTranslationKey().registryKey(RegistryKey.of(RegistryKeys.ITEM, DUST_IDENTIFIER))))
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.add(dustBlockItem) })
         Registry.register(Registries.STATUS_EFFECT, Identifier.of(MOD_ID, "sunscreen"), Sunscreen)
         sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier.of(MOD_ID, "sunscreen")).get()
@@ -42,5 +44,6 @@ object SolarApocalypse : ModInitializer {
             newPlayer.addStatusEffect(StatusEffectInstance(sunscreen, 2400, 0, false, false, true))
         })
     }
-    val DUST = ColoredFallingBlock(ColorCode(0x191919), AbstractBlock.Settings.create().mapColor(MapColor.BLACK).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND))
+    private val DUST_IDENTIFIER = Identifier.of(MOD_ID, "dust")
+    val DUST = ColoredFallingBlock(ColorCode(0x191919), AbstractBlock.Settings.create().mapColor(MapColor.BLACK).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND).registryKey(RegistryKey.of(RegistryKeys.BLOCK, DUST_IDENTIFIER)))
 }
