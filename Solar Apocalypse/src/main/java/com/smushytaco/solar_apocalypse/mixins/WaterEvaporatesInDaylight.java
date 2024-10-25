@@ -8,10 +8,10 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.WaterFluid;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,7 +22,7 @@ public abstract class WaterEvaporatesInDaylight {
     @ModifyReturnValue(method = "hasRandomTicks", at = @At("RETURN"))
     protected boolean hookHasRandomTicks(boolean original) { return (Fluid) (Object) this instanceof WaterFluid || original; }
     @Inject(method = "onRandomTick", at = @At("HEAD"))
-    protected void onRandomTick(World world, BlockPos pos, FluidState state, Random random, CallbackInfo ci) {
+    protected void onRandomTick(ServerWorld world, BlockPos pos, FluidState state, Random random, CallbackInfo ci) {
         if (!((Fluid) (Object) this instanceof WaterFluid)) return;
         BlockPos blockPos = pos.offset(Direction.UP);
         if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || state.getFluid() != Fluids.WATER || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
