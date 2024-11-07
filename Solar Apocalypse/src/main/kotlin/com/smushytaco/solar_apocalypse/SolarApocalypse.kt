@@ -1,6 +1,7 @@
 package com.smushytaco.solar_apocalypse
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.configuration_support.ModConfiguration
+import com.smushytaco.solar_apocalypse.configuration_support.Phases
 import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
@@ -22,7 +23,15 @@ import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.ColorCode
 import net.minecraft.util.Identifier
+import net.minecraft.world.World
 object SolarApocalypse : ModInitializer {
+    fun isPhaseReady(phase: Phases, world: World): Boolean {
+        if (phase == Phases.MOBS_AND_PLAYERS_BURN_IN_DAYLIGHT_PHASE && world.isOldEnough(config.mobsAndPlayersBurnInDaylightDay)) return true
+        if (phase == Phases.BLOCKS_AND_WATER_ARE_AFFECTED_BY_DAYLIGHT_PHASE && world.isOldEnough(config.blocksAndWaterAreAffectedByDaylightDay)) return true
+        if (phase == Phases.MYCELIUM_AND_GRASS_TURN_TO_DIRT_IN_DAYLIGHT_PHASE && world.isOldEnough(config.myceliumAndGrassTurnToDirtInDaylightDay)) return true
+        return false
+    }
+    fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
     const val MOD_ID = "solar_apocalypse"
     lateinit var config: ModConfiguration
         private set
