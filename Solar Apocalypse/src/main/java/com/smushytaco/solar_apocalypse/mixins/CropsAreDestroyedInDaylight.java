@@ -1,5 +1,6 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.block.BlockState;
@@ -23,5 +24,10 @@ public abstract class CropsAreDestroyedInDaylight {
         if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
         world.setBlockState(pos, Blocks.AIR.getDefaultState());
         ci.cancel();
+    }
+    @WrapWithCondition(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
+    private boolean hookSetBlockState(ServerWorld instance, BlockPos blockPos, BlockState blockState, int i, BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        if (!SolarApocalypse.INSTANCE.isPhaseReady(SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownPhase(), world) || world.isNight() || world.isRaining() || world.isSkyVisible(blockPos) || SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownMultiplier() < 2) return true;
+        return random.nextInt(SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownMultiplier()) == 0;
     }
 }

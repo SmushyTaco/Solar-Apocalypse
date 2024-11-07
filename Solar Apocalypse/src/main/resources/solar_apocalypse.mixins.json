@@ -12,11 +12,16 @@
     "BlocksAreModifiedInDaylight",
     "CocoaBlocksAreDestroyedInDaylight",
     "CropsAreDestroyedInDaylight",
+    "ExperienceOrbsItemsAndProjectilesBurnInDaylight",
     "GetBurnableAccessor",
     "GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight",
+    "GreaterFireDamage",
     "IceBlocksMeltInDaylight",
+    "LavaSpeedAndDistanceModification",
     "LeavesBlockDecayInDaylight",
+    "MangroveSaplingsAreDestroyedInDaylight",
     "PlayersBurnDuringTheDaylight",
+    "SaplingsAreDestroyedInDaylight",
     "SnowLayersMeltInDaylight",
     "StemBlocksAreDestroyedInDaylight",
     "SugarCaneIsDestroyedInDaylight",
@@ -26,6 +31,7 @@
     "WaterIsFiniteAndEvaporatesInDaylight"
   ],
   "client": [
-    "client.BigSun"
+    "client.BigSun",
+    "client.SkyColor"
   ]
 }

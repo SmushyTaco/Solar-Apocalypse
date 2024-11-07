@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SkyRendering.class)
 public abstract class BigSun {
     @Unique
-    private VertexConsumer bigSunGenerator(BufferBuilder instance, Matrix4f matrix, float x, float y, float z, Operation<VertexConsumer> original) {
+    private static VertexConsumer bigSunGenerator(BufferBuilder instance, Matrix4f matrix, float x, float y, float z, Operation<VertexConsumer> original) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.world == null) return original.call(instance, matrix, x, y, z);
         if (WorldDayCalculation.INSTANCE.isOldEnough(client.world, SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay())) {
