@@ -1,5 +1,4 @@
 package com.smushytaco.solar_apocalypse
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.configuration_support.ModConfiguration
 import com.smushytaco.solar_apocalypse.configuration_support.Phases
@@ -9,13 +8,8 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
-import net.minecraft.block.AbstractBlock
-import net.minecraft.block.ColoredFallingBlock
-import net.minecraft.block.MapColor
+import net.minecraft.block.*
 import net.minecraft.block.enums.NoteBlockInstrument
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.BufferBuilder
-import net.minecraft.client.render.VertexConsumer
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.BlockItem
@@ -26,13 +20,14 @@ import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.entry.RegistryEntry
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.ColorCode
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import org.joml.Matrix4f
-import kotlin.math.abs
-
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 object SolarApocalypse : ModInitializer {
     fun isPhaseReady(phase: Phases, world: World): Boolean {
         if (phase == Phases.PHASE_THREE && world.isOldEnough(config.phaseThreeDay)) return true
@@ -41,6 +36,14 @@ object SolarApocalypse : ModInitializer {
         return false
     }
     fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
+    fun blockDestruction(world: ServerWorld, pos: BlockPos, ci: CallbackInfo) {
+        if (!world.apocalypseChecks(pos)) return
+        world.setBlockState(pos, Blocks.AIR.defaultState)
+        ci.cancel()
+    }
+    fun ServerWorld.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseTwoDay) && !isNight && !isRaining && isSkyVisible(pos.offset(Direction.UP))
+    val BlockState.blockChecks: Boolean
+        get() = block === Blocks.COBBLESTONE || block === Blocks.COBBLESTONE_SLAB || block === Blocks.COBBLESTONE_STAIRS || block === Blocks.COBBLESTONE_WALL || block === Blocks.COBBLED_DEEPSLATE || block === Blocks.COBBLED_DEEPSLATE_SLAB || block === Blocks.COBBLED_DEEPSLATE_STAIRS || block === Blocks.COBBLED_DEEPSLATE_WALL || block === Blocks.CRACKED_DEEPSLATE_TILES || block === Blocks.CRACKED_DEEPSLATE_BRICKS || block === Blocks.CRACKED_STONE_BRICKS
     const val MOD_ID = "solar_apocalypse"
     lateinit var config: ModConfiguration
         private set
