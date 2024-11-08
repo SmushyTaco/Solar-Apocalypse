@@ -32,6 +32,7 @@
   ],
   "client": [
     "client.BigSun",
+    "client.ColoredSkyLight",
     "client.SkyColor"
   ]
 }

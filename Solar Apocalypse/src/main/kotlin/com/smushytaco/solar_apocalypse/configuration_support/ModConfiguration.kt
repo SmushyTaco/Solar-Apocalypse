@@ -1,5 +1,6 @@
 package com.smushytaco.solar_apocalypse.configuration_support
 import com.smushytaco.solar_apocalypse.SolarApocalypse
+import com.smushytaco.solar_apocalypse.SolarApocalypse.rgbToInt
 import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker
@@ -20,14 +21,18 @@ class ModConfiguration: ConfigData {
     val cropGrowthSlowDownPhase = Phases.PHASE_TWO
     val cropGrowthSlowDownMultiplier = 3
     val solarFireDamageMultiplier = 5.0F
-    val shouldPhaseOneHaveCustomSkyColor = true
+    val enablePhaseOneCustomSkyColor = true
     @ColorPicker
-    val phaseOneSkyColor = SolarApocalypse.rgbToInt(255, 165, 0)
-    val shouldPhaseTwoHaveCustomSkyColor = true
+    val phaseOneSkyColor = rgbToInt(255, 165, 0)
+    val enablePhaseTwoCustomSkyColor = true
     @ColorPicker
-    val phaseTwoSkyColor = SolarApocalypse.rgbToInt(255, 140, 0)
-    val shouldPhaseThreeHaveCustomSkyColor = true
+    val phaseTwoSkyColor = rgbToInt(255, 140, 0)
+    val enablePhaseThreeCustomSkyColor = true
     @ColorPicker
-    val phaseThreeSkyColor = SolarApocalypse.rgbToInt(255, 69, 0)
+    val phaseThreeSkyColor = rgbToInt(255, 69, 0)
+    val enableCustomSkyLight = true
+    val enableHeatLayers = true
+    val enableHeatLayersOnBlocks = false
+    val heatLayers = listOf(HeatLayer(10.0, 100.0, 3.25F, rgbToInt(255, 50, 0)), HeatLayer(20.0, 60.0, 3.5F, rgbToInt(255, 40, 0)), HeatLayer(30.0, 50.0, 3.75F, rgbToInt(255, 30, 0)), HeatLayer(40.0, 25.0, 4.0F, rgbToInt(255, 30, 0)), HeatLayer(50.0, 0.0, 5.00F, rgbToInt(255, 0, 0)))
     val dimensionWhitelist = listOf("minecraft:overworld")
 }
