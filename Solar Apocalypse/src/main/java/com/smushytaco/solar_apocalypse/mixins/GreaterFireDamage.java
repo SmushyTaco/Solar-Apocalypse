@@ -10,6 +10,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +23,7 @@ public abstract class GreaterFireDamage extends Entity {
     public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
     @ModifyVariable(method = "damage", at = @At("HEAD"), index = 3, argsOnly = true)
     private float modifyDamageAmount(float value, ServerWorld world, DamageSource source) {
-        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseThreeDay()) || !isAlive() || getWorld().isRaining() || getWorld().isNight() || getWorld().isClient || !getWorld().isSkyVisible(getBlockPos())) return value;
-        return value * SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier();
+        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseThreeDay()) || !isAlive() || getWorld().isRaining() || getWorld().isNight() || getWorld().isClient || (!getWorld().isSkyVisible(getBlockPos()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, getWorld()))) return value;
+        return value * MathHelper.clamp(SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier(), 1.0F, Float.MAX_VALUE);
     }
 }

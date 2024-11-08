@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.block.*
 import net.minecraft.block.enums.NoteBlockInstrument
+import net.minecraft.entity.Entity
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.BlockItem
@@ -36,12 +37,26 @@ object SolarApocalypse : ModInitializer {
         return false
     }
     fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
+    val Int.redToFloat
+        get() = ((this shr 16) and 0xFF) / 255.0F
+    val Int.greenToFloat
+        get() = ((this shr 8) and 0xFF) / 255.0F
+    val Int.blueToFloat
+        get() = (this and 0xFF) / 255.0F
     fun blockDestruction(world: ServerWorld, pos: BlockPos, ci: CallbackInfo) {
         if (!world.apocalypseChecks(pos)) return
         world.setBlockState(pos, Blocks.AIR.defaultState)
         ci.cancel()
     }
-    fun ServerWorld.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseTwoDay) && !isNight && !isRaining && isSkyVisible(pos.offset(Direction.UP))
+    fun ServerWorld.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseTwoDay) && !isNight && !isRaining && (isSkyVisible(pos.offset(Direction.UP)) || pos.shouldHeatLayerDamage(this))
+    private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
+        if (!condition || !world.isOldEnough(config.phaseThreeDay)) return false
+        val heatLayers = config.heatLayers.sorted()
+        for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
+        return false
+    }
+    fun Entity.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y)
+    fun BlockPos.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y.toDouble(), config.enableHeatLayers && config.enableHeatLayersOnBlocks)
     val BlockState.blockChecks: Boolean
         get() = block === Blocks.COBBLESTONE || block === Blocks.COBBLESTONE_SLAB || block === Blocks.COBBLESTONE_STAIRS || block === Blocks.COBBLESTONE_WALL || block === Blocks.COBBLED_DEEPSLATE || block === Blocks.COBBLED_DEEPSLATE_SLAB || block === Blocks.COBBLED_DEEPSLATE_STAIRS || block === Blocks.COBBLED_DEEPSLATE_WALL || block === Blocks.CRACKED_DEEPSLATE_TILES || block === Blocks.CRACKED_DEEPSLATE_BRICKS || block === Blocks.CRACKED_STONE_BRICKS
     const val MOD_ID = "solar_apocalypse"

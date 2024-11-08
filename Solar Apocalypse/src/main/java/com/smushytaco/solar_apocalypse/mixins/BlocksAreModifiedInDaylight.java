@@ -4,9 +4,12 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.block.*;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.WorldEvents;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -25,7 +28,7 @@ public abstract class BlocksAreModifiedInDaylight {
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockPos blockPos = pos.offset(Direction.UP);
-        if (world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
+        if (world.isNight() || world.isRaining() || (!world.isSkyVisible(blockPos) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(pos, world))) return;
         if (WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay())) {
             if (state.isBurnable() && world.getBlockState(blockPos).isAir()) {
                 BlockState blockState = AbstractFireBlock.getState(world, blockPos);
@@ -41,6 +44,10 @@ public abstract class BlocksAreModifiedInDaylight {
                 world.setBlockState(pos, Blocks.ICE.getDefaultState());
             } else if (state.getBlock() == Blocks.BLUE_ICE) {
                 world.setBlockState(pos, Blocks.PACKED_ICE.getDefaultState());
+            } else if (state.getBlock() == Blocks.WET_SPONGE) {
+                world.setBlockState(pos, Blocks.SPONGE.getDefaultState(), Block.NOTIFY_ALL);
+                world.syncWorldEvent(WorldEvents.WET_SPONGE_DRIES_OUT, pos, 0);
+                world.playSound(null, pos, SoundEvents.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, (1.0F + world.getRandom().nextFloat() * 0.2F) * 0.7F);
             } else if (state.getBlock() == Blocks.STONE) {
                 world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
             } else if (state.getBlock() == Blocks.STONE_SLAB) {
@@ -69,13 +76,15 @@ public abstract class BlocksAreModifiedInDaylight {
                 world.setBlockState(pos, Blocks.STONE_BRICK_STAIRS.getDefaultState().withIfExists(StairsBlock.FACING, state.getNullable(StairsBlock.FACING)).withIfExists(StairsBlock.HALF, state.getNullable(StairsBlock.HALF)).withIfExists(StairsBlock.SHAPE, state.getNullable(StairsBlock.SHAPE)).withIfExists(StairsBlock.WATERLOGGED, state.getNullable(StairsBlock.WATERLOGGED)));
             } else if (state.getBlock() == Blocks.MOSSY_STONE_BRICK_WALL) {
                 world.setBlockState(pos, Blocks.STONE_BRICK_WALL.getDefaultState().withIfExists(WallBlock.UP, state.getNullable(WallBlock.UP)).withIfExists(WallBlock.NORTH_SHAPE, state.getNullable(WallBlock.NORTH_SHAPE)).withIfExists(WallBlock.EAST_SHAPE, state.getNullable(WallBlock.EAST_SHAPE)).withIfExists(WallBlock.SOUTH_SHAPE, state.getNullable(WallBlock.SOUTH_SHAPE)).withIfExists(WallBlock.WEST_SHAPE, state.getNullable(WallBlock.WEST_SHAPE)).withIfExists(WallBlock.WATERLOGGED, state.getNullable(WallBlock.WATERLOGGED)));
+            } else if (state.getBlock() == Blocks.SNOW_BLOCK || state.getBlock() == Blocks.POWDER_SNOW) {
+                world.setBlockState(pos, Blocks.WATER.getDefaultState());
             } else if (state.getBlock() instanceof InfestedBlock infestedBlock) {
                 world.setBlockState(pos, infestedBlock.getRegularBlock().getDefaultState());
             } else if (state.getBlock() == Blocks.DIRT_PATH) {
                 world.setBlockState(pos, Blocks.DIRT.getDefaultState());
             } else if (state.getBlock() == Blocks.FARMLAND) {
                 FarmlandBlock.setToDirt(null, state, world, pos);
-            } else if (state.getBlock() instanceof PumpkinBlock || state.getBlock() == Blocks.MELON || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() instanceof HayBlock || state.getBlock() == Blocks.MUSHROOM_STEM || state.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK || state.getBlock() == Blocks.RED_MUSHROOM_BLOCK || state.getBlock() == Blocks.SNOW_BLOCK || state.getBlock() == Blocks.POWDER_SNOW) {
+            } else if (state.getBlock() instanceof PumpkinBlock || state.getBlock() == Blocks.MELON || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() instanceof HayBlock || state.getBlock() == Blocks.MUSHROOM_STEM || state.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK || state.getBlock() == Blocks.RED_MUSHROOM_BLOCK) {
                 world.setBlockState(pos, Blocks.AIR.getDefaultState());
             } else if (state.getBlock() == Blocks.SAND || state.getBlock() == Blocks.RED_SAND) {
                 world.setBlockState(pos, SolarApocalypse.INSTANCE.getDUST().getDefaultState());
@@ -85,5 +94,5 @@ public abstract class BlocksAreModifiedInDaylight {
         if (SolarApocalypse.INSTANCE.isPhaseReady(SolarApocalypse.INSTANCE.getConfig().getCobbledAndCrackedStonesTurnsToLavaPhase(), world) && SolarApocalypse.INSTANCE.getBlockChecks(state)) world.setBlockState(pos, Blocks.LAVA.getDefaultState());
     }
     @ModifyReturnValue(method = "hasRandomTicks", at = @At("RETURN"))
-    private boolean hookHasRandomTicks(boolean original, BlockState state) { return original || state.getBlock() == Blocks.CLAY || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.DIRT_PATH || state.getBlock() == Blocks.COARSE_DIRT || state.getBlock() instanceof PumpkinBlock || state.getBlock() == Blocks.MELON || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() == Blocks.SAND || state.getBlock() == Blocks.RED_SAND || state.getBlock() == Blocks.MUSHROOM_STEM || state.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK || state.getBlock() == Blocks.RED_MUSHROOM_BLOCK || state.getBlock() == Blocks.SNOW_BLOCK || state.getBlock() == Blocks.POWDER_SNOW || state.getBlock() == Blocks.PACKED_ICE || state.getBlock() == Blocks.BLUE_ICE || state.getBlock() == Blocks.STONE_BRICKS || state.getBlock() == Blocks.STONE || state.getBlock() == Blocks.STONE_SLAB || state.getBlock() == Blocks.STONE_STAIRS || state.getBlock() == Blocks.DEEPSLATE || state.getBlock() == Blocks.DEEPSLATE_BRICKS || state.getBlock() == Blocks.DEEPSLATE_TILES || state.getBlock() == Blocks.MOSSY_COBBLESTONE || state.getBlock() == Blocks.MOSSY_COBBLESTONE_SLAB || state.getBlock() == Blocks.MOSSY_COBBLESTONE_STAIRS || state.getBlock() == Blocks.MOSSY_COBBLESTONE_WALL || state.getBlock() == Blocks.MOSSY_STONE_BRICKS || state.getBlock() == Blocks.MOSSY_STONE_BRICK_SLAB || state.getBlock() == Blocks.MOSSY_STONE_BRICK_STAIRS || state.getBlock() == Blocks.MOSSY_STONE_BRICK_WALL || SolarApocalypse.INSTANCE.getBlockChecks(state) || state.getBlock() instanceof HayBlock || state.getBlock() instanceof InfestedBlock; }
+    private boolean hookHasRandomTicks(boolean original, BlockState state) { return original || state.getBlock() == Blocks.CLAY || state.getBlock() == Blocks.DIRT || state.getBlock() == Blocks.DIRT_PATH || state.getBlock() == Blocks.COARSE_DIRT || state.getBlock() instanceof PumpkinBlock || state.getBlock() == Blocks.MELON || state.getBlock() instanceof CarvedPumpkinBlock || state.getBlock() instanceof PlantBlock || state.getBlock() == Blocks.SAND || state.getBlock() == Blocks.RED_SAND || state.getBlock() == Blocks.MUSHROOM_STEM || state.getBlock() == Blocks.BROWN_MUSHROOM_BLOCK || state.getBlock() == Blocks.RED_MUSHROOM_BLOCK || state.getBlock() == Blocks.SNOW_BLOCK || state.getBlock() == Blocks.POWDER_SNOW || state.getBlock() == Blocks.PACKED_ICE || state.getBlock() == Blocks.BLUE_ICE || state.getBlock() == Blocks.STONE_BRICKS || state.getBlock() == Blocks.STONE || state.getBlock() == Blocks.STONE_SLAB || state.getBlock() == Blocks.STONE_STAIRS || state.getBlock() == Blocks.DEEPSLATE || state.getBlock() == Blocks.DEEPSLATE_BRICKS || state.getBlock() == Blocks.DEEPSLATE_TILES || state.getBlock() == Blocks.MOSSY_COBBLESTONE || state.getBlock() == Blocks.MOSSY_COBBLESTONE_SLAB || state.getBlock() == Blocks.MOSSY_COBBLESTONE_STAIRS || state.getBlock() == Blocks.MOSSY_COBBLESTONE_WALL || state.getBlock() == Blocks.MOSSY_STONE_BRICKS || state.getBlock() == Blocks.MOSSY_STONE_BRICK_SLAB || state.getBlock() == Blocks.MOSSY_STONE_BRICK_STAIRS || state.getBlock() == Blocks.MOSSY_STONE_BRICK_WALL || state.getBlock() == Blocks.WET_SPONGE || SolarApocalypse.INSTANCE.getBlockChecks(state) || state.getBlock() instanceof HayBlock || state.getBlock() instanceof InfestedBlock; }
 }
