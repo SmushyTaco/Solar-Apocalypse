@@ -25,7 +25,13 @@
   "text.autoconfig.solar_apocalypse.option.HeatLayer.day": "Day",
   "text.autoconfig.solar_apocalypse.option.HeatLayer.layer": "Layer",
   "text.autoconfig.solar_apocalypse.option.HeatLayer.sunSizeMultiplier": "Sun Size Multiplier",
+  "text.autoconfig.solar_apocalypse.option.HeatLayer.enableCustomSkyColor": "Enable Custom Sky Color",
   "text.autoconfig.solar_apocalypse.option.HeatLayer.skyColor": "Sky Color",
+  "text.autoconfig.solar_apocalypse.option.enableLightningPhases": "Enable Lightning Phases",
+  "text.autoconfig.solar_apocalypse.option.lightningPhases": "Lightning Phases",
+  "text.autoconfig.solar_apocalypse.option.LightningPhase": "Lightning Phase",
+  "text.autoconfig.solar_apocalypse.option.LightningPhase.day": "Day",
+  "text.autoconfig.solar_apocalypse.option.LightningPhase.multiplier": "Multiplier",
   "text.autoconfig.solar_apocalypse.option.dimensionWhitelist": "Dimension Whitelist",
   "block.solar_apocalypse.dust": "Dust",
   "effect.solar_apocalypse.sunscreen": "Sunscreen"

@@ -33,6 +33,8 @@ class ModConfiguration: ConfigData {
     val enableCustomSkyLight = true
     val enableHeatLayers = true
     val enableHeatLayersOnBlocks = false
-    val heatLayers = listOf(HeatLayer(10.0, 100.0, 3.25F, rgbToInt(255, 50, 0)), HeatLayer(20.0, 60.0, 3.5F, rgbToInt(255, 40, 0)), HeatLayer(30.0, 50.0, 3.75F, rgbToInt(255, 30, 0)), HeatLayer(40.0, 25.0, 4.0F, rgbToInt(255, 30, 0)), HeatLayer(50.0, 0.0, 5.00F, rgbToInt(255, 0, 0)))
+    val heatLayers = listOf(HeatLayer(10.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(20.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(30.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(40.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(50.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))
+    val enableLightningPhases = true
+    val lightningPhases = listOf(LightningPhase(10.0, 2.0), LightningPhase(20.0, 4.0), LightningPhase(30.0, 8.0), LightningPhase(40.0, 16.0), LightningPhase(50.0, 32.0))
     val dimensionWhitelist = listOf("minecraft:overworld")
 }
