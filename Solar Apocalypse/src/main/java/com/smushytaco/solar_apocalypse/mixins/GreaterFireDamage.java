@@ -22,7 +22,7 @@ public abstract class GreaterFireDamage extends Entity {
     public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
     @ModifyVariable(method = "damage", at = @At("HEAD"), index = 3, argsOnly = true)
     private float modifyDamageAmount(float value, ServerWorld world, DamageSource source) {
-        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) || !isAlive() || getWorld().isRaining() || getWorld().isNight() || getWorld().isClient || !getWorld().isSkyVisible(getBlockPos())) return value;
-        return value * SolarApocalypse.INSTANCE.getConfig().getDaylightDamageMultiplier();
+        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseThreeDay()) || !isAlive() || getWorld().isRaining() || getWorld().isNight() || getWorld().isClient || !getWorld().isSkyVisible(getBlockPos())) return value;
+        return value * SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier();
     }
 }

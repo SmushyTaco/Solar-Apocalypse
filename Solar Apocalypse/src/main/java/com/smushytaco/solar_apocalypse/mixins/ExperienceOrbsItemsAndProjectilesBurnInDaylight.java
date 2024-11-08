@@ -23,6 +23,6 @@ public abstract class ExperienceOrbsItemsAndProjectilesBurnInDaylight {
     @ModifyReturnValue(method = "isInLava", at = @At("RETURN"))
     private boolean hookIsInLava(boolean original) {
         Entity entity = (Entity) (Object) this;
-        return original || (entity instanceof ExperienceOrbEntity || entity instanceof ItemEntity || entity instanceof PersistentProjectileEntity || entity instanceof SnowballEntity) && WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getMobsAndPlayersBurnInDaylightDay()) && isAlive() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && getWorld().isSkyVisible(getBlockPos());
+        return original || (entity instanceof ExperienceOrbEntity || entity instanceof ItemEntity || entity instanceof PersistentProjectileEntity || entity instanceof SnowballEntity) && WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseThreeDay()) && isAlive() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && getWorld().isSkyVisible(getBlockPos());
     }
 }
