@@ -1,12 +1,10 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
-import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +16,7 @@ public abstract class LeavesBlockDecayInDaylight {
     private boolean hookHasRandomTick(boolean original, BlockState state) { return true; }
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        BlockPos blockPos = pos.offset(Direction.UP);
-        if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos) || !state.isBurnable()) return;
+        if (!SolarApocalypse.INSTANCE.apocalypseChecks(world, pos) || !state.isBurnable()) return;
         world.removeBlock(pos, false);
     }
 }
