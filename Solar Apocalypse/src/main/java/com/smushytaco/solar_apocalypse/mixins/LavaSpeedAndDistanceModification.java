@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LavaFluid.class)
 public abstract class LavaSpeedAndDistanceModification {
     @WrapOperation(method = "getMaxFlowDistance", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionType;ultrawarm()Z"))
-    private boolean hookGetMaxFlowDistance(DimensionType instance, Operation<Boolean> original, WorldView world) { return original.call(instance) || world instanceof World realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()); }
+    private boolean hookGetMaxFlowDistance(DimensionType instance, Operation<Boolean> original, WorldView world) { return original.call(instance) || world instanceof World realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()); }
     @WrapOperation(method = "getLevelDecreasePerBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionType;ultrawarm()Z"))
-    private boolean hookGetLevelDecreasePerBlock(DimensionType instance, Operation<Boolean> original, WorldView world) { return original.call(instance) || world instanceof World realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()); }
+    private boolean hookGetLevelDecreasePerBlock(DimensionType instance, Operation<Boolean> original, WorldView world) { return original.call(instance) || world instanceof World realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()); }
     @WrapOperation(method = "getTickRate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/DimensionType;ultrawarm()Z"))
-    private boolean hookGetTickRate(DimensionType instance, Operation<Boolean> original, WorldView world) { return original.call(instance) || world instanceof World realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()); }
+    private boolean hookGetTickRate(DimensionType instance, Operation<Boolean> original, WorldView world) { return original.call(instance) || world instanceof World realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()); }
 }

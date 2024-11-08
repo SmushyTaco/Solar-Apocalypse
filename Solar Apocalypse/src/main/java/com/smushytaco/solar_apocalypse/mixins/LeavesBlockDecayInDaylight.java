@@ -19,7 +19,7 @@ public abstract class LeavesBlockDecayInDaylight {
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockPos blockPos = pos.offset(Direction.UP);
-        if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay()) || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos) || !state.isBurnable()) return;
+        if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos) || !state.isBurnable()) return;
         world.removeBlock(pos, false);
     }
 }

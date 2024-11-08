@@ -16,6 +16,6 @@ public abstract class GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight {
     private static boolean hookCanSurvive(boolean original, BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.offset(Direction.UP);
         World realWorld = (World) world;
-        return (!WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getMyceliumAndGrassTurnToDirtInDaylightDay()) || realWorld.isNight() || !realWorld.isSkyVisible(blockPos)) && original;
+        return (!WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()) || realWorld.isNight() || !realWorld.isSkyVisible(blockPos)) && original;
     }
 }

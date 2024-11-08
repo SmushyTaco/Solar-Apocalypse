@@ -1,4 +1,5 @@
 package com.smushytaco.solar_apocalypse
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.configuration_support.ModConfiguration
 import com.smushytaco.solar_apocalypse.configuration_support.Phases
@@ -8,8 +9,13 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
-import net.minecraft.block.*
+import net.minecraft.block.AbstractBlock
+import net.minecraft.block.ColoredFallingBlock
+import net.minecraft.block.MapColor
 import net.minecraft.block.enums.NoteBlockInstrument
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.render.BufferBuilder
+import net.minecraft.client.render.VertexConsumer
 import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.item.BlockItem
@@ -24,11 +30,14 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.ColorCode
 import net.minecraft.util.Identifier
 import net.minecraft.world.World
+import org.joml.Matrix4f
+import kotlin.math.abs
+
 object SolarApocalypse : ModInitializer {
     fun isPhaseReady(phase: Phases, world: World): Boolean {
-        if (phase == Phases.MOBS_AND_PLAYERS_BURN_IN_DAYLIGHT_PHASE && world.isOldEnough(config.mobsAndPlayersBurnInDaylightDay)) return true
-        if (phase == Phases.BLOCKS_AND_WATER_ARE_AFFECTED_BY_DAYLIGHT_PHASE && world.isOldEnough(config.blocksAndWaterAreAffectedByDaylightDay)) return true
-        if (phase == Phases.MYCELIUM_AND_GRASS_TURN_TO_DIRT_IN_DAYLIGHT_PHASE && world.isOldEnough(config.myceliumAndGrassTurnToDirtInDaylightDay)) return true
+        if (phase == Phases.PHASE_THREE && world.isOldEnough(config.phaseThreeDay)) return true
+        if (phase == Phases.PHASE_TWO && world.isOldEnough(config.phaseTwoDay)) return true
+        if (phase == Phases.PHASE_ONE && world.isOldEnough(config.phaseOneDay)) return true
         return false
     }
     fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
@@ -49,7 +58,7 @@ object SolarApocalypse : ModInitializer {
         sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier.of(MOD_ID, "sunscreen")).get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             val world = newPlayer.world
-            if (!world.isOldEnough(config.mobsAndPlayersBurnInDaylightDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || !world.isSkyVisible(newPlayer.blockPos) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
+            if (!world.isOldEnough(config.phaseThreeDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || !world.isSkyVisible(newPlayer.blockPos) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
             newPlayer.addStatusEffect(StatusEffectInstance(sunscreen, 2400, 0, false, false, true))
         })
     }

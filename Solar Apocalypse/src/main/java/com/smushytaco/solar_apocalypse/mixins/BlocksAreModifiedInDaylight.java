@@ -26,7 +26,7 @@ public abstract class BlocksAreModifiedInDaylight {
     private void hookRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockPos blockPos = pos.offset(Direction.UP);
         if (world.isNight() || world.isRaining() || !world.isSkyVisible(blockPos)) return;
-        if (WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getBlocksAndWaterAreAffectedByDaylightDay())) {
+        if (WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay())) {
             if (state.isBurnable() && world.getBlockState(blockPos).isAir()) {
                 BlockState blockState = AbstractFireBlock.getState(world, blockPos);
                 world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
