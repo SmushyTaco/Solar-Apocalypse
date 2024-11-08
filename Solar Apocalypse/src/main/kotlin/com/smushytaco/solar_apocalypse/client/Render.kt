@@ -16,7 +16,7 @@ object Render {
         var multiplier: Float? = null
         val heatLayers = config.heatLayers.sorted()
         for (heatLayer in heatLayers) {
-            if (world.isOldEnough(heatLayer.day) && heatLayer.sunSizeMultiplier != null) {
+            if (world.isOldEnough(heatLayer.day)) {
                 multiplier = abs(heatLayer.sunSizeMultiplier)
                 break
             }
@@ -29,13 +29,14 @@ object Render {
                 else -> return original.call(instance, matrix, x, y, z)
             }
         }
+        if (multiplier == 0.0F) original.call(instance, matrix, x, y, z)
         return original.call(instance, matrix, x * multiplier, y, z * multiplier)
     }
     val Int.skyColor: Int
         get() {
             val world = MinecraftClient.getInstance().world ?: return this
             val heatLayers = config.heatLayers.sorted()
-            for (heatLayer in heatLayers) if (world.isOldEnough(heatLayer.day) && heatLayer.skyColor != null) return heatLayer.skyColor
+            for (heatLayer in heatLayers) if (heatLayer.enableCustomSkyColor && world.isOldEnough(heatLayer.day)) return heatLayer.skyColor
             return when {
                 config.enablePhaseThreeCustomSkyColor && world.isOldEnough(config.phaseThreeDay) -> config.phaseThreeSkyColor
                 config.enablePhaseTwoCustomSkyColor && world.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor

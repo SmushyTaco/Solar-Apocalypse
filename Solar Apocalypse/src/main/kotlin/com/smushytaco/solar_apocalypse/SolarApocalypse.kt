@@ -57,6 +57,12 @@ object SolarApocalypse : ModInitializer {
     }
     fun Entity.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y)
     fun BlockPos.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y.toDouble(), config.enableHeatLayers && config.enableHeatLayersOnBlocks)
+    val World.lightningMultiplier: Double
+        get() {
+            val lightningPhases = config.lightningPhases.sorted()
+            for (lightningPhase in lightningPhases) if (isOldEnough(lightningPhase.day)) return lightningPhase.multiplier.coerceAtLeast(1.0)
+            return 1.0
+        }
     val BlockState.blockChecks: Boolean
         get() = block === Blocks.COBBLESTONE || block === Blocks.COBBLESTONE_SLAB || block === Blocks.COBBLESTONE_STAIRS || block === Blocks.COBBLESTONE_WALL || block === Blocks.COBBLED_DEEPSLATE || block === Blocks.COBBLED_DEEPSLATE_SLAB || block === Blocks.COBBLED_DEEPSLATE_STAIRS || block === Blocks.COBBLED_DEEPSLATE_WALL || block === Blocks.CRACKED_DEEPSLATE_TILES || block === Blocks.CRACKED_DEEPSLATE_BRICKS || block === Blocks.CRACKED_STONE_BRICKS
     const val MOD_ID = "solar_apocalypse"
