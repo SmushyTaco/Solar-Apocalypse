@@ -11,11 +11,7 @@ import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SpreadableBlock.class)
-public abstract class GrassAndMyceliumDontGrowAndTurnToDirtInTheDaylight {
+public abstract class PhaseOne {
     @ModifyReturnValue(method = "canSurvive", at = @At("RETURN"))
-    private static boolean hookCanSurvive(boolean original, BlockState state, WorldView world, BlockPos pos) {
-        BlockPos blockPos = pos.offset(Direction.UP);
-        World realWorld = (World) world;
-        return (!WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()) || realWorld.isNight() || !realWorld.isSkyVisible(blockPos)) && original;
-    }
+    private static boolean hookCanSurvive(boolean original, BlockState state, WorldView world, BlockPos pos) { return (world instanceof World realWorld && (!WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()) || realWorld.isNight() || !realWorld.isSkyVisible(pos.offset(Direction.UP)))) && original; }
 }

@@ -7,7 +7,7 @@ import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 @Mixin(WaterFluid.class)
-public abstract class WaterIsFiniteAndEvaporatesInDaylight {
+public abstract class WaterIsFinite {
     @ModifyReturnValue(method = "isInfinite", at = @At("RETURN"))
     private boolean hookIsInfinite(boolean original, ServerWorld world) { return !WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && original; }
 }
