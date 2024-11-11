@@ -54,8 +54,6 @@ object BlocksAreModifiedLogic {
             }
             for (tagAndBlock in config.blockTransformationTagToBlock) {
                 if (!instance.block.containsTag(tagAndBlock.tag)) continue
-                println(instance.block.stringIdentifier)
-                println(Blocks.SPRUCE_LOG)
                 blockChanges(instance.block, tagAndBlock.block.block, serverWorld, blockPos, instance)
                 original.call(instance, serverWorld, blockPos, random)
                 return

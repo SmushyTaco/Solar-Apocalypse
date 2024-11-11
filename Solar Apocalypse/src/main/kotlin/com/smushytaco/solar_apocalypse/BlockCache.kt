@@ -4,4 +4,6 @@ interface BlockCache {
     val cacheTags: HashSet<String>
     val cacheCorrectClasses: HashSet<String>
     val cacheIncorrectClasses: HashSet<String>
+    var cacheShouldRandomTick: Boolean
+    var cacheShouldBurn: Boolean
 }

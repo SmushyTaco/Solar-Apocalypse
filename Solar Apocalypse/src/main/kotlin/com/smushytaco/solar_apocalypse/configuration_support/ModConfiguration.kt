@@ -37,6 +37,15 @@ class ModConfiguration: ConfigData {
         Blocks.PALE_OAK_SAPLING.stringIdentifier,
         Blocks.SWEET_BERRY_BUSH.stringIdentifier,
         Blocks.SUGAR_CANE.stringIdentifier,
+        Blocks.MOSS_BLOCK.stringIdentifier,
+        Blocks.PALE_HANGING_MOSS.stringIdentifier,
+        Blocks.MOSS_CARPET.stringIdentifier,
+        Blocks.AZALEA.stringIdentifier,
+        Blocks.FLOWERING_AZALEA.stringIdentifier,
+        Blocks.GLOW_LICHEN.stringIdentifier,
+        Blocks.CAVE_VINES.stringIdentifier,
+        Blocks.CAVE_VINES_PLANT.stringIdentifier,
+        Blocks.SPORE_BLOSSOM.stringIdentifier,
         Blocks.TORCH.stringIdentifier
     )
     val burnableBlockTags = arrayListOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors")
