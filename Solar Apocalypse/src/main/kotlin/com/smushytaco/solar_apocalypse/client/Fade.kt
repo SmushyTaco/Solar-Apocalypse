@@ -1,4 +1,5 @@
 package com.smushytaco.solar_apocalypse.client
-interface HeatOverlayFade {
+interface Fade {
     val overlayOpacity: Float
+    val fogFade: Float
 }

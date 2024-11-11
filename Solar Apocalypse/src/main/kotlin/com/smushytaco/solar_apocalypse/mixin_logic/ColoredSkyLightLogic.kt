@@ -4,11 +4,14 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse.blueToFloat
 import com.smushytaco.solar_apocalypse.SolarApocalypse.config
 import com.smushytaco.solar_apocalypse.SolarApocalypse.greenToFloat
 import com.smushytaco.solar_apocalypse.SolarApocalypse.redToFloat
-import com.smushytaco.solar_apocalypse.client.Render.skyColor
+import com.smushytaco.solar_apocalypse.mixin_logic.SkyColorLogic.skyColor
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gl.Uniform
 import net.minecraft.util.math.MathHelper
 import org.joml.Vector3f
+@Environment(EnvType.CLIENT)
 object ColoredSkyLightLogic {
     fun hookUpdate(instance: Uniform, vector: Vector3f, original: Operation<Void>) {
         if (!config.enableCustomSkyLight) {

@@ -46,6 +46,7 @@ class ModConfiguration: ConfigData {
         Blocks.CAVE_VINES.stringIdentifier,
         Blocks.CAVE_VINES_PLANT.stringIdentifier,
         Blocks.SPORE_BLOSSOM.stringIdentifier,
+        Blocks.COBWEB.stringIdentifier,
         Blocks.TORCH.stringIdentifier
     )
     val burnableBlockTags = arrayListOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors")
@@ -146,6 +147,11 @@ class ModConfiguration: ConfigData {
     val enableCustomSkyLight = true
     val enableHeatOverlay = true
     val heatOverlayFadeTime = 3.0
+    val apocalypseFogDay = 3.0
+    val apocalypseFadeTime = 3.0
+    val apocalypseFogMaximumDistance = 192.0F
+    val apocalypseFogMultiplier = 0.5F
+    val noCloudsDay = 7.0
     val enableHeatLayers = true
     val enableHeatLayersOnBlocks = false
     val heatLayers = listOf(HeatLayer(10.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(20.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(30.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(40.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(50.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))

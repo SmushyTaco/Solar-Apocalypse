@@ -85,7 +85,7 @@ object BlocksAreModifiedLogic {
                 return
             }
         }
-        if (serverWorld.getBlockState(blockPos).isBurnable && serverWorld.getBlockState(pos).isAir && serverWorld.isOldEnough(config.phaseTwoDay)) if (config.turnToAirInsteadOfBurn) serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState) else serverWorld.setBlockState(pos, AbstractFireBlock.getState(serverWorld, pos), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+        if (serverWorld.getBlockState(blockPos).isBurnable && serverWorld.getBlockState(pos).isAir && serverWorld.isOldEnough(config.phaseTwoDay)) if (config.turnToAirInsteadOfBurn) serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState) else if (!serverWorld.isOutOfHeightLimit(pos)) serverWorld.setBlockState(pos, AbstractFireBlock.getState(serverWorld, pos), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD) else serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState)
         original.call(instance, serverWorld, blockPos, random)
     }
 }
