@@ -16,10 +16,10 @@
     "FireSpread",
     "GreaterFireDamage",
     "LavaModification",
-    "LeavesTickModification",
     "LightningPhases",
     "PhaseOne",
     "PlayersBurn",
+    "TickAndBurnGuarantee",
     "WaterEvaporates",
     "WaterIsFinite"
   ],

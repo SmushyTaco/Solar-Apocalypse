@@ -121,10 +121,17 @@ object SolarApocalypse : ModInitializer {
             identifiers.addAll(config.burnableBlockClasses)
             identifiers.addAll(config.lavaBlockClasses)
             Registries.BLOCK.forEach {
-                if (ConfigurationLogic.isWhitelisted(it.defaultState.isBurnable, it, config.burnableBlockIdentifiers, config.burnableBlockTags, config.burnableBlockClasses)) (it.defaultState as BlockStateAccessor).setBurnable(true)
-                if (ConfigurationLogic.isWhitelisted(it.defaultState.isBurnable, it, identifiers, tags, classes)) {
-                    (it.defaultState as BlockStateAccessor).setTicksRandomly(true)
+                it as BlockCache
+                val blockState = it.defaultState
+                blockState as BlockStateAccessor
+                if (ConfigurationLogic.isWhitelisted(blockState.isBurnable, it, config.burnableBlockIdentifiers, config.burnableBlockTags, config.burnableBlockClasses)) {
+                    blockState.setBurnable(true)
+                    it.cacheShouldBurn = true
+                }
+                if (ConfigurationLogic.isWhitelisted(blockState.isBurnable, it, identifiers, tags, classes)) {
+                    blockState.setTicksRandomly(true)
                     (it as AbstractBlockAccessor).setRandomTicks(true)
+                    it.cacheShouldRandomTick = true
                 }
             }
         })
