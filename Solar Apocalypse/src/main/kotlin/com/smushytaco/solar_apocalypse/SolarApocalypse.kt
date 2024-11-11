@@ -66,7 +66,7 @@ object SolarApocalypse : ModInitializer {
         }
     fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseTwoDay) && !isNight && !isRaining && (isSkyVisible(pos.offset(Direction.UP)) || pos.shouldHeatLayerDamage(this))
     private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
-        if (!condition || !world.isOldEnough(config.phaseThreeDay)) return false
+        if (!condition) return false
         val heatLayers = config.heatLayers.sorted()
         for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
         return false

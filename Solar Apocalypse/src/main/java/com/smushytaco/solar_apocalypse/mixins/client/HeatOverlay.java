@@ -1,6 +1,6 @@
 package com.smushytaco.solar_apocalypse.mixins.client;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
-import com.smushytaco.solar_apocalypse.client.HeatOverlayFade;
+import com.smushytaco.solar_apocalypse.client.Fade;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -24,7 +24,7 @@ public abstract class HeatOverlay {
     private MinecraftClient client;
     @Inject(method = "renderMiscOverlays", at = @At("RETURN"))
     private void hookRenderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        if (!SolarApocalypse.INSTANCE.getConfig().getEnableHeatOverlay() || !(client.player instanceof HeatOverlayFade heatOverlayFade) || heatOverlayFade.getOverlayOpacity() == 0.0F) return;
+        if (!SolarApocalypse.INSTANCE.getConfig().getEnableHeatOverlay() || !(client.player instanceof Fade heatOverlayFade) || heatOverlayFade.getOverlayOpacity() == 0.0F) return;
         renderOverlay(context, SolarApocalypse.INSTANCE.getHEAT_OVERLAY(), heatOverlayFade.getOverlayOpacity());
     }
 }
