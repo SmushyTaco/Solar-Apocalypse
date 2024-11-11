@@ -6,8 +6,6 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractBlock.AbstractBlockState.class)
 public interface BlockStateAccessor {
-    @Accessor
-    void setTicksRandomly(boolean ticksRandomly);
     @Mutable
     @Final
     @Accessor

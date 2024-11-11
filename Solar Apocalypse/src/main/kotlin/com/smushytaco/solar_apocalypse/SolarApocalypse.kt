@@ -2,7 +2,6 @@ package com.smushytaco.solar_apocalypse
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.configuration_support.ConfigurationLogic
 import com.smushytaco.solar_apocalypse.configuration_support.ModConfiguration
-import com.smushytaco.solar_apocalypse.mixins.AbstractBlockAccessor
 import com.smushytaco.solar_apocalypse.mixins.BlockStateAccessor
 import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.annotation.Config
@@ -64,7 +63,7 @@ object SolarApocalypse : ModInitializer {
             stringToBlock[this] = block
             return block
         }
-    fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseTwoDay) && !isNight && !isRaining && (isSkyVisible(pos.offset(Direction.UP)) || pos.shouldHeatLayerDamage(this))
+    fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseOneDay) && !isNight && !isRaining && (isSkyVisible(pos.offset(Direction.UP)) || pos.shouldHeatLayerDamage(this))
     private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
         if (!condition) return false
         val heatLayers = config.heatLayers.sorted()
@@ -74,7 +73,7 @@ object SolarApocalypse : ModInitializer {
     fun Entity.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y)
     fun BlockPos.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y.toDouble(), config.enableHeatLayers && config.enableHeatLayersOnBlocks)
     fun isInstanceOfClassByName(block: Block, className: String): Boolean {
-        val name = if (className.contains('.')) "net.minecraft.$className" else className
+        val name = if (!className.contains('.')) "net.minecraft.$className" else className
         block as BlockCache
         if (block.cacheCorrectClasses.contains(name)) return true
         if (block.cacheIncorrectClasses.contains(name)) return false
@@ -107,7 +106,7 @@ object SolarApocalypse : ModInitializer {
             GsonConfigSerializer(definition, configClass)
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
-        ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted {
+        ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycleEvents.ServerStarting {
             val identifiers = arrayListOf<String>()
             identifiers.addAll(config.blockTransformationBlockToBlock.map { it.blockOne })
             identifiers.addAll(config.burnableBlockIdentifiers)
@@ -128,11 +127,7 @@ object SolarApocalypse : ModInitializer {
                     blockState.setBurnable(true)
                     it.cacheShouldBurn = true
                 }
-                if (ConfigurationLogic.isWhitelisted(blockState.isBurnable, it, identifiers, tags, classes)) {
-                    blockState.setTicksRandomly(true)
-                    (it as AbstractBlockAccessor).setRandomTicks(true)
-                    it.cacheShouldRandomTick = true
-                }
+                if (ConfigurationLogic.isWhitelisted(blockState.isBurnable, it, identifiers, tags, classes)) it.cacheShouldRandomTick = true
             }
         })
         Registry.register(Registries.BLOCK, DUST_IDENTIFIER, DUST)
@@ -142,7 +137,7 @@ object SolarApocalypse : ModInitializer {
         sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier.of(MOD_ID, "sunscreen")).get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             val world = newPlayer.world
-            if (!world.isOldEnough(config.phaseThreeDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || (!world.isSkyVisible(newPlayer.blockPos) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
+            if (!world.isOldEnough(config.phaseTwoDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || (!world.isSkyVisible(newPlayer.blockPos) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
             newPlayer.addStatusEffect(StatusEffectInstance(sunscreen, 2400, 0, false, false, true))
         })
     }

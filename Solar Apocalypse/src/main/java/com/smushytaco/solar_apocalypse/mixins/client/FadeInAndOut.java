@@ -28,7 +28,7 @@ public abstract class FadeInAndOut extends AbstractClientPlayerEntity implements
     @Inject(method = "tick", at = @At("RETURN"))
     private void hookTick(CallbackInfo ci) {
         ClientPlayerEntity clientPlayerEntity = (ClientPlayerEntity) (Object) this;
-        overlayOpacity = HeatOverlayFadeInAndOutLogic.INSTANCE.hookTick(clientPlayerEntity, overlayOpacity, SolarApocalypse.INSTANCE.getConfig().getHeatOverlayFadeTime(), SolarApocalypse.INSTANCE.getConfig().getPhaseThreeDay());
+        overlayOpacity = HeatOverlayFadeInAndOutLogic.INSTANCE.hookTick(clientPlayerEntity, overlayOpacity, SolarApocalypse.INSTANCE.getConfig().getHeatOverlayFadeTime(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay());
         fogFade = HeatOverlayFadeInAndOutLogic.INSTANCE.hookTick(clientPlayerEntity, fogFade, SolarApocalypse.INSTANCE.getConfig().getApocalypseFadeTime(), SolarApocalypse.INSTANCE.getConfig().getApocalypseFogDay());
     }
 }

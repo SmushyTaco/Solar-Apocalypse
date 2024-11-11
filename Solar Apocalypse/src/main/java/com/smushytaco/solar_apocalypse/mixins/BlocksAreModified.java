@@ -1,15 +1,17 @@
 package com.smushytaco.solar_apocalypse.mixins;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.smushytaco.solar_apocalypse.mixin_logic.BlocksAreModifiedLogic;
-import net.minecraft.block.*;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerWorld.class)
 public abstract class BlocksAreModified {
-    @WrapOperation(method = "tickChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;randomTick(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/random/Random;)V"))
-    private void hookRandomTick(BlockState instance, ServerWorld serverWorld, BlockPos blockPos, Random random, Operation<Void> original) { BlocksAreModifiedLogic.INSTANCE.hookRandomTick(instance, serverWorld, blockPos, random, original); }
+    @Inject(method = "tickChunk", at = @At("RETURN"))
+    private void hookRandomTick(WorldChunk chunk, int randomTickSpeed, CallbackInfo ci, @Local Profiler profiler, @Local(ordinal = 1) int i, @Local(ordinal = 2) int j) {
+        BlocksAreModifiedLogic.INSTANCE.apocalypseRandomTicks((ServerWorld) (Object) this, profiler, chunk, i, j);
+    }
 }

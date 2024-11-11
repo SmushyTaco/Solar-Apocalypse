@@ -9,7 +9,6 @@ object SkyColorLogic {
             val heatLayers = config.heatLayers.sorted()
             for (heatLayer in heatLayers) if (heatLayer.enableCustomSkyColor && world.isOldEnough(heatLayer.day)) return heatLayer.skyColor
             return when {
-                config.enablePhaseThreeCustomSkyColor && world.isOldEnough(config.phaseThreeDay) -> config.phaseThreeSkyColor
                 config.enablePhaseTwoCustomSkyColor && world.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
                 config.enablePhaseOneCustomSkyColor && world.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
                 else -> this

@@ -8,10 +8,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker
 import net.minecraft.block.Blocks
 @Config(name = SolarApocalypse.MOD_ID)
 class ModConfiguration: ConfigData {
-    val phaseOneDay = 3.0
-    val phaseOneSunSizeMultiplier = 1.5F
-    val phaseTwoDay = 5.0
-    val phaseTwoSunSizeMultiplier = 2.0F
+    val apocalypseRandomTickSpeed = 3
+    val phaseOneDay = 20.0
+    val phaseOneSunSizeMultiplier = 2.0F
     val turnToAirInsteadOfBurn = true
     val burnableBlockIdentifiers = arrayListOf(
         Blocks.CACTUS.stringIdentifier,
@@ -47,14 +46,19 @@ class ModConfiguration: ConfigData {
         Blocks.CAVE_VINES_PLANT.stringIdentifier,
         Blocks.SPORE_BLOSSOM.stringIdentifier,
         Blocks.COBWEB.stringIdentifier,
-        Blocks.TORCH.stringIdentifier
+        Blocks.TORCH.stringIdentifier,
+        Blocks.WALL_TORCH.stringIdentifier,
+        Blocks.GLASS.stringIdentifier,
+        Blocks.GLASS_PANE.stringIdentifier,
     )
-    val burnableBlockTags = arrayListOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors")
-    val burnableBlockClasses = arrayListOf("class_2261")
+    val burnableBlockTags = arrayListOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors", "minecraft:beds")
+    val burnableBlockClasses = arrayListOf("class_2261", "class_2504", "class_2506")
     val blockTransformationBlockToBlock = arrayListOf(
         BlockPair(Blocks.CLAY, Blocks.TERRACOTTA),
         BlockPair(Blocks.MUD, Blocks.DIRT),
         BlockPair(Blocks.DIRT_PATH, Blocks.DIRT),
+        BlockPair(Blocks.GRASS_BLOCK, Blocks.DIRT),
+        BlockPair(Blocks.MYCELIUM, Blocks.DIRT),
         BlockPair(Blocks.ROOTED_DIRT, Blocks.DIRT),
         BlockPair(Blocks.FARMLAND, Blocks.DIRT),
         BlockPair(Blocks.DIRT, Blocks.COARSE_DIRT),
@@ -114,8 +118,8 @@ class ModConfiguration: ConfigData {
     )
     val blockTransformationTagToBlock = arrayListOf(TagAndBlock("minecraft:leaves", Blocks.AIR))
     val blockTransformationClassToBlock = arrayListOf<ClassAndBlock>()
-    val phaseThreeDay = 7.0
-    val phaseThreeSunSizeMultiplier = 3.0F
+    val phaseTwoDay = 40.0
+    val phaseTwoSunSizeMultiplier = 3.0F
     val blocksTurnToLavaDay = -1.0
     val lavaBlockIdentifiers = listOf(
         Blocks.COBBLESTONE.stringIdentifier,
@@ -132,30 +136,27 @@ class ModConfiguration: ConfigData {
     )
     val lavaBlockTags = arrayListOf<String>()
     val lavaBlockClasses = arrayListOf<String>()
-    val cropGrowthSlowDownDay = 5.0
+    val cropGrowthSlowDownDay = 20.0
     val cropGrowthSlowDownMultiplier = 3
     val solarFireDamageMultiplier = 5.0F
     val enablePhaseOneCustomSkyColor = true
     @ColorPicker
-    val phaseOneSkyColor = rgbToInt(255, 165, 0)
+    val phaseOneSkyColor = rgbToInt(255, 140, 0)
     val enablePhaseTwoCustomSkyColor = true
     @ColorPicker
-    val phaseTwoSkyColor = rgbToInt(255, 140, 0)
-    val enablePhaseThreeCustomSkyColor = true
-    @ColorPicker
-    val phaseThreeSkyColor = rgbToInt(255, 69, 0)
+    val phaseTwoSkyColor = rgbToInt(255, 69, 0)
     val enableCustomSkyLight = true
     val enableHeatOverlay = true
     val heatOverlayFadeTime = 3.0
-    val apocalypseFogDay = 3.0
+    val apocalypseFogDay = 20.0
     val apocalypseFadeTime = 3.0
     val apocalypseFogMaximumDistance = 192.0F
     val apocalypseFogMultiplier = 0.5F
-    val noCloudsDay = 7.0
+    val noCloudsDay = 40.0
     val enableHeatLayers = true
     val enableHeatLayersOnBlocks = false
-    val heatLayers = listOf(HeatLayer(10.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(20.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(30.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(40.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(50.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))
+    val heatLayers = listOf(HeatLayer(60.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(80.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(100.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(120.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(140.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))
     val enableLightningPhases = true
-    val lightningPhases = listOf(LightningPhase(10.0, 2.0), LightningPhase(20.0, 4.0), LightningPhase(30.0, 8.0), LightningPhase(40.0, 16.0), LightningPhase(50.0, 32.0))
+    val lightningPhases = listOf(LightningPhase(60.0, 2.0), LightningPhase(80.0, 4.0), LightningPhase(100.0, 8.0), LightningPhase(120.0, 16.0), LightningPhase(140.0, 32.0))
     val dimensionWhitelist = listOf("minecraft:overworld")
 }

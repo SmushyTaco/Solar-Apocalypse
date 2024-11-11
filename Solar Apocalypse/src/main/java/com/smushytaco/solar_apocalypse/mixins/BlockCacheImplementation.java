@@ -1,11 +1,9 @@
 package com.smushytaco.solar_apocalypse.mixins;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.BlockCache;
 import net.minecraft.block.AbstractBlock;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
 import java.util.HashSet;
 @Mixin(AbstractBlock.class)
 public abstract class BlockCacheImplementation implements BlockCache {
@@ -39,6 +37,4 @@ public abstract class BlockCacheImplementation implements BlockCache {
     public boolean getCacheShouldBurn() { return cacheShouldBurn; }
     @Override
     public void setCacheShouldBurn(boolean b) { cacheShouldBurn = b; }
-    @ModifyReturnValue(method = "hasRandomTicks", at = @At("RETURN"))
-    private boolean hookHasRandomTicks(boolean original) { return original || cacheShouldRandomTick; }
 }

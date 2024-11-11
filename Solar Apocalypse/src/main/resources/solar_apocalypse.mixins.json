@@ -6,11 +6,12 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AbstractBlockAccessor",
     "AllMobsBurnInDaylight",
     "BlockCacheImplementation",
     "BlocksAreModified",
     "BlockStateAccessor",
+    "BlockStateCounterApocalypseTicks",
+    "ChuckSectionApocalypseTicks",
     "CropGrowthSlowDown",
     "ExperienceOrbsItemsAndProjectilesBurn",
     "FireSpread",
@@ -20,7 +21,6 @@
     "PhaseOne",
     "PlayersBurn",
     "TickAndBurnGuarantee",
-    "WaterEvaporates",
     "WaterIsFinite"
   ],
   "client": [
@@ -29,7 +29,7 @@
     "client.ApocalypseFog",
     "client.BigSun",
     "client.ColoredSkyLight",
-    "client.HeatOverlay",
-    "client.FadeInAndOut"
+    "client.FadeInAndOut",
+    "client.HeatOverlay"
   ]
 }
