@@ -23,7 +23,7 @@ public abstract class GreaterFireDamage extends Entity {
     public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
     @ModifyVariable(method = "damage", at = @At("HEAD"), index = 3, argsOnly = true)
     private float modifyDamageAmount(float value, ServerWorld world, DamageSource source) {
-        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseThreeDay()) || !isAlive() || getWorld().isRaining() || getWorld().isNight() || getWorld().isClient || (!getWorld().isSkyVisible(getBlockPos()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, getWorld()))) return value;
+        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || !isAlive() || getWorld().isRaining() || getWorld().isNight() || getWorld().isClient || (!getWorld().isSkyVisible(getBlockPos()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, getWorld()))) return value;
         return value * MathHelper.clamp(SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier(), 1.0F, Float.MAX_VALUE);
     }
 }
