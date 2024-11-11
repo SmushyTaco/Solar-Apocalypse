@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
-public abstract class PlayersBurnDuringTheDaylight extends LivingEntity {
-    protected PlayersBurnDuringTheDaylight(EntityType<? extends LivingEntity> entityType, World world) { super(entityType, world); }
+public abstract class PlayersBurn extends LivingEntity {
+    protected PlayersBurn(EntityType<? extends LivingEntity> entityType, World world) { super(entityType, world); }
     @Shadow
     public abstract boolean isCreative();
     @Inject(method = "tickMovement", at = @At("HEAD"))

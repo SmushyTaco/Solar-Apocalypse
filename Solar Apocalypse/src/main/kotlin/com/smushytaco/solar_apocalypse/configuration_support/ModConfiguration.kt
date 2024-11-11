@@ -1,24 +1,128 @@
 package com.smushytaco.solar_apocalypse.configuration_support
 import com.smushytaco.solar_apocalypse.SolarApocalypse
 import com.smushytaco.solar_apocalypse.SolarApocalypse.rgbToInt
+import com.smushytaco.solar_apocalypse.SolarApocalypse.stringIdentifier
 import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker
-import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.EnumHandler
+import net.minecraft.block.Blocks
 @Config(name = SolarApocalypse.MOD_ID)
 class ModConfiguration: ConfigData {
     val phaseOneDay = 3.0
     val phaseOneSunSizeMultiplier = 1.5F
     val phaseTwoDay = 5.0
     val phaseTwoSunSizeMultiplier = 2.0F
+    val turnToAirInsteadOfBurn = true
+    val burnableBlockIdentifiers = arrayListOf(
+        Blocks.CACTUS.stringIdentifier,
+        Blocks.PUMPKIN.stringIdentifier,
+        Blocks.CARVED_PUMPKIN.stringIdentifier,
+        Blocks.JACK_O_LANTERN.stringIdentifier,
+        Blocks.MELON.stringIdentifier,
+        Blocks.HAY_BLOCK.stringIdentifier,
+        Blocks.MUSHROOM_STEM.stringIdentifier,
+        Blocks.BROWN_MUSHROOM.stringIdentifier,
+        Blocks.BROWN_MUSHROOM_BLOCK.stringIdentifier,
+        Blocks.RED_MUSHROOM.stringIdentifier,
+        Blocks.RED_MUSHROOM_BLOCK.stringIdentifier,
+        Blocks.COCOA.stringIdentifier,
+        Blocks.MANGROVE_PROPAGULE.stringIdentifier,
+        Blocks.OAK_SAPLING.stringIdentifier,
+        Blocks.SPRUCE_SAPLING.stringIdentifier,
+        Blocks.BIRCH_SAPLING.stringIdentifier,
+        Blocks.JUNGLE_SAPLING.stringIdentifier,
+        Blocks.ACACIA_SAPLING.stringIdentifier,
+        Blocks.CHERRY_SAPLING.stringIdentifier,
+        Blocks.DARK_OAK_SAPLING.stringIdentifier,
+        Blocks.PALE_OAK_SAPLING.stringIdentifier,
+        Blocks.SWEET_BERRY_BUSH.stringIdentifier,
+        Blocks.SUGAR_CANE.stringIdentifier,
+        Blocks.TORCH.stringIdentifier
+    )
+    val burnableBlockTags = arrayListOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors")
+    val burnableBlockClasses = arrayListOf("class_2261")
+    val blockTransformationBlockToBlock = arrayListOf(
+        BlockPair(Blocks.CLAY, Blocks.TERRACOTTA),
+        BlockPair(Blocks.MUD, Blocks.DIRT),
+        BlockPair(Blocks.DIRT_PATH, Blocks.DIRT),
+        BlockPair(Blocks.ROOTED_DIRT, Blocks.DIRT),
+        BlockPair(Blocks.FARMLAND, Blocks.DIRT),
+        BlockPair(Blocks.DIRT, Blocks.COARSE_DIRT),
+        BlockPair(Blocks.COARSE_DIRT, Blocks.SAND),
+        BlockPair(Blocks.BLUE_ICE, Blocks.PACKED_ICE),
+        BlockPair(Blocks.PACKED_ICE, Blocks.ICE),
+        BlockPair(Blocks.ICE, Blocks.WATER),
+        BlockPair(Blocks.STONE_BRICKS, Blocks.CRACKED_STONE_BRICKS),
+        BlockPair(Blocks.WET_SPONGE, Blocks.SPONGE),
+        BlockPair(Blocks.INFESTED_STONE, Blocks.STONE),
+        BlockPair(Blocks.INFESTED_COBBLESTONE, Blocks.COBBLESTONE),
+        BlockPair(Blocks.INFESTED_STONE_BRICKS, Blocks.STONE_BRICKS),
+        BlockPair(Blocks.INFESTED_MOSSY_STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS),
+        BlockPair(Blocks.INFESTED_CRACKED_STONE_BRICKS, Blocks.CRACKED_STONE_BRICKS),
+        BlockPair(Blocks.INFESTED_CHISELED_STONE_BRICKS, Blocks.CHISELED_STONE_BRICKS),
+        BlockPair(Blocks.INFESTED_DEEPSLATE, Blocks.DEEPSLATE),
+        BlockPair(Blocks.STONE, Blocks.COBBLESTONE),
+        BlockPair(Blocks.STONE_SLAB, Blocks.COBBLESTONE_SLAB),
+        BlockPair(Blocks.STONE_STAIRS, Blocks.COBBLESTONE_STAIRS),
+        BlockPair(Blocks.DEEPSLATE, Blocks.COBBLED_DEEPSLATE),
+        BlockPair(Blocks.DEEPSLATE_BRICKS, Blocks.CRACKED_DEEPSLATE_BRICKS),
+        BlockPair(Blocks.DEEPSLATE_TILES, Blocks.CRACKED_DEEPSLATE_TILES),
+        BlockPair(Blocks.MOSSY_COBBLESTONE, Blocks.COBBLESTONE),
+        BlockPair(Blocks.MOSSY_COBBLESTONE_SLAB, Blocks.COBBLESTONE_SLAB),
+        BlockPair(Blocks.MOSSY_COBBLESTONE_STAIRS, Blocks.COBBLESTONE_STAIRS),
+        BlockPair(Blocks.MOSSY_COBBLESTONE_WALL, Blocks.COBBLESTONE_WALL),
+        BlockPair(Blocks.MOSSY_STONE_BRICKS, Blocks.STONE_BRICKS),
+        BlockPair(Blocks.MOSSY_STONE_BRICK_SLAB, Blocks.STONE_BRICK_SLAB),
+        BlockPair(Blocks.MOSSY_STONE_BRICK_STAIRS, Blocks.STONE_BRICK_STAIRS),
+        BlockPair(Blocks.MOSSY_STONE_BRICK_WALL, Blocks.STONE_BRICK_WALL),
+        BlockPair(Blocks.SNOW, Blocks.WATER),
+        BlockPair(Blocks.SNOW_BLOCK, Blocks.WATER),
+        BlockPair(Blocks.POWDER_SNOW, Blocks.WATER),
+        BlockPair(Blocks.SAND, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.GRAVEL, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.RED_SAND, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SANDSTONE_STAIRS, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SANDSTONE_WALL, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.CHISELED_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SMOOTH_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SMOOTH_SANDSTONE_STAIRS, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SMOOTH_SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.CUT_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.CUT_SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.RED_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.RED_SANDSTONE_STAIRS, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.RED_SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.RED_SANDSTONE_WALL, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.CHISELED_RED_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SMOOTH_RED_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SMOOTH_RED_SANDSTONE_STAIRS, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.SMOOTH_RED_SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.CUT_RED_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
+        BlockPair(Blocks.CUT_RED_SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString())
+    )
+    val blockTransformationTagToBlock = arrayListOf(TagAndBlock("minecraft:leaves", Blocks.AIR))
+    val blockTransformationClassToBlock = arrayListOf<ClassAndBlock>()
     val phaseThreeDay = 7.0
     val phaseThreeSunSizeMultiplier = 3.0F
-    @EnumHandler(option = EnumHandler.EnumDisplayOption.BUTTON)
-    val coarseDirtTurnsToSandPhase = Phases.NONE
-    @EnumHandler(option = EnumHandler.EnumDisplayOption.BUTTON)
-    val cobbledAndCrackedStonesTurnsToLavaPhase = Phases.NONE
-    @EnumHandler(option = EnumHandler.EnumDisplayOption.BUTTON)
-    val cropGrowthSlowDownPhase = Phases.PHASE_TWO
+    val blocksTurnToLavaDay = -1.0
+    val lavaBlockIdentifiers = listOf(
+        Blocks.COBBLESTONE.stringIdentifier,
+        Blocks.COBBLESTONE_SLAB.stringIdentifier,
+        Blocks.COBBLESTONE_STAIRS.stringIdentifier,
+        Blocks.COBBLESTONE_WALL.stringIdentifier,
+        Blocks.COBBLED_DEEPSLATE.stringIdentifier,
+        Blocks.COBBLED_DEEPSLATE_SLAB.stringIdentifier,
+        Blocks.COBBLED_DEEPSLATE_STAIRS.stringIdentifier,
+        Blocks.COBBLED_DEEPSLATE_WALL.stringIdentifier,
+        Blocks.CRACKED_DEEPSLATE_TILES.stringIdentifier,
+        Blocks.CRACKED_DEEPSLATE_BRICKS.stringIdentifier,
+        Blocks.CRACKED_STONE_BRICKS.stringIdentifier
+    )
+    val lavaBlockTags = arrayListOf<String>()
+    val lavaBlockClasses = arrayListOf<String>()
+    val cropGrowthSlowDownDay = 5.0
     val cropGrowthSlowDownMultiplier = 3
     val solarFireDamageMultiplier = 5.0F
     val enablePhaseOneCustomSkyColor = true
@@ -31,6 +135,8 @@ class ModConfiguration: ConfigData {
     @ColorPicker
     val phaseThreeSkyColor = rgbToInt(255, 69, 0)
     val enableCustomSkyLight = true
+    val enableHeatOverlay = true
+    val heatOverlayFadeTime = 3.0
     val enableHeatLayers = true
     val enableHeatLayersOnBlocks = false
     val heatLayers = listOf(HeatLayer(10.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(20.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(30.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(40.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(50.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))
