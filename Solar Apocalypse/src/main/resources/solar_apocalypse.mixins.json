@@ -11,6 +11,7 @@
     "BlocksAreModified",
     "BlockStateAccessor",
     "BlockStateCounterApocalypseTicks",
+    "BurnGuarantee",
     "ChuckSectionApocalypseTicks",
     "CropGrowthSlowDown",
     "ExperienceOrbsItemsAndProjectilesBurn",
@@ -20,7 +21,6 @@
     "LightningPhases",
     "PhaseOne",
     "PlayersBurn",
-    "TickAndBurnGuarantee",
     "WaterIsFinite"
   ],
   "client": [
