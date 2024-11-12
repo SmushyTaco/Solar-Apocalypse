@@ -24,6 +24,7 @@ import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.util.ActionResult
 import net.minecraft.util.ColorCode
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -101,35 +102,35 @@ object SolarApocalypse : ModInitializer {
         private set
     lateinit var sunscreen: RegistryEntry.Reference<StatusEffect>
         private set
+    private fun calculateBlocks() {
+        val identifiers = arrayListOf<String>()
+        identifiers.addAll(config.blockTransformationBlockToBlock.map { it.blockOne })
+        identifiers.addAll(config.burnableBlockIdentifiers)
+        identifiers.addAll(config.lavaBlockIdentifiers)
+        val tags = arrayListOf<String>()
+        identifiers.addAll(config.blockTransformationTagToBlock.map { it.tag })
+        identifiers.addAll(config.burnableBlockTags)
+        identifiers.addAll(config.lavaBlockTags)
+        val classes = arrayListOf<String>()
+        identifiers.addAll(config.blockTransformationClassToBlock.map { it.className })
+        identifiers.addAll(config.burnableBlockClasses)
+        identifiers.addAll(config.lavaBlockClasses)
+        Registries.BLOCK.forEach {
+            it as BlockCache
+            val isBurnable = (it.defaultState as BlockStateAccessor).burnable
+            it.cacheShouldBurn = ConfigurationLogic.isWhitelisted(isBurnable, it, config.burnableBlockIdentifiers, config.burnableBlockTags, config.burnableBlockClasses)
+            it.cacheShouldRandomTick = ConfigurationLogic.isWhitelisted(isBurnable, it, identifiers, tags, classes)
+        }
+    }
     override fun onInitialize() {
         AutoConfig.register(ModConfiguration::class.java) { definition: Config, configClass: Class<ModConfiguration> ->
             GsonConfigSerializer(definition, configClass)
+        }.registerSaveListener { _, _ ->
+            calculateBlocks()
+            ActionResult.PASS
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
-        ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycleEvents.ServerStarting {
-            val identifiers = arrayListOf<String>()
-            identifiers.addAll(config.blockTransformationBlockToBlock.map { it.blockOne })
-            identifiers.addAll(config.burnableBlockIdentifiers)
-            identifiers.addAll(config.lavaBlockIdentifiers)
-            val tags = arrayListOf<String>()
-            identifiers.addAll(config.blockTransformationTagToBlock.map { it.tag })
-            identifiers.addAll(config.burnableBlockTags)
-            identifiers.addAll(config.lavaBlockTags)
-            val classes = arrayListOf<String>()
-            identifiers.addAll(config.blockTransformationClassToBlock.map { it.className })
-            identifiers.addAll(config.burnableBlockClasses)
-            identifiers.addAll(config.lavaBlockClasses)
-            Registries.BLOCK.forEach {
-                it as BlockCache
-                val blockState = it.defaultState
-                blockState as BlockStateAccessor
-                if (ConfigurationLogic.isWhitelisted(blockState.isBurnable, it, config.burnableBlockIdentifiers, config.burnableBlockTags, config.burnableBlockClasses)) {
-                    blockState.setBurnable(true)
-                    it.cacheShouldBurn = true
-                }
-                if (ConfigurationLogic.isWhitelisted(blockState.isBurnable, it, identifiers, tags, classes)) it.cacheShouldRandomTick = true
-            }
-        })
+        ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycleEvents.ServerStarting { calculateBlocks() })
         Registry.register(Registries.BLOCK, DUST_IDENTIFIER, DUST)
         val dustBlockItem = Registry.register(Registries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Settings().useBlockPrefixedTranslationKey().registryKey(RegistryKey.of(RegistryKeys.ITEM, DUST_IDENTIFIER))))
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.add(dustBlockItem) })
