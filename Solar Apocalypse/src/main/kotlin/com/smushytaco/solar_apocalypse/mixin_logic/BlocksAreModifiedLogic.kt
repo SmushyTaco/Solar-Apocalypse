@@ -1,6 +1,7 @@
 package com.smushytaco.solar_apocalypse.mixin_logic
 import com.smushytaco.solar_apocalypse.ApocalypseTickable
 import com.smushytaco.solar_apocalypse.BlockCache
+import com.smushytaco.solar_apocalypse.SolarApocalypse
 import com.smushytaco.solar_apocalypse.SolarApocalypse.block
 import com.smushytaco.solar_apocalypse.SolarApocalypse.config
 import com.smushytaco.solar_apocalypse.SolarApocalypse.containsTag
@@ -14,7 +15,6 @@ import net.minecraft.block.enums.SlabType
 import net.minecraft.block.enums.StairShape
 import net.minecraft.block.enums.WallShape
 import net.minecraft.fluid.Fluids
-import net.minecraft.fluid.WaterFluid
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
@@ -59,7 +59,7 @@ object BlocksAreModifiedLogic {
                 profiler.push("randomApocalypseTick")
                 val blockState = chunkSection.getBlockState(blockPos.x - startX, blockPos.y - blockCoordinate, blockPos.z - startZ)
                 if ((blockState.block as BlockCache).cacheShouldRandomTick) randomTick(world, blockState, blockPos)
-                if (blockState.fluidState.fluid is WaterFluid && blockState.fluidState.fluid == Fluids.WATER) WaterEvaporatesLogic.randomTick(world, blockState, blockPos)
+                if (blockState.fluidState.fluid == Fluids.WATER) WaterEvaporatesLogic.randomTick(world, blockState, blockPos)
                 profiler.pop()
             }
         }
@@ -69,34 +69,32 @@ object BlocksAreModifiedLogic {
         val pos = blockPos.offset(Direction.UP)
         if (serverWorld.isNight || serverWorld.isRaining || (!serverWorld.isSkyVisible(pos) && !blockPos.shouldHeatLayerDamage(serverWorld))) return
         if (serverWorld.isOldEnough(config.phaseOneDay)) {
-            for (blockPair in config.blockTransformationBlockToBlock) {
-                if (blockState.block.stringIdentifier != blockPair.blockOne) continue
-                blockChanges(blockState.block, blockPair.blockTwo.block, serverWorld, blockPos, blockState)
+            SolarApocalypse.blockTransformationBlockToBlockMap[blockState.block.stringIdentifier]?.let {
+                blockChanges(blockState.block, it.block, serverWorld, blockPos, blockState)
                 return
             }
-            for (tagAndBlock in config.blockTransformationTagToBlock) {
+            for (tagAndBlock in SolarApocalypse.blockTransformationTagToBlock) {
                 if (!blockState.block.containsTag(tagAndBlock.tag)) continue
                 blockChanges(blockState.block, tagAndBlock.block.block, serverWorld, blockPos, blockState)
                 return
             }
-            for (classAndBlock in config.blockTransformationClassToBlock) {
+            for (classAndBlock in SolarApocalypse.blockTransformationClassToBlock) {
                 if (!isInstanceOfClassByName(blockState.block, classAndBlock.className)) continue
                 blockChanges(blockState.block, classAndBlock.block.block, serverWorld, blockPos, blockState)
                 return
             }
         }
         if (serverWorld.isOldEnough(config.blocksTurnToLavaDay)) {
-            for (block in config.lavaBlockIdentifiers) {
-                if (blockState.block.stringIdentifier != block) continue
+            if (SolarApocalypse.lavaBlockIdentifiers.contains(blockState.block.stringIdentifier)) {
                 serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
                 return
             }
-            for (tag in config.lavaBlockTags) {
+            for (tag in SolarApocalypse.lavaBlockTags) {
                 if (!blockState.block.containsTag(tag)) continue
                 serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
                 return
             }
-            for (className in config.lavaBlockClasses) {
+            for (className in SolarApocalypse.lavaBlockClasses) {
                 if (!isInstanceOfClassByName(blockState.block, className)) continue
                 serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
                 return
