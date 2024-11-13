@@ -58,6 +58,7 @@ class ModConfiguration: ConfigData {
         BlockPair(Blocks.MUD, Blocks.DIRT),
         BlockPair(Blocks.DIRT_PATH, Blocks.DIRT),
         BlockPair(Blocks.GRASS_BLOCK, Blocks.DIRT),
+        BlockPair(Blocks.PODZOL, Blocks.DIRT),
         BlockPair(Blocks.MYCELIUM, Blocks.DIRT),
         BlockPair(Blocks.ROOTED_DIRT, Blocks.DIRT),
         BlockPair(Blocks.FARMLAND, Blocks.DIRT),
