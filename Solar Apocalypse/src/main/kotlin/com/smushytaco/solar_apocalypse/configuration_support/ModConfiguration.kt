@@ -12,7 +12,7 @@ class ModConfiguration: ConfigData {
     val phaseOneDay = 20.0
     val phaseOneSunSizeMultiplier = 2.0F
     val turnToAirInsteadOfBurn = true
-    val burnableBlockIdentifiers = arrayListOf(
+    val burnableBlockIdentifiers = listOf(
         Blocks.CACTUS.stringIdentifier,
         Blocks.PUMPKIN.stringIdentifier,
         Blocks.CARVED_PUMPKIN.stringIdentifier,
@@ -51,9 +51,9 @@ class ModConfiguration: ConfigData {
         Blocks.GLASS.stringIdentifier,
         Blocks.GLASS_PANE.stringIdentifier,
     )
-    val burnableBlockTags = arrayListOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors", "minecraft:beds")
-    val burnableBlockClasses = arrayListOf("class_2261", "class_2504", "class_2506")
-    val blockTransformationBlockToBlock = arrayListOf(
+    val burnableBlockTags = listOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors", "minecraft:beds")
+    val burnableBlockClasses = listOf("class_2261", "class_2504", "class_2506")
+    val blockTransformationBlockToBlock = listOf(
         BlockPair(Blocks.CLAY, Blocks.TERRACOTTA),
         BlockPair(Blocks.MUD, Blocks.DIRT),
         BlockPair(Blocks.DIRT_PATH, Blocks.DIRT),
@@ -116,8 +116,8 @@ class ModConfiguration: ConfigData {
         BlockPair(Blocks.CUT_RED_SANDSTONE, SolarApocalypse.DUST_IDENTIFIER.toString()),
         BlockPair(Blocks.CUT_RED_SANDSTONE_SLAB, SolarApocalypse.DUST_IDENTIFIER.toString())
     )
-    val blockTransformationTagToBlock = arrayListOf(TagAndBlock("minecraft:leaves", Blocks.AIR))
-    val blockTransformationClassToBlock = arrayListOf<ClassAndBlock>()
+    val blockTransformationTagToBlock = listOf(TagAndBlock("minecraft:leaves", Blocks.AIR))
+    val blockTransformationClassToBlock = listOf<ClassAndBlock>()
     val phaseTwoDay = 40.0
     val phaseTwoSunSizeMultiplier = 3.0F
     val blocksTurnToLavaDay = -1.0
@@ -134,8 +134,8 @@ class ModConfiguration: ConfigData {
         Blocks.CRACKED_DEEPSLATE_BRICKS.stringIdentifier,
         Blocks.CRACKED_STONE_BRICKS.stringIdentifier
     )
-    val lavaBlockTags = arrayListOf<String>()
-    val lavaBlockClasses = arrayListOf<String>()
+    val lavaBlockTags = listOf<String>()
+    val lavaBlockClasses = listOf<String>()
     val cropGrowthSlowDownDay = 20.0
     val cropGrowthSlowDownMultiplier = 3
     val solarFireDamageMultiplier = 5.0F

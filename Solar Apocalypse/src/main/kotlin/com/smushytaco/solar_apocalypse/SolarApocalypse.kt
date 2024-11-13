@@ -1,7 +1,6 @@
 package com.smushytaco.solar_apocalypse
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
-import com.smushytaco.solar_apocalypse.configuration_support.ConfigurationLogic
-import com.smushytaco.solar_apocalypse.configuration_support.ModConfiguration
+import com.smushytaco.solar_apocalypse.configuration_support.*
 import com.smushytaco.solar_apocalypse.mixins.BlockStateAccessor
 import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.annotation.Config
@@ -67,7 +66,6 @@ object SolarApocalypse : ModInitializer {
     fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseOneDay) && !isNight && !isRaining && (isSkyVisible(pos.offset(Direction.UP)) || pos.shouldHeatLayerDamage(this))
     private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
         if (!condition) return false
-        val heatLayers = config.heatLayers.sorted()
         for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
         return false
     }
@@ -92,44 +90,82 @@ object SolarApocalypse : ModInitializer {
     }
     val World.lightningMultiplier: Double
         get() {
-            val lightningPhases = config.lightningPhases.sorted()
             for (lightningPhase in lightningPhases) if (isOldEnough(lightningPhase.day)) return lightningPhase.multiplier.coerceAtLeast(1.0)
             return 1.0
         }
     const val MOD_ID = "solar_apocalypse"
     val HEAT_OVERLAY: Identifier = Identifier.of(MOD_ID, "textures/misc/heat_overlay_outline.png")
+    private var burnableBlockIdentifiers = hashSetOf<String>()
+    private var burnableBlockTags = hashSetOf<String>()
+    private var burnableBlockClasses = hashSetOf<String>()
+    private var blockTransformationBlockToBlock = hashSetOf<BlockPair>()
+    var blockTransformationBlockToBlockMap = hashMapOf<String, String>()
+        private set
+    var blockTransformationTagToBlock = hashSetOf<TagAndBlock>()
+        private set
+    var blockTransformationClassToBlock = hashSetOf<ClassAndBlock>()
+        private set
+    var lavaBlockIdentifiers = hashSetOf<String>()
+        private set
+    var lavaBlockTags = hashSetOf<String>()
+        private set
+    var lavaBlockClasses = hashSetOf<String>()
+        private set
+    var heatLayers = listOf<HeatLayer>()
+        private set
+    private var lightningPhases = listOf<LightningPhase>()
+    var dimensionWhitelist = hashSetOf<String>()
+        private set
     lateinit var config: ModConfiguration
         private set
     lateinit var sunscreen: RegistryEntry.Reference<StatusEffect>
         private set
     private fun calculateBlocks() {
-        val identifiers = arrayListOf<String>()
-        identifiers.addAll(config.blockTransformationBlockToBlock.map { it.blockOne })
-        identifiers.addAll(config.burnableBlockIdentifiers)
-        identifiers.addAll(config.lavaBlockIdentifiers)
-        val tags = arrayListOf<String>()
-        identifiers.addAll(config.blockTransformationTagToBlock.map { it.tag })
-        identifiers.addAll(config.burnableBlockTags)
-        identifiers.addAll(config.lavaBlockTags)
-        val classes = arrayListOf<String>()
-        identifiers.addAll(config.blockTransformationClassToBlock.map { it.className })
-        identifiers.addAll(config.burnableBlockClasses)
-        identifiers.addAll(config.lavaBlockClasses)
+        val identifiers = hashSetOf<String>()
+        identifiers.addAll(blockTransformationBlockToBlock.map { it.blockOne })
+        identifiers.addAll(burnableBlockIdentifiers)
+        identifiers.addAll(lavaBlockIdentifiers)
+        val tags = hashSetOf<String>()
+        identifiers.addAll(blockTransformationTagToBlock.map { it.tag })
+        identifiers.addAll(burnableBlockTags)
+        identifiers.addAll(lavaBlockTags)
+        val classes = hashSetOf<String>()
+        identifiers.addAll(blockTransformationClassToBlock.map { it.className })
+        identifiers.addAll(burnableBlockClasses)
+        identifiers.addAll(lavaBlockClasses)
         Registries.BLOCK.forEach {
             it as BlockCache
             val isBurnable = (it.defaultState as BlockStateAccessor).burnable
-            it.cacheShouldBurn = ConfigurationLogic.isWhitelisted(isBurnable, it, config.burnableBlockIdentifiers, config.burnableBlockTags, config.burnableBlockClasses)
-            it.cacheShouldRandomTick = ConfigurationLogic.isWhitelisted(isBurnable, it, identifiers, tags, classes)
+            it.cacheShouldBurn = ConfigurationLogic.isWhitelisted(isBurnable, it, burnableBlockIdentifiers, burnableBlockTags, burnableBlockClasses)
+            it.cacheShouldRandomTick = ConfigurationLogic.isWhitelisted(isBurnable, it, identifiers, tags, classes) || it == Blocks.WATER
         }
+    }
+    private fun configCache(modConfiguration: ModConfiguration) {
+        burnableBlockIdentifiers = modConfiguration.burnableBlockIdentifiers.toHashSet()
+        burnableBlockTags = modConfiguration.burnableBlockTags.toHashSet()
+        burnableBlockClasses = modConfiguration.burnableBlockClasses.toHashSet()
+        blockTransformationBlockToBlock = modConfiguration.blockTransformationBlockToBlock.toHashSet()
+        blockTransformationBlockToBlockMap = hashMapOf()
+        blockTransformationBlockToBlock.forEach { blockTransformationBlockToBlockMap[it.blockOne] = it.blockTwo }
+        blockTransformationTagToBlock = modConfiguration.blockTransformationTagToBlock.toHashSet()
+        blockTransformationClassToBlock = modConfiguration.blockTransformationClassToBlock.toHashSet()
+        lavaBlockIdentifiers = modConfiguration.lavaBlockIdentifiers.toHashSet()
+        lavaBlockTags = modConfiguration.lavaBlockTags.toHashSet()
+        lavaBlockClasses = modConfiguration.lavaBlockClasses.toHashSet()
+        heatLayers = modConfiguration.heatLayers.sorted()
+        lightningPhases = modConfiguration.lightningPhases.sorted()
+        dimensionWhitelist = modConfiguration.dimensionWhitelist.toHashSet()
     }
     override fun onInitialize() {
         AutoConfig.register(ModConfiguration::class.java) { definition: Config, configClass: Class<ModConfiguration> ->
             GsonConfigSerializer(definition, configClass)
-        }.registerSaveListener { _, _ ->
+        }.registerSaveListener { _, modConfiguration ->
+            configCache(modConfiguration)
             calculateBlocks()
             ActionResult.PASS
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
+        configCache(config)
         ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycleEvents.ServerStarting { calculateBlocks() })
         Registry.register(Registries.BLOCK, DUST_IDENTIFIER, DUST)
         val dustBlockItem = Registry.register(Registries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Settings().useBlockPrefixedTranslationKey().registryKey(RegistryKey.of(RegistryKeys.ITEM, DUST_IDENTIFIER))))
