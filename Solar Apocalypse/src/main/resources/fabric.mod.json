@@ -23,6 +23,12 @@
         "value": "com.smushytaco.solar_apocalypse.SolarApocalypse"
       }
     ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.smushytaco.solar_apocalypse.SolarApocalypseClient"
+      }
+    ],
     "modmenu": [
       "com.smushytaco.solar_apocalypse.configuration_support.ModMenuIntegration"
     ]

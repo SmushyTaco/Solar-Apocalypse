@@ -30,12 +30,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 object SolarApocalypse : ModInitializer {
     fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
-    val Int.redToFloat
-        get() = ((this shr 16) and 0xFF) / 255.0F
-    val Int.greenToFloat
-        get() = ((this shr 8) and 0xFF) / 255.0F
-    val Int.blueToFloat
-        get() = (this and 0xFF) / 255.0F
     val Block.stringIdentifier: String
         get() {
             this as BlockCache

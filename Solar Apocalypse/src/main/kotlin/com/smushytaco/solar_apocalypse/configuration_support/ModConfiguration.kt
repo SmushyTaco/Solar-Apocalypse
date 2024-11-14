@@ -56,6 +56,7 @@ class ModConfiguration: ConfigData {
     val blockTransformationBlockToBlock = listOf(
         BlockPair(Blocks.CLAY, Blocks.TERRACOTTA),
         BlockPair(Blocks.MUD, Blocks.DIRT),
+        BlockPair(Blocks.MUDDY_MANGROVE_ROOTS, Blocks.DIRT),
         BlockPair(Blocks.DIRT_PATH, Blocks.DIRT),
         BlockPair(Blocks.GRASS_BLOCK, Blocks.DIRT),
         BlockPair(Blocks.PODZOL, Blocks.DIRT),
@@ -149,6 +150,7 @@ class ModConfiguration: ConfigData {
     val enableCustomSkyLight = true
     val enableHeatOverlay = true
     val heatOverlayFadeTime = 3.0
+    val sunSizeTransitionTime = 3.0
     val apocalypseFogDay = 20.0
     val apocalypseFadeTime = 3.0
     val apocalypseFogMaximumDistance = 192.0F

@@ -35,6 +35,7 @@
   "text.autoconfig.solar_apocalypse.option.enableCustomSkyLight": "Enable Custom Sky Light",
   "text.autoconfig.solar_apocalypse.option.enableHeatOverlay": "Enable Heat Overlay",
   "text.autoconfig.solar_apocalypse.option.heatOverlayFadeTime": "Heat Overlay Fade Time",
+  "text.autoconfig.solar_apocalypse.option.sunSizeTransitionTime": "Sun Size Transition Time",
   "text.autoconfig.solar_apocalypse.option.apocalypseFogDay": "Apocalypse Fog Day",
   "text.autoconfig.solar_apocalypse.option.apocalypseFadeTime": "Apocalypse Fade Time",
   "text.autoconfig.solar_apocalypse.option.apocalypseFogMaximumDistance": "Apocalypse Fog Maximum Distance",
