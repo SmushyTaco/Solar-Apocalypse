@@ -60,6 +60,15 @@ object SolarApocalypseClient: ClientModInitializer {
         if (totalTicks <= 0) return 1.0F
         return (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
+    fun skyColor(originalColor: Int?): Int? {
+        val world = MinecraftClient.getInstance().world ?: return originalColor
+        for (heatLayer in SolarApocalypse.heatLayers) if (heatLayer.enableCustomSkyColor && world.isOldEnough(heatLayer.day)) return heatLayer.skyColor
+        return when {
+            config.enablePhaseTwoCustomSkyColor && world.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
+            config.enablePhaseOneCustomSkyColor && world.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
+            else -> originalColor
+        }
+    }
     fun lerpColor(color1: Int, color2: Int, progress: Float): Int {
         val r1 = (color1 shr 16) and 0xFF
         val g1 = (color1 shr 8) and 0xFF

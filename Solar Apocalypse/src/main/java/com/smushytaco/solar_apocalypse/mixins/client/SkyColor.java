@@ -1,7 +1,7 @@
 package com.smushytaco.solar_apocalypse.mixins.client;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
-import com.smushytaco.solar_apocalypse.mixin_logic.SkyColorLogic;
+import com.smushytaco.solar_apocalypse.SolarApocalypseClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.math.BlockPos;
@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class SkyColor {
     @ModifyReturnValue(method = "getFogColor", at = @At("RETURN"))
     public int hookGetFogColor(int original) {
-        Integer color = SkyColorLogic.INSTANCE.skyColor(original);
+        Integer color = SolarApocalypseClient.INSTANCE.skyColor(original);
         return color != null ? color : original;
     }
     @ModifyReturnValue(method = "getSkyColor", at = @At("RETURN"))
     public int hookGetSkyColor(int original) {
-        Integer color = SkyColorLogic.INSTANCE.skyColor(original);
+        Integer color = SolarApocalypseClient.INSTANCE.skyColor(original);
         return color != null ? color : original;
     }
     @ModifyReturnValue(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At("RETURN"))
