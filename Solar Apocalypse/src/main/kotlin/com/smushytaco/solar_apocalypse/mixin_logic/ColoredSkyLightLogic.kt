@@ -18,9 +18,9 @@ object ColoredSkyLightLogic {
             original.call(instance, vector)
             return
         }
-        val skylight = SolarApocalypseClient.skyColor(null)
+        val skylight = SolarApocalypseClient.skyColor
         val clientWorld = MinecraftClient.getInstance().world
-        if (skylight == null || clientWorld == null) {
+        if (skylight == SolarApocalypseClient.originalSkyColor || clientWorld == null) {
             original.call(instance, vector)
             return
         }
