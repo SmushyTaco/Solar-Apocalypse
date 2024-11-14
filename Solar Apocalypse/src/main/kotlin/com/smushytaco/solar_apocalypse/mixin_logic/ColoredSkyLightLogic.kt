@@ -1,9 +1,9 @@
 package com.smushytaco.solar_apocalypse.mixin_logic
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation
-import com.smushytaco.solar_apocalypse.SolarApocalypse.blueToFloat
+import com.smushytaco.solar_apocalypse.SolarApocalypseClient.blueToFloat
 import com.smushytaco.solar_apocalypse.SolarApocalypse.config
-import com.smushytaco.solar_apocalypse.SolarApocalypse.greenToFloat
-import com.smushytaco.solar_apocalypse.SolarApocalypse.redToFloat
+import com.smushytaco.solar_apocalypse.SolarApocalypseClient.greenToFloat
+import com.smushytaco.solar_apocalypse.SolarApocalypseClient.redToFloat
 import com.smushytaco.solar_apocalypse.mixin_logic.SkyColorLogic.skyColor
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
