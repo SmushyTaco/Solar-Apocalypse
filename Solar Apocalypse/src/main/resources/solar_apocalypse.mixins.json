@@ -24,12 +24,11 @@
     "WaterIsFinite"
   ],
   "client": [
-    "SkyColor",
+    "client.SkyColor",
     "client.ApocalypseClouds",
     "client.ApocalypseFog",
     "client.BigSun",
     "client.ColoredSkyLight",
-    "client.Transitions",
     "client.HeatOverlay"
   ]
 }

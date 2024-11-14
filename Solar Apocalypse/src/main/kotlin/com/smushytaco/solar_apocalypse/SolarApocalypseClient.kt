@@ -1,12 +1,17 @@
 package com.smushytaco.solar_apocalypse
+import com.smushytaco.solar_apocalypse.SolarApocalypse.config
+import com.smushytaco.solar_apocalypse.SolarApocalypse.shouldHeatLayerDamage
+import com.smushytaco.solar_apocalypse.SolarApocalypse.sunscreen
+import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.mixin_logic.BigSunLogic.sunSize
-import com.smushytaco.solar_apocalypse.mixin_logic.TransitionsLogic.transitionConditions
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.network.ClientPlayerEntity
+import kotlin.math.ceil
 @Environment(EnvType.CLIENT)
 object SolarApocalypseClient: ClientModInitializer {
     private var hasInitialized = false
@@ -26,15 +31,36 @@ object SolarApocalypseClient: ClientModInitializer {
     override fun onInitializeClient() {
         ClientPlayConnectionEvents.DISCONNECT.register(ClientPlayConnectionEvents.Disconnect { _, _ -> hasInitialized = false })
         ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick { world ->
-            if (hasInitialized) return@EndWorldTick
-            hasInitialized = true
-            MinecraftClient.getInstance().player?.let { player ->
-                fogFade = if (player.transitionConditions(SolarApocalypse.config.apocalypseFogDay)) 1.0F else 0.0F
-                overlayOpacity = if (player.transitionConditions(SolarApocalypse.config.phaseTwoDay)) 1.0F else 0.0F
+            if (!hasInitialized) {
+                hasInitialized = true
+                MinecraftClient.getInstance().player?.let { player ->
+                    fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
+                    overlayOpacity = if (player.transitionConditions(config.phaseTwoDay)) 1.0F else 0.0F
+                }
+                _currentSunMultiplier = world.sunSize
+                previousSunMultiplier = _currentSunMultiplier
             }
-            _currentSunMultiplier = world.sunSize
-            previousSunMultiplier = _currentSunMultiplier
         })
+        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
+            val player = it.player ?: return@EndTick
+            overlayOpacity = player.updateFade(overlayOpacity, config.heatOverlayFadeTime, config.phaseTwoDay)
+            fogFade = player.updateFade(fogFade, config.apocalypseFadeTime, config.apocalypseFogDay)
+            if (sunTransition != 1.0f) sunTransition = updateTransition(sunTransition, config.sunSizeTransitionTime)
+        })
+    }
+    private fun ClientPlayerEntity.updateFade(value: Float, time: Double, day: Double): Float {
+        val totalTicks = ceil(time * 20).toInt()
+        val should = transitionConditions(day)
+        if (totalTicks <= 0) return if (should) 1.0F else 0.0F
+        return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
+    }
+    private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(
+        sunscreen
+    )
+    private fun updateTransition(value: Float, time: Double): Float {
+        val totalTicks = ceil(time * 20).toInt()
+        if (totalTicks <= 0) return 1.0F
+        return (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
     fun lerpColor(color1: Int, color2: Int, progress: Float): Int {
         val r1 = (color1 shr 16) and 0xFF
