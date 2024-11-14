@@ -24,6 +24,6 @@ object ColoredSkyLightLogic {
             original.call(instance, vector)
             return
         }
-        original.call(instance, vector.lerp(Vector3f(skylight.redToFloat, skylight.greenToFloat, skylight.blueToFloat), MathHelper.clamp(clientWorld.getSkyBrightness(1.0f), 0.0f, 1.0f)))
+        original.call(instance, vector.lerp(Vector3f(skylight.redToFloat, skylight.greenToFloat, skylight.blueToFloat), MathHelper.clamp(clientWorld.getSkyBrightness(1.0F), 0.0F, 1.0F)))
     }
 }

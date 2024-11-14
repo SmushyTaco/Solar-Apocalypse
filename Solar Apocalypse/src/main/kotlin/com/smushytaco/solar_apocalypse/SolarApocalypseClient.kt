@@ -1,10 +1,12 @@
 package com.smushytaco.solar_apocalypse
 import com.smushytaco.solar_apocalypse.mixin_logic.BigSunLogic.sunSize
+import com.smushytaco.solar_apocalypse.mixin_logic.HeatOverlayFadeInAndOutLogic.transitionConditions
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
+import net.minecraft.client.MinecraftClient
 @Environment(EnvType.CLIENT)
 object SolarApocalypseClient: ClientModInitializer {
     private var hasInitialized = false
@@ -23,12 +25,14 @@ object SolarApocalypseClient: ClientModInitializer {
         }
     override fun onInitializeClient() {
         ClientPlayConnectionEvents.DISCONNECT.register(ClientPlayConnectionEvents.Disconnect { _, _ -> hasInitialized = false })
-        ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick {
+        ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick { world ->
             if (hasInitialized) return@EndWorldTick
             hasInitialized = true
-            overlayOpacity = 0.0F
-            fogFade = 0.0F
-            _currentSunMultiplier = it.sunSize
+            MinecraftClient.getInstance().player?.let { player ->
+                fogFade = if (player.transitionConditions(SolarApocalypse.config.apocalypseFogDay)) 1.0F else 0.0F
+                overlayOpacity = if (player.transitionConditions(SolarApocalypse.config.phaseTwoDay)) 1.0F else 0.0F
+            }
+            _currentSunMultiplier = world.sunSize
             previousSunMultiplier = _currentSunMultiplier
         })
     }
