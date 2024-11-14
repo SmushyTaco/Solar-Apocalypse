@@ -1,6 +1,6 @@
 package com.smushytaco.solar_apocalypse
 import com.smushytaco.solar_apocalypse.mixin_logic.BigSunLogic.sunSize
-import com.smushytaco.solar_apocalypse.mixin_logic.HeatOverlayFadeInAndOutLogic.transitionConditions
+import com.smushytaco.solar_apocalypse.mixin_logic.TransitionsLogic.transitionConditions
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment

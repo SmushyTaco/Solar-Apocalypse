@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment
 import net.minecraft.client.network.ClientPlayerEntity
 import kotlin.math.ceil
 @Environment(EnvType.CLIENT)
-object HeatOverlayFadeInAndOutLogic {
+object TransitionsLogic {
     fun ClientPlayerEntity.hookTick(value: Float, time: Double, day: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
         val should = transitionConditions(day)
