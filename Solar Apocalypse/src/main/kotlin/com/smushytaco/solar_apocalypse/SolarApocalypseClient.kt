@@ -11,14 +11,20 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.ClientPlayerEntity
+import net.minecraft.world.World
 import kotlin.math.ceil
 @Environment(EnvType.CLIENT)
 object SolarApocalypseClient: ClientModInitializer {
-    private var hasInitialized = false
+    var hasInitialized = false
+        private set
     var overlayOpacity = 0.0F
+        private set
     var fogFade = 0.0F
+        private set
     var sunTransition = 1.0F
+        private set
     var previousSunMultiplier = 1.0F
+        private set
     private var _currentSunMultiplier = 1.0F
     var currentSunMultiplier
         get() = _currentSunMultiplier
@@ -28,24 +34,60 @@ object SolarApocalypseClient: ClientModInitializer {
             _currentSunMultiplier = value
             sunTransition = 0.0F
         }
+    private var skyTransition = 1.0F
+    var originalSkyColor = 1
+        private set
+    private var previousSkyColor = 1
+    private var _currentSkyColor = 1
+    private var currentSkyColor
+        get() = _currentSkyColor
+        set(value) {
+            if (_currentSkyColor == value) return
+            previousSkyColor = _currentSkyColor
+            _currentSkyColor = value
+            skyTransition = 0.0F
+        }
+    val skyColor
+        get() = lerpColor(previousSkyColor, currentSkyColor, skyTransition)
+    private var fogTransition = 1.0F
+    private var previousFogColor = 1
+    private var _currentFogColor = 1
+    private var currentFogColor
+        get() = _currentFogColor
+        set(value) {
+            if (_currentFogColor == value) return
+            previousFogColor = _currentFogColor
+            _currentFogColor = value
+            fogTransition = 0.0F
+        }
+    val fogColor
+        get() = lerpColor(previousFogColor, currentFogColor, fogTransition)
     override fun onInitializeClient() {
         ClientPlayConnectionEvents.DISCONNECT.register(ClientPlayConnectionEvents.Disconnect { _, _ -> hasInitialized = false })
         ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick { world ->
-            if (!hasInitialized) {
-                hasInitialized = true
-                MinecraftClient.getInstance().player?.let { player ->
-                    fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
-                    overlayOpacity = if (player.transitionConditions(config.phaseTwoDay)) 1.0F else 0.0F
-                }
-                _currentSunMultiplier = world.sunSize
-                previousSunMultiplier = _currentSunMultiplier
+            if (hasInitialized) return@EndWorldTick
+            MinecraftClient.getInstance().player?.let { player ->
+                fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
+                overlayOpacity = if (player.transitionConditions(config.phaseTwoDay)) 1.0F else 0.0F
+                _currentSkyColor = world.biomeAccess.getBiome(player.blockPos).value().skyColor
+                previousSkyColor = _currentSkyColor
+                originalSkyColor = _currentSkyColor
+                _currentFogColor = world.biomeAccess.getBiome(player.blockPos).value().fogColor
+                previousFogColor = _currentFogColor
             }
+            _currentSunMultiplier = world.sunSize
+            previousSunMultiplier = _currentSunMultiplier
+            updateSkyColor(null, world)
+            updateFogColor(null, world)
+            hasInitialized = true
         })
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick {
             val player = it.player ?: return@EndTick
             overlayOpacity = player.updateFade(overlayOpacity, config.heatOverlayFadeTime, config.phaseTwoDay)
             fogFade = player.updateFade(fogFade, config.apocalypseFadeTime, config.apocalypseFogDay)
             if (sunTransition != 1.0F) sunTransition = updateTransition(sunTransition, config.sunSizeTransitionTime)
+            if (skyTransition != 1.0F) skyTransition = updateTransition(skyTransition, config.skyColorTransitionTime)
+            if (fogTransition != 1.0F) fogTransition = updateTransition(fogTransition, config.fogColorTransitionTime)
         })
     }
     private fun ClientPlayerEntity.updateFade(value: Float, time: Double, day: Double): Float {
@@ -55,27 +97,51 @@ object SolarApocalypseClient: ClientModInitializer {
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
     private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(sunscreen)
+    @Suppress("SameParameterValue")
     private fun updateTransition(value: Float, time: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
         if (totalTicks <= 0) return 1.0F
         return (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
-    fun skyColor(originalColor: Int?): Int? {
-        val world = MinecraftClient.getInstance().world ?: return originalColor
-        for (heatLayer in SolarApocalypse.heatLayers) if (heatLayer.enableCustomSkyColor && world.isOldEnough(heatLayer.day)) return heatLayer.skyColor
+    private fun updateColor(originalColor: Int?, world: World?): Int? {
+        val theWorld = world ?: MinecraftClient.getInstance().world ?: return originalColor
+        for (heatLayer in SolarApocalypse.heatLayers) if (heatLayer.enableCustomSkyColor && theWorld.isOldEnough(heatLayer.day)) return heatLayer.skyColor
         return when {
-            config.enablePhaseTwoCustomSkyColor && world.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
-            config.enablePhaseOneCustomSkyColor && world.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
+            config.enablePhaseTwoCustomSkyColor && theWorld.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
+            config.enablePhaseOneCustomSkyColor && theWorld.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
             else -> originalColor
         }
     }
-    fun lerpColor(color1: Int, color2: Int, progress: Float): Int {
-        val r1 = (color1 shr 16) and 0xFF
-        val g1 = (color1 shr 8) and 0xFF
-        val b1 = color1 and 0xFF
-        val r2 = (color2 shr 16) and 0xFF
-        val g2 = (color2 shr 8) and 0xFF
-        val b2 = color2 and 0xFF
+    fun updateSkyColor(originalColor: Int?, world: World? = null) {
+        val color = updateColor(originalColor, world)
+        if (color != null) {
+            if (color == originalColor) originalSkyColor = color
+            if (hasInitialized) {
+                currentSkyColor = color
+            } else {
+                _currentSkyColor = color
+                previousSkyColor = _currentSkyColor
+            }
+        }
+    }
+    fun updateFogColor(originalColor: Int?, world: World? = null) {
+        val color = updateColor(originalColor, world)
+        if (color != null) {
+            if (hasInitialized) {
+                currentFogColor = color
+            } else {
+                _currentFogColor = color
+                previousFogColor = _currentFogColor
+            }
+        }
+    }
+    private fun lerpColor(colorOne: Int, colorTwo: Int, progress: Float): Int {
+        val r1 = (colorOne shr 16) and 0xFF
+        val g1 = (colorOne shr 8) and 0xFF
+        val b1 = colorOne and 0xFF
+        val r2 = (colorTwo shr 16) and 0xFF
+        val g2 = (colorTwo shr 8) and 0xFF
+        val b2 = colorTwo and 0xFF
         val r = (r1 + ((r2 - r1) * progress)).toInt() and 0xFF
         val g = (g1 + ((g2 - g1) * progress)).toInt() and 0xFF
         val b = (b1 + ((b2 - b1) * progress)).toInt() and 0xFF

@@ -151,6 +151,8 @@ class ModConfiguration: ConfigData {
     val enableHeatOverlay = true
     val heatOverlayFadeTime = 3.0
     val sunSizeTransitionTime = 3.0
+    val skyColorTransitionTime = 3.0
+    val fogColorTransitionTime = 3.0
     val apocalypseFogDay = 20.0
     val apocalypseFadeTime = 3.0
     val apocalypseFogMaximumDistance = 192.0F

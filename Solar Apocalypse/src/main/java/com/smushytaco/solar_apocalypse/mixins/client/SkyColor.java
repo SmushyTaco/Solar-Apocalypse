@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class SkyColor {
     @ModifyReturnValue(method = "getFogColor", at = @At("RETURN"))
     public int hookGetFogColor(int original) {
-        Integer color = SolarApocalypseClient.INSTANCE.skyColor(original);
-        return color != null ? color : original;
+        SolarApocalypseClient.INSTANCE.updateFogColor(original, null);
+        return SolarApocalypseClient.INSTANCE.getHasInitialized() ? SolarApocalypseClient.INSTANCE.getFogColor() : original;
     }
     @ModifyReturnValue(method = "getSkyColor", at = @At("RETURN"))
     public int hookGetSkyColor(int original) {
-        Integer color = SolarApocalypseClient.INSTANCE.skyColor(original);
-        return color != null ? color : original;
+        SolarApocalypseClient.INSTANCE.updateSkyColor(original, null);
+        return SolarApocalypseClient.INSTANCE.getHasInitialized() ? SolarApocalypseClient.INSTANCE.getSkyColor() : original;
     }
     @ModifyReturnValue(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At("RETURN"))
     public boolean hookCanSetIce(boolean original, WorldView world, BlockPos pos, boolean doWaterCheck) {
