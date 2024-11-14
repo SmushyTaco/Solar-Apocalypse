@@ -18,9 +18,9 @@ object ColoredSkyLightLogic {
             original.call(instance, vector)
             return
         }
-        val skylight: Int = Integer.MAX_VALUE.skyColor
+        val skylight = skyColor(null)
         val clientWorld = MinecraftClient.getInstance().world
-        if (skylight == Int.MAX_VALUE || clientWorld == null) {
+        if (skylight == null || clientWorld == null) {
             original.call(instance, vector)
             return
         }
