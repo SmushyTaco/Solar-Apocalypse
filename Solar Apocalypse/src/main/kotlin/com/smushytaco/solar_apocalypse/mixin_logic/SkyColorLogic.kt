@@ -2,7 +2,10 @@ package com.smushytaco.solar_apocalypse.mixin_logic
 import com.smushytaco.solar_apocalypse.SolarApocalypse
 import com.smushytaco.solar_apocalypse.SolarApocalypse.config
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
+@Environment(EnvType.CLIENT)
 object SkyColorLogic {
     val Int.skyColor: Int
         get() {
