@@ -14,9 +14,15 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Biome.class)
 public abstract class SkyColor {
     @ModifyReturnValue(method = "getFogColor", at = @At("RETURN"))
-    public int hookGetFogColor(int original) { return SkyColorLogic.INSTANCE.getSkyColor(original); }
+    public int hookGetFogColor(int original) {
+        Integer color = SkyColorLogic.INSTANCE.skyColor(original);
+        return color != null ? color : original;
+    }
     @ModifyReturnValue(method = "getSkyColor", at = @At("RETURN"))
-    public int hookGetSkyColor(int original) { return SkyColorLogic.INSTANCE.getSkyColor(original); }
+    public int hookGetSkyColor(int original) {
+        Integer color = SkyColorLogic.INSTANCE.skyColor(original);
+        return color != null ? color : original;
+    }
     @ModifyReturnValue(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At("RETURN"))
     public boolean hookCanSetIce(boolean original, WorldView world, BlockPos pos, boolean doWaterCheck) {
         if (!(world instanceof World realWorld)) return original;

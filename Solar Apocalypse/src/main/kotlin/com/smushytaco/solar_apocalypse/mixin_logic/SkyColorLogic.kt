@@ -7,14 +7,13 @@ import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
 @Environment(EnvType.CLIENT)
 object SkyColorLogic {
-    val Int.skyColor: Int
-        get() {
-            val world = MinecraftClient.getInstance().world ?: return this
-            for (heatLayer in SolarApocalypse.heatLayers) if (heatLayer.enableCustomSkyColor && world.isOldEnough(heatLayer.day)) return heatLayer.skyColor
-            return when {
-                config.enablePhaseTwoCustomSkyColor && world.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
-                config.enablePhaseOneCustomSkyColor && world.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
-                else -> this
-            }
+    fun skyColor(originalColor: Int?): Int? {
+        val world = MinecraftClient.getInstance().world ?: return originalColor
+        for (heatLayer in SolarApocalypse.heatLayers) if (heatLayer.enableCustomSkyColor && world.isOldEnough(heatLayer.day)) return heatLayer.skyColor
+        return when {
+            config.enablePhaseTwoCustomSkyColor && world.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
+            config.enablePhaseOneCustomSkyColor && world.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
+            else -> originalColor
         }
+    }
 }

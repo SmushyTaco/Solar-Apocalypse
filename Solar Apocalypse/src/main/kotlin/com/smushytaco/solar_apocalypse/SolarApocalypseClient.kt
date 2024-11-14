@@ -45,7 +45,7 @@ object SolarApocalypseClient: ClientModInitializer {
             val player = it.player ?: return@EndTick
             overlayOpacity = player.updateFade(overlayOpacity, config.heatOverlayFadeTime, config.phaseTwoDay)
             fogFade = player.updateFade(fogFade, config.apocalypseFadeTime, config.apocalypseFogDay)
-            if (sunTransition != 1.0f) sunTransition = updateTransition(sunTransition, config.sunSizeTransitionTime)
+            if (sunTransition != 1.0F) sunTransition = updateTransition(sunTransition, config.sunSizeTransitionTime)
         })
     }
     private fun ClientPlayerEntity.updateFade(value: Float, time: Double, day: Double): Float {
@@ -54,9 +54,7 @@ object SolarApocalypseClient: ClientModInitializer {
         if (totalTicks <= 0) return if (should) 1.0F else 0.0F
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
-    private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(
-        sunscreen
-    )
+    private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(sunscreen)
     private fun updateTransition(value: Float, time: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
         if (totalTicks <= 0) return 1.0F
