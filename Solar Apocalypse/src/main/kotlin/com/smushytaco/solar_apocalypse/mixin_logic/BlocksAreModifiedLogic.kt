@@ -66,9 +66,10 @@ object BlocksAreModifiedLogic {
         profiler.pop()
     }
     private fun randomTick(serverWorld: ServerWorld, blockState: BlockState, blockPos: BlockPos) {
-        val pos = blockPos.offset(Direction.UP)
+        val pos = blockPos.up()
         if (serverWorld.isNight || serverWorld.isRaining || (!serverWorld.isSkyVisible(pos) && !blockPos.shouldHeatLayerDamage(serverWorld))) return
-        if (serverWorld.isOldEnough(config.phaseOneDay)) {
+        val phaseOneDayCheck = serverWorld.isOldEnough(config.phaseOneDay)
+        if (phaseOneDayCheck) {
             SolarApocalypse.blockTransformationBlockToBlockMap[blockState.block.stringIdentifier]?.let {
                 blockChanges(blockState.block, it.block, serverWorld, blockPos, blockState)
                 return
@@ -100,6 +101,53 @@ object BlocksAreModifiedLogic {
                 return
             }
         }
-        if (serverWorld.getBlockState(blockPos).isBurnable && serverWorld.getBlockState(pos).isAir && serverWorld.isOldEnough(config.phaseOneDay)) if (config.turnToAirInsteadOfBurn) serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState) else if (!serverWorld.isOutOfHeightLimit(pos)) serverWorld.setBlockState(pos, AbstractFireBlock.getState(serverWorld, pos), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD) else serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState)
+        if (serverWorld.getBlockState(blockPos).isBurnable && phaseOneDayCheck) {
+            if (config.turnToAirInsteadOfBurn) {
+                serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState)
+            } else {
+                val posState = serverWorld.getBlockState(pos)
+                if (!serverWorld.isOutOfHeightLimit(pos) && posState.isAir) {
+                    serverWorld.setBlockState(pos, AbstractFireBlock.getState(serverWorld, pos), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+                } else {
+                    if (posState.block is AbstractFireBlock) return
+                    val east = blockPos.east()
+                    val eastState = serverWorld.getBlockState(east)
+                    if (!serverWorld.isOutOfHeightLimit(east) && eastState.isAir) {
+                        serverWorld.setBlockState(east, AbstractFireBlock.getState(serverWorld, east), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+                    } else {
+                        if (eastState.block is AbstractFireBlock) return
+                        val west = blockPos.west()
+                        val westState = serverWorld.getBlockState(west)
+                        if (!serverWorld.isOutOfHeightLimit(west) && westState.isAir) {
+                            serverWorld.setBlockState(west, AbstractFireBlock.getState(serverWorld, west), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+                        } else {
+                            if (westState.block is AbstractFireBlock) return
+                            val north = blockPos.north()
+                            val northState = serverWorld.getBlockState(north)
+                            if (!serverWorld.isOutOfHeightLimit(north) && northState.isAir) {
+                                serverWorld.setBlockState(north, AbstractFireBlock.getState(serverWorld, north), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+                            } else {
+                                if (northState.block is AbstractFireBlock) return
+                                val south = blockPos.south()
+                                val southState = serverWorld.getBlockState(south)
+                                if (!serverWorld.isOutOfHeightLimit(south) && southState.isAir) {
+                                    serverWorld.setBlockState(south, AbstractFireBlock.getState(serverWorld, south), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+                                } else {
+                                    if (southState.block is AbstractFireBlock) return
+                                    val down = blockPos.down()
+                                    val downState = serverWorld.getBlockState(down)
+                                    if (!serverWorld.isOutOfHeightLimit(down) && downState.isAir) {
+                                        serverWorld.setBlockState(down, AbstractFireBlock.getState(serverWorld, down), Block.NOTIFY_ALL or Block.REDRAW_ON_MAIN_THREAD)
+                                    } else {
+                                        if (downState.block is AbstractFireBlock) return
+                                        serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

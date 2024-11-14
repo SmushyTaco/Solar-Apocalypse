@@ -27,7 +27,6 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.ColorCode
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 object SolarApocalypse : ModInitializer {
     fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
@@ -63,7 +62,7 @@ object SolarApocalypse : ModInitializer {
             stringToBlock[this] = block
             return block
         }
-    fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseOneDay) && !isNight && !isRaining && (isSkyVisible(pos.offset(Direction.UP)) || pos.shouldHeatLayerDamage(this))
+    fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseOneDay) && !isNight && !isRaining && (isSkyVisible(pos.up()) || pos.shouldHeatLayerDamage(this))
     private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
         if (!condition) return false
         for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
