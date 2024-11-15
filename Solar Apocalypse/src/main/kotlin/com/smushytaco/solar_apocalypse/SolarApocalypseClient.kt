@@ -45,7 +45,7 @@ object SolarApocalypseClient: ClientModInitializer {
             if (_currentSkyColor == value) return
             previousSkyColor = _currentSkyColor
             _currentSkyColor = value
-            skyTransition = 0.0F
+            if (SolarApocalypse.skyColors.contains(previousSkyColor) || SolarApocalypse.skyColors.contains(_currentSkyColor)) skyTransition = 0.0F
         }
     val skyColor
         get() = lerpColor(previousSkyColor, currentSkyColor, skyTransition)
@@ -58,7 +58,7 @@ object SolarApocalypseClient: ClientModInitializer {
             if (_currentFogColor == value) return
             previousFogColor = _currentFogColor
             _currentFogColor = value
-            fogTransition = 0.0F
+            if (SolarApocalypse.skyColors.contains(previousFogColor) || SolarApocalypse.skyColors.contains(_currentFogColor)) fogTransition = 0.0F
         }
     val fogColor
         get() = lerpColor(previousFogColor, currentFogColor, fogTransition)
