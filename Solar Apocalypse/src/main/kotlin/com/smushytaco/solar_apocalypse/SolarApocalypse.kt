@@ -92,8 +92,7 @@ object SolarApocalypse : ModInitializer {
     private var burnableBlockTags = hashSetOf<String>()
     private var burnableBlockClasses = hashSetOf<String>()
     private var blockTransformationBlockToBlock = hashSetOf<BlockPair>()
-    var blockTransformationBlockToBlockMap = hashMapOf<String, String>()
-        private set
+    val blockTransformationBlockToBlockMap = hashMapOf<String, String>()
     var blockTransformationTagToBlock = hashSetOf<TagAndBlock>()
         private set
     var blockTransformationClassToBlock = hashSetOf<ClassAndBlock>()
@@ -107,6 +106,7 @@ object SolarApocalypse : ModInitializer {
     var heatLayers = listOf<HeatLayer>()
         private set
     private var lightningPhases = listOf<LightningPhase>()
+    val skyColors = hashSetOf<Int>()
     var dimensionWhitelist = hashSetOf<String>()
         private set
     lateinit var config: ModConfiguration
@@ -138,7 +138,7 @@ object SolarApocalypse : ModInitializer {
         burnableBlockTags = modConfiguration.burnableBlockTags.toHashSet()
         burnableBlockClasses = modConfiguration.burnableBlockClasses.toHashSet()
         blockTransformationBlockToBlock = modConfiguration.blockTransformationBlockToBlock.toHashSet()
-        blockTransformationBlockToBlockMap = hashMapOf()
+        blockTransformationBlockToBlockMap.clear()
         blockTransformationBlockToBlock.forEach { blockTransformationBlockToBlockMap[it.blockOne] = it.blockTwo }
         blockTransformationTagToBlock = modConfiguration.blockTransformationTagToBlock.toHashSet()
         blockTransformationClassToBlock = modConfiguration.blockTransformationClassToBlock.toHashSet()
@@ -148,6 +148,10 @@ object SolarApocalypse : ModInitializer {
         heatLayers = modConfiguration.heatLayers.sorted()
         lightningPhases = modConfiguration.lightningPhases.sorted()
         dimensionWhitelist = modConfiguration.dimensionWhitelist.toHashSet()
+        skyColors.clear()
+        skyColors.add(config.phaseOneSkyColor)
+        skyColors.add(config.phaseTwoSkyColor)
+        heatLayers.forEach { skyColors.add(it.skyColor) }
     }
     override fun onInitialize() {
         AutoConfig.register(ModConfiguration::class.java) { definition: Config, configClass: Class<ModConfiguration> ->
