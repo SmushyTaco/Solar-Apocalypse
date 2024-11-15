@@ -21,6 +21,8 @@ object SolarApocalypseClient: ClientModInitializer {
         private set
     var fogFade = 0.0F
         private set
+    var cloudFade = 0.0F
+        private set
     var sunTransition = 1.0F
         private set
     var previousSunMultiplier = 1.0F
@@ -66,6 +68,7 @@ object SolarApocalypseClient: ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register(ClientPlayConnectionEvents.Disconnect { _, _ -> hasInitialized = false })
         ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick { world ->
             if (hasInitialized) return@EndWorldTick
+            cloudFade = if (world.transitionConditions(config.noCloudsDay)) 1.0F else 0.0F
             MinecraftClient.getInstance().player?.let { player ->
                 fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
                 overlayOpacity = if (player.transitionConditions(config.phaseTwoDay)) 1.0F else 0.0F
@@ -85,6 +88,7 @@ object SolarApocalypseClient: ClientModInitializer {
             val player = it.player ?: return@EndTick
             overlayOpacity = player.updateFade(overlayOpacity, config.heatOverlayFadeTime, config.phaseTwoDay)
             fogFade = player.updateFade(fogFade, config.apocalypseFadeTime, config.apocalypseFogDay)
+            cloudFade = player.updateCloudFade(cloudFade, config.cloudFadeTime, config.noCloudsDay)
             if (sunTransition != 1.0F) sunTransition = updateTransition(sunTransition, config.sunSizeTransitionTime)
             if (skyTransition != 1.0F) skyTransition = updateTransition(skyTransition, config.skyColorTransitionTime)
             if (fogTransition != 1.0F) fogTransition = updateTransition(fogTransition, config.fogColorTransitionTime)
@@ -96,6 +100,13 @@ object SolarApocalypseClient: ClientModInitializer {
         if (totalTicks <= 0) return if (should) 1.0F else 0.0F
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
+    private fun ClientPlayerEntity.updateCloudFade(value: Float, time: Double, day: Double): Float {
+        val totalTicks = ceil(time * 20).toInt()
+        val should = world.transitionConditions(day)
+        if (totalTicks <= 0) return if (should) 1.0F else 0.0F
+        return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
+    }
+    private fun World.transitionConditions(day: Double) = isOldEnough(day) && !isRaining && !isNight
     private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(sunscreen)
     @Suppress("SameParameterValue")
     private fun updateTransition(value: Float, time: Double): Float {

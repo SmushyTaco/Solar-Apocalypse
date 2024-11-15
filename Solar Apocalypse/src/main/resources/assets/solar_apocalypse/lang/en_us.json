@@ -43,6 +43,7 @@
   "text.autoconfig.solar_apocalypse.option.apocalypseFogMaximumDistance": "Apocalypse Fog Maximum Distance",
   "text.autoconfig.solar_apocalypse.option.apocalypseFogMultiplier": "Apocalypse Fog Multiplier",
   "text.autoconfig.solar_apocalypse.option.noCloudsDay": "No Clouds Day",
+  "text.autoconfig.solar_apocalypse.option.cloudFadeTime": "Cloud Fade Time",
   "text.autoconfig.solar_apocalypse.option.enableHeatLayers": "Enable Heat Layers",
   "text.autoconfig.solar_apocalypse.option.enableHeatLayersOnBlocks": "Enable Heat Layers On Blocks",
   "text.autoconfig.solar_apocalypse.option.heatLayers": "Heat Layers",

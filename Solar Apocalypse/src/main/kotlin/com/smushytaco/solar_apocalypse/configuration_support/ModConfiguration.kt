@@ -158,6 +158,7 @@ class ModConfiguration: ConfigData {
     val apocalypseFogMaximumDistance = 192.0F
     val apocalypseFogMultiplier = 0.5F
     val noCloudsDay = 40.0
+    val cloudFadeTime = 3.0
     val enableHeatLayers = true
     val enableHeatLayersOnBlocks = false
     val heatLayers = listOf(HeatLayer(60.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(80.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(100.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(120.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(140.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))
