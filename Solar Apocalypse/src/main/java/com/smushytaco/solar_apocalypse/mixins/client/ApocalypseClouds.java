@@ -1,24 +1,17 @@
 package com.smushytaco.solar_apocalypse.mixins.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.smushytaco.solar_apocalypse.SolarApocalypse;
-import com.smushytaco.solar_apocalypse.WorldDayCalculation;
+import com.smushytaco.solar_apocalypse.SolarApocalypseClient;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.CloudRenderMode;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.render.CloudRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 @Environment(EnvType.CLIENT)
-@Mixin(WorldRenderer.class)
-public class ApocalypseClouds {
-    @WrapOperation(method = "render", at = @At(value = "INVOKE", target="Lnet/minecraft/client/option/GameOptions;getCloudRenderModeValue()Lnet/minecraft/client/option/CloudRenderMode;"))
-    private CloudRenderMode hookApplyFogMultiplier(GameOptions instance, Operation<CloudRenderMode> original) {
-        ClientWorld clientWorld = MinecraftClient.getInstance().world;
-        if (clientWorld == null || clientWorld.isNight() || clientWorld.isRaining() || !WorldDayCalculation.INSTANCE.isOldEnough(clientWorld, SolarApocalypse.INSTANCE.getConfig().getNoCloudsDay())) return original.call(instance);
-        return CloudRenderMode.OFF;
+@Mixin(CloudRenderer.class)
+public abstract class ApocalypseClouds {
+    @WrapOperation(method = "renderClouds(ILnet/minecraft/client/option/CloudRenderMode;FLorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/util/math/Vec3d;F)V", at = @At(value = "INVOKE", target="Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 0))
+    private void hookRenderCloudsOne(float red, float green, float blue, float alpha, Operation<Void> original) {
+        original.call(red, green, blue, alpha * (1.0F - SolarApocalypseClient.INSTANCE.getCloudFade()));
     }
 }
