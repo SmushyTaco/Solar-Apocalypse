@@ -19,11 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class HeatOverlay {
     @Shadow
     protected abstract void renderOverlay(DrawContext context, Identifier texture, float opacity);
-    @Shadow
-    @Final
-    private MinecraftClient client;
-    @Inject(method = "renderMiscOverlays", at = @At("RETURN"))
-    private void hookRenderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    @Inject(method = "renderOverlay", at = @At("RETURN"))
+    private void hookRenderMiscOverlays(DrawContext context, Identifier texture, float opacity, CallbackInfo ci) {
         if (!SolarApocalypse.INSTANCE.getConfig().getEnableHeatOverlay() || SolarApocalypseClient.INSTANCE.getOverlayOpacity() == 0.0F) return;
         renderOverlay(context, SolarApocalypse.INSTANCE.getHEAT_OVERLAY(), SolarApocalypseClient.INSTANCE.getOverlayOpacity());
     }

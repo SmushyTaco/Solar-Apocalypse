@@ -107,7 +107,7 @@ object SolarApocalypseClient: ClientModInitializer {
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
     private fun World.transitionConditions(day: Double) = isOldEnough(day) && !isRaining && !isNight
-    private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(sunscreen)
+    private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(Sunscreen)
     @Suppress("SameParameterValue")
     private fun updateTransition(value: Float, time: Double): Float {
         val totalTicks = ceil(time * 20).toInt()

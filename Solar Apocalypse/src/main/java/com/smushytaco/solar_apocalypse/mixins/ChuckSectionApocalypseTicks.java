@@ -25,8 +25,9 @@ public abstract class ChuckSectionApocalypseTicks implements ApocalypseTickable 
         if (!(counter instanceof ApocalypseTickable apocalypseTickable)) return;
         randomApocalypseTickableBlockCount = apocalypseTickable.getRandomApocalypseTickableBlockCount();
     }
-    @Inject(method = "<init>(Lnet/minecraft/world/chunk/ChunkSection;)V", at = @At("RETURN"))
-    private void hookInitialize(ChunkSection section, CallbackInfo ci) {
+    @Inject(method = "<init>(Lnet/minecraft/world/chunk/PalettedContainer;Lnet/minecraft/world/chunk/ReadableContainer;)V", at = @At("RETURN"))
+    private void hookInitialize(CallbackInfo ci) {
+        ChunkSection section = ((ChunkSection)(Object)this);
         if (section instanceof ApocalypseTickable apocalypseTickable) randomApocalypseTickableBlockCount = apocalypseTickable.getRandomApocalypseTickableBlockCount();
     }
     @Inject(method = "setBlockState(IIILnet/minecraft/block/BlockState;Z)Lnet/minecraft/block/BlockState;", at = @At("RETURN"))

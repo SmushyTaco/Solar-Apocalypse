@@ -8,7 +8,7 @@ object WaterEvaporatesLogic {
         if (!serverWorld.apocalypseChecks(blockPos)) return
         val block = blockState.block
         when {
-            block is FluidDrainable && block.tryDrainFluid(null, serverWorld, blockPos, blockState).isEmpty && block is FluidBlock -> serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState, Block.NOTIFY_ALL)
+            block is FluidDrainable && block.tryDrainFluid(serverWorld, blockPos, blockState).isEmpty && block is FluidBlock -> serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState, Block.NOTIFY_ALL)
             blockState.isOf(Blocks.KELP) || blockState.isOf(Blocks.KELP_PLANT) || blockState.isOf(Blocks.SEAGRASS) || blockState.isOf(Blocks.TALL_SEAGRASS) -> {
                 val blockEntity = if (blockState.hasBlockEntity()) serverWorld.getBlockEntity(blockPos) else null
                 Block.dropStacks(blockState, serverWorld, blockPos, blockEntity)
