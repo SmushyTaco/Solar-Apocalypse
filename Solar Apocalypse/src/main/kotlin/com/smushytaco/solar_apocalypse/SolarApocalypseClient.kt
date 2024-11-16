@@ -5,15 +5,12 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse.sunscreen
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import com.smushytaco.solar_apocalypse.mixin_logic.BigSunLogic.sunSize
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.world.World
 import kotlin.math.ceil
-@Environment(EnvType.CLIENT)
 object SolarApocalypseClient: ClientModInitializer {
     var hasInitialized = false
         private set

@@ -4,15 +4,12 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse
 import com.smushytaco.solar_apocalypse.SolarApocalypse.config
 import com.smushytaco.solar_apocalypse.SolarApocalypseClient
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.BufferBuilder
 import net.minecraft.client.render.VertexConsumer
 import net.minecraft.world.World
 import org.joml.Matrix4f
 import kotlin.math.abs
-@Environment(EnvType.CLIENT)
 object BigSunLogic {
     val World.sunSize: Float
         get() {

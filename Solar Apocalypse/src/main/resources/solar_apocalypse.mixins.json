@@ -5,6 +5,7 @@
   "injectors": {
     "defaultRequire": 1
   },
+  "plugin": "com.smushytaco.solar_apocalypse.mixin_logic.MixinConfigPlugin",
   "mixins": [
     "AllMobsBurnInDaylight",
     "BlockCacheImplementation",
@@ -21,7 +22,8 @@
     "LightningPhases",
     "PhaseOne",
     "PlayersBurn",
-    "WaterIsFinite"
+    "WaterIsFinite",
+    "client.SodiumCloudSupport"
   ],
   "client": [
     "client.ApocalypseClouds",

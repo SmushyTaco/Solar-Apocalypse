@@ -2,14 +2,11 @@ package com.smushytaco.solar_apocalypse.mixins.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.SolarApocalypseClient;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
 import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-@Environment(EnvType.CLIENT)
 @Mixin(BackgroundRenderer.class)
 public abstract class ApocalypseFog {
     @ModifyExpressionValue(method = "applyFog", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/BackgroundRenderer$FogData;fogEnd:F", ordinal = 15))
