@@ -2,15 +2,12 @@ package com.smushytaco.solar_apocalypse.mixins.client;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.SolarApocalypseClient;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-@Environment(EnvType.CLIENT)
 @Mixin(Biome.class)
 public abstract class SkyColor {
     @ModifyReturnValue(method = "getFogColor", at = @At("RETURN"))
