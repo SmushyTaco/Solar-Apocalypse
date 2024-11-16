@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(BackgroundRenderer.class)
 public abstract class ApocalypseFog {
     @ModifyExpressionValue(method = "applyFog", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/BackgroundRenderer$FogData;fogEnd:F", ordinal = 15))
-    private static float hookApplyFogStart(float original, Camera camera, BackgroundRenderer.FogType fogType, Vector4f color, float viewDistance, boolean thickenFog, float tickDelta) { return original + SolarApocalypseClient.INSTANCE.getFogFade() * ((Math.min(viewDistance, SolarApocalypse.INSTANCE.getConfig().getApocalypseFogMaximumDistance()) * SolarApocalypse.INSTANCE.getConfig().getApocalypseFogMultiplier()) - original); }
+    private static float hookApplyFogStart(float original, Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickenFog, float tickDelta) { return original + SolarApocalypseClient.INSTANCE.getFogFade() * ((Math.min(viewDistance, SolarApocalypse.INSTANCE.getConfig().getApocalypseFogMaximumDistance()) * SolarApocalypse.INSTANCE.getConfig().getApocalypseFogMultiplier()) - original); }
     @ModifyExpressionValue(method = "applyFog", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/BackgroundRenderer$FogData;fogStart:F", ordinal = 9))
-    private static float hookApplyFogEnd(float original, Camera camera, BackgroundRenderer.FogType fogType, Vector4f color, float viewDistance, boolean thickenFog, float tickDelta) { return original + SolarApocalypseClient.INSTANCE.getFogFade() * ((viewDistance * 0.05F) - original); }
+    private static float hookApplyFogEnd(float original, Camera camera, BackgroundRenderer.FogType fogType, float viewDistance, boolean thickenFog, float tickDelta) { return original + SolarApocalypseClient.INSTANCE.getFogFade() * ((viewDistance * 0.05F) - original); }
 }

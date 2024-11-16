@@ -109,7 +109,7 @@ object SolarApocalypse : ModInitializer {
         private set
     lateinit var config: ModConfiguration
         private set
-    lateinit var sunscreen: RegistryEntry.Reference<StatusEffect>
+    lateinit var sunscreen: StatusEffect
         private set
     private fun calculateBlocks() {
         val identifiers = hashSetOf<String>()
@@ -166,6 +166,7 @@ object SolarApocalypse : ModInitializer {
         val dustBlockItem = Registry.register(Registries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Settings()))
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.add(dustBlockItem) })
         Registry.register(Registries.STATUS_EFFECT, Identifier.of(MOD_ID, "sunscreen"), Sunscreen)
+        sunscreen = Registries.STATUS_EFFECT.get(Identifier.of(MOD_ID, "sunscreen"))!!
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             val world = newPlayer.world
             if (!world.isOldEnough(config.phaseTwoDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || (!world.isSkyVisible(newPlayer.blockPos) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasStatusEffect(Sunscreen)) return@AfterRespawn
