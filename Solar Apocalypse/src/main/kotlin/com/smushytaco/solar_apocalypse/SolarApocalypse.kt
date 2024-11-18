@@ -92,17 +92,14 @@ object SolarApocalypse : ModInitializer {
     private var burnableBlockTags = hashSetOf<String>()
     private var burnableBlockClasses = hashSetOf<String>()
     private var blockTransformationBlockToBlock = hashSetOf<BlockPair>()
-    val blockTransformationBlockToBlockMap = hashMapOf<String, String>()
-    var blockTransformationTagToBlock = hashSetOf<TagAndBlock>()
-        private set
-    var blockTransformationClassToBlock = hashSetOf<ClassAndBlock>()
-        private set
+    val blockTransformationBlockToBlockMap = hashMapOf<String, HashSet<String>>()
+    val blockTransformationBlockToBlockMapWithLava = hashMapOf<String, HashSet<String>>()
+    private var blockTransformationTagToBlock = hashSetOf<TagAndBlock>()
+    private var blockTransformationClassToBlock = hashSetOf<ClassAndBlock>()
     var lavaBlockIdentifiers = hashSetOf<String>()
         private set
-    var lavaBlockTags = hashSetOf<String>()
-        private set
-    var lavaBlockClasses = hashSetOf<String>()
-        private set
+    private var lavaBlockTags = hashSetOf<String>()
+    private var lavaBlockClasses = hashSetOf<String>()
     var heatLayers = listOf<HeatLayer>()
         private set
     private var lightningPhases = listOf<LightningPhase>()
@@ -119,18 +116,46 @@ object SolarApocalypse : ModInitializer {
         identifiers.addAll(burnableBlockIdentifiers)
         identifiers.addAll(lavaBlockIdentifiers)
         val tags = hashSetOf<String>()
-        identifiers.addAll(blockTransformationTagToBlock.map { it.tag })
-        identifiers.addAll(burnableBlockTags)
-        identifiers.addAll(lavaBlockTags)
+        tags.addAll(blockTransformationTagToBlock.map { it.tag })
+        tags.addAll(burnableBlockTags)
+        tags.addAll(lavaBlockTags)
         val classes = hashSetOf<String>()
-        identifiers.addAll(blockTransformationClassToBlock.map { it.className })
-        identifiers.addAll(burnableBlockClasses)
-        identifiers.addAll(lavaBlockClasses)
+        classes.addAll(blockTransformationClassToBlock.map { it.className })
+        classes.addAll(burnableBlockClasses)
+        classes.addAll(lavaBlockClasses)
         Registries.BLOCK.forEach {
             it as BlockCache
             val isBurnable = (it.defaultState as BlockStateAccessor).burnable
             it.cacheShouldBurn = ConfigurationLogic.isWhitelisted(isBurnable, it, burnableBlockIdentifiers, burnableBlockTags, burnableBlockClasses)
             it.cacheShouldRandomTick = ConfigurationLogic.isWhitelisted(isBurnable, it, identifiers, tags, classes) || it == Blocks.WATER
+            for (tagAndBlock in blockTransformationTagToBlock) {
+                if (!it.containsTag(tagAndBlock.tag)) continue
+                blockTransformationBlockToBlockMap.putIfAbsent(it.stringIdentifier, hashSetOf())
+                blockTransformationBlockToBlockMap[it.stringIdentifier]?.add(tagAndBlock.block)
+            }
+            for (classAndBlock in blockTransformationClassToBlock) {
+                if (!isInstanceOfClassByName(it, classAndBlock.className)) continue
+                blockTransformationBlockToBlockMap.putIfAbsent(it.stringIdentifier, hashSetOf())
+                blockTransformationBlockToBlockMap[it.stringIdentifier]?.add(classAndBlock.block)
+            }
+            for (tag in lavaBlockTags) {
+                if (!it.containsTag(tag)) continue
+                lavaBlockIdentifiers.add(it.stringIdentifier)
+            }
+            for (className in lavaBlockClasses) {
+                if (!isInstanceOfClassByName(it, className)) continue
+                lavaBlockIdentifiers.add(it.stringIdentifier)
+            }
+            blockTransformationBlockToBlockMapWithLava.clear()
+            blockTransformationBlockToBlockMap.forEach { (key, value) ->
+                val newHashSet = hashSetOf<String>()
+                value.forEach { block -> newHashSet.add(block) }
+                blockTransformationBlockToBlockMapWithLava[key] = newHashSet
+            }
+            lavaBlockIdentifiers.forEach { value ->
+                blockTransformationBlockToBlockMapWithLava.putIfAbsent(value, hashSetOf())
+                blockTransformationBlockToBlockMapWithLava[value]?.add(Blocks.LAVA.stringIdentifier)
+            }
         }
     }
     private fun configCache(modConfiguration: ModConfiguration) {
@@ -139,7 +164,10 @@ object SolarApocalypse : ModInitializer {
         burnableBlockClasses = modConfiguration.burnableBlockClasses.toHashSet()
         blockTransformationBlockToBlock = modConfiguration.blockTransformationBlockToBlock.toHashSet()
         blockTransformationBlockToBlockMap.clear()
-        blockTransformationBlockToBlock.forEach { blockTransformationBlockToBlockMap[it.blockOne] = it.blockTwo }
+        blockTransformationBlockToBlock.forEach {
+            blockTransformationBlockToBlockMap.putIfAbsent(it.blockOne, hashSetOf())
+            blockTransformationBlockToBlockMap[it.blockOne]?.add(it.blockTwo)
+        }
         blockTransformationTagToBlock = modConfiguration.blockTransformationTagToBlock.toHashSet()
         blockTransformationClassToBlock = modConfiguration.blockTransformationClassToBlock.toHashSet()
         lavaBlockIdentifiers = modConfiguration.lavaBlockIdentifiers.toHashSet()

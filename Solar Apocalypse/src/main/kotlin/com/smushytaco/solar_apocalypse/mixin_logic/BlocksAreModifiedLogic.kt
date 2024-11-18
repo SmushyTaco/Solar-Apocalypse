@@ -4,8 +4,6 @@ import com.smushytaco.solar_apocalypse.BlockCache
 import com.smushytaco.solar_apocalypse.SolarApocalypse
 import com.smushytaco.solar_apocalypse.SolarApocalypse.block
 import com.smushytaco.solar_apocalypse.SolarApocalypse.config
-import com.smushytaco.solar_apocalypse.SolarApocalypse.containsTag
-import com.smushytaco.solar_apocalypse.SolarApocalypse.isInstanceOfClassByName
 import com.smushytaco.solar_apocalypse.SolarApocalypse.shouldHeatLayerDamage
 import com.smushytaco.solar_apocalypse.SolarApocalypse.stringIdentifier
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
@@ -69,37 +67,22 @@ object BlocksAreModifiedLogic {
         val pos = blockPos.up()
         if (serverWorld.isNight || serverWorld.isRaining || (!serverWorld.isSkyVisible(pos) && !blockPos.shouldHeatLayerDamage(serverWorld))) return
         val phaseOneDayCheck = serverWorld.isOldEnough(config.phaseOneDay)
-        if (phaseOneDayCheck) {
-            SolarApocalypse.blockTransformationBlockToBlockMap[blockState.block.stringIdentifier]?.let {
-                blockChanges(blockState.block, it.block, serverWorld, blockPos, blockState)
-                return
-            }
-            for (tagAndBlock in SolarApocalypse.blockTransformationTagToBlock) {
-                if (!blockState.block.containsTag(tagAndBlock.tag)) continue
-                blockChanges(blockState.block, tagAndBlock.block.block, serverWorld, blockPos, blockState)
-                return
-            }
-            for (classAndBlock in SolarApocalypse.blockTransformationClassToBlock) {
-                if (!isInstanceOfClassByName(blockState.block, classAndBlock.className)) continue
-                blockChanges(blockState.block, classAndBlock.block.block, serverWorld, blockPos, blockState)
+        val lavaDayCheck = serverWorld.isOldEnough(config.blocksTurnToLavaDay)
+        if (phaseOneDayCheck && lavaDayCheck) {
+            SolarApocalypse.blockTransformationBlockToBlockMapWithLava[blockState.block.stringIdentifier]?.let {
+                blockChanges(blockState.block, it.random().block, serverWorld, blockPos, blockState)
                 return
             }
         }
-        if (serverWorld.isOldEnough(config.blocksTurnToLavaDay)) {
-            if (SolarApocalypse.lavaBlockIdentifiers.contains(blockState.block.stringIdentifier)) {
-                serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
+        if (phaseOneDayCheck) {
+            SolarApocalypse.blockTransformationBlockToBlockMap[blockState.block.stringIdentifier]?.let {
+                blockChanges(blockState.block, it.random().block, serverWorld, blockPos, blockState)
                 return
             }
-            for (tag in SolarApocalypse.lavaBlockTags) {
-                if (!blockState.block.containsTag(tag)) continue
-                serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
-                return
-            }
-            for (className in SolarApocalypse.lavaBlockClasses) {
-                if (!isInstanceOfClassByName(blockState.block, className)) continue
-                serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
-                return
-            }
+        }
+        if (SolarApocalypse.lavaBlockIdentifiers.contains(blockState.block.stringIdentifier) && lavaDayCheck) {
+            serverWorld.setBlockState(blockPos, Blocks.LAVA.defaultState)
+            return
         }
         if (serverWorld.getBlockState(blockPos).isBurnable && phaseOneDayCheck) {
             if (config.turnToAirInsteadOfBurn) {
