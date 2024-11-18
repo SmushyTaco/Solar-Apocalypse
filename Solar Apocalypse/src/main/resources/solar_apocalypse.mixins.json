@@ -22,11 +22,11 @@
     "LightningPhases",
     "PhaseOne",
     "PlayersBurn",
-    "WaterIsFinite",
-    "client.SodiumCloudSupport"
+    "WaterIsFinite"
   ],
   "client": [
     "client.ApocalypseClouds",
+    "client.SodiumCloudSupport",
     "client.ApocalypseFog",
     "client.BigSun",
     "client.CloudOptimization",
