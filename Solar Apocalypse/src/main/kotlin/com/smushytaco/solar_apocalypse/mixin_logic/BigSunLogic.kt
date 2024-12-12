@@ -30,7 +30,7 @@ object BigSunLogic {
             if (multiplier == 0.0F) multiplier = 1.0F
             return multiplier
         }
-    fun bigSunGenerator(instance: BufferBuilder, matrix: Matrix4f, x: Float, y: Float, z: Float, original: Operation<VertexConsumer>): VertexConsumer {
+    fun bigSunGenerator(instance: VertexConsumer, matrix: Matrix4f, x: Float, y: Float, z: Float, original: Operation<VertexConsumer>): VertexConsumer {
         val world = MinecraftClient.getInstance().world ?: return original.call(instance, matrix, x, y, z)
         var multiplier = world.sunSize
         if (multiplier == 0.0F) multiplier = 1.0F
