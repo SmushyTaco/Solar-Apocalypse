@@ -100,10 +100,14 @@ object SolarApocalypse : ModInitializer {
         private set
     private var lavaBlockTags = hashSetOf<String>()
     private var lavaBlockClasses = hashSetOf<String>()
-    var heatLayers = listOf<HeatLayer>()
+    var sunMultiplierPhases = listOf<SunMultiplierPair>()
         private set
+    var skyColorPhases = listOf<SkyColorPair>()
+        private set
+    private var heatLayers = listOf<HeatLayer>()
     private var lightningPhases = listOf<LightningPhase>()
-    val skyColors = hashSetOf<Int>()
+    var skyColors = hashSetOf<Int>()
+        private set
     var dimensionWhitelist = hashSetOf<String>()
         private set
     lateinit var config: ModConfiguration
@@ -173,13 +177,12 @@ object SolarApocalypse : ModInitializer {
         lavaBlockIdentifiers = modConfiguration.lavaBlockIdentifiers.toHashSet()
         lavaBlockTags = modConfiguration.lavaBlockTags.toHashSet()
         lavaBlockClasses = modConfiguration.lavaBlockClasses.toHashSet()
+        sunMultiplierPhases = modConfiguration.sunMultiplierPhases.sorted()
+        skyColorPhases = modConfiguration.skyColorPhases.sorted()
         heatLayers = modConfiguration.heatLayers.sorted()
         lightningPhases = modConfiguration.lightningPhases.sorted()
         dimensionWhitelist = modConfiguration.dimensionWhitelist.toHashSet()
-        skyColors.clear()
-        skyColors.add(config.phaseOneSkyColor)
-        skyColors.add(config.phaseTwoSkyColor)
-        heatLayers.forEach { skyColors.add(it.skyColor) }
+        skyColors = skyColorPhases.map { it.skyColor }.toHashSet()
     }
     override fun onInitialize() {
         AutoConfig.register(ModConfiguration::class.java) { definition: Config, configClass: Class<ModConfiguration> ->

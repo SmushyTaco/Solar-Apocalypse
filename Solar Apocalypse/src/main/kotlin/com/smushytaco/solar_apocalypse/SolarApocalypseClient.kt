@@ -113,12 +113,8 @@ object SolarApocalypseClient: ClientModInitializer {
     }
     private fun updateColor(originalColor: Int?, world: World?): Int? {
         val theWorld = world ?: MinecraftClient.getInstance().world ?: return originalColor
-        for (heatLayer in SolarApocalypse.heatLayers) if (heatLayer.enableCustomSkyColor && theWorld.isOldEnough(heatLayer.day)) return heatLayer.skyColor
-        return when {
-            config.enablePhaseTwoCustomSkyColor && theWorld.isOldEnough(config.phaseTwoDay) -> config.phaseTwoSkyColor
-            config.enablePhaseOneCustomSkyColor && theWorld.isOldEnough(config.phaseOneDay) -> config.phaseOneSkyColor
-            else -> originalColor
-        }
+        for (skyColorPhase in SolarApocalypse.skyColorPhases) if (theWorld.isOldEnough(skyColorPhase.day)) return skyColorPhase.skyColor
+        return originalColor
     }
     fun updateSkyColor(originalColor: Int?, world: World? = null) {
         val color = updateColor(originalColor, world)
