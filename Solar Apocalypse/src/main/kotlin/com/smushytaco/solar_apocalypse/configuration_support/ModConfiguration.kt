@@ -4,13 +4,11 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse.rgbToInt
 import com.smushytaco.solar_apocalypse.SolarApocalypse.stringIdentifier
 import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
-import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker
 import net.minecraft.block.Blocks
 @Config(name = SolarApocalypse.MOD_ID)
 class ModConfiguration: ConfigData {
     val apocalypseRandomTickSpeed = 3
     val phaseOneDay = 20.0
-    val phaseOneSunSizeMultiplier = 2.0F
     val turnToAirInsteadOfBurn = true
     val burnableBlockIdentifiers = listOf(
         Blocks.CACTUS.stringIdentifier,
@@ -121,7 +119,6 @@ class ModConfiguration: ConfigData {
     val blockTransformationTagToBlock = listOf(TagAndBlock("minecraft:leaves", Blocks.AIR))
     val blockTransformationClassToBlock = listOf<ClassAndBlock>()
     val phaseTwoDay = 40.0
-    val phaseTwoSunSizeMultiplier = 3.0F
     val blocksTurnToLavaDay = -1.0
     val lavaBlockIdentifiers = listOf(
         Blocks.COBBLESTONE.stringIdentifier,
@@ -141,12 +138,6 @@ class ModConfiguration: ConfigData {
     val cropGrowthSlowDownDay = 20.0
     val cropGrowthSlowDownMultiplier = 3
     val solarFireDamageMultiplier = 5.0F
-    val enablePhaseOneCustomSkyColor = true
-    @ColorPicker
-    val phaseOneSkyColor = rgbToInt(255, 140, 0)
-    val enablePhaseTwoCustomSkyColor = true
-    @ColorPicker
-    val phaseTwoSkyColor = rgbToInt(255, 69, 0)
     val enableCustomSkyLight = true
     val enableHeatOverlay = true
     val heatOverlayFadeTime = 3.0
@@ -159,9 +150,11 @@ class ModConfiguration: ConfigData {
     val apocalypseFogMultiplier = 0.5F
     val noCloudsDay = 40.0
     val cloudFadeTime = 3.0
+    val sunMultiplierPhases = listOf(SunMultiplierPair(20.0, 2.0F), SunMultiplierPair(40.0, 3.0F), SunMultiplierPair(60.0, 3.25F), SunMultiplierPair(80.0, 3.5F), SunMultiplierPair(100.0, 3.75F), SunMultiplierPair(120.0, 4.0F), SunMultiplierPair(140.0, 5.00F))
+    val skyColorPhases = listOf(SkyColorPair(20.0, rgbToInt(255, 140, 0)), SkyColorPair(40.0, rgbToInt(255, 69, 0)), SkyColorPair(60.0, rgbToInt(255, 50, 0)), SkyColorPair(80.0, rgbToInt(255, 40, 0)), SkyColorPair(100.0, rgbToInt(255, 30, 0)), SkyColorPair(120.0, rgbToInt(255, 30, 0)), SkyColorPair(140.0, rgbToInt(255, 0, 0)))
     val enableHeatLayers = true
     val enableHeatLayersOnBlocks = false
-    val heatLayers = listOf(HeatLayer(60.0, 100.0, 3.25F, true, rgbToInt(255, 50, 0)), HeatLayer(80.0, 60.0, 3.5F, true, rgbToInt(255, 40, 0)), HeatLayer(100.0, 50.0, 3.75F, true, rgbToInt(255, 30, 0)), HeatLayer(120.0, 25.0, 4.0F, true, rgbToInt(255, 30, 0)), HeatLayer(140.0, 0.0, 5.00F, true, rgbToInt(255, 0, 0)))
+    val heatLayers = listOf(HeatLayer(60.0, 100.0), HeatLayer(80.0, 60.0), HeatLayer(100.0, 50.0), HeatLayer(120.0, 25.0), HeatLayer(140.0, 0.0))
     val enableLightningPhases = true
     val lightningPhases = listOf(LightningPhase(60.0, 2.0), LightningPhase(80.0, 4.0), LightningPhase(100.0, 8.0), LightningPhase(120.0, 16.0), LightningPhase(140.0, 32.0))
     val dimensionWhitelist = listOf("minecraft:overworld")
