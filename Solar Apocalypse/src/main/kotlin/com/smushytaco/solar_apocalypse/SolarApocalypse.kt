@@ -71,7 +71,7 @@ object SolarApocalypse : ModInitializer {
         if (block.cacheIncorrectClasses.contains(name)) return false
         val kClass = try {
             Class.forName(name).kotlin
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return false
         }
         if (kClass.isInstance(block)) {

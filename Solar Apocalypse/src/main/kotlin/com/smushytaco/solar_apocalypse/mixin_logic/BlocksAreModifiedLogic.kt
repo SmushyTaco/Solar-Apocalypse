@@ -23,12 +23,14 @@ import net.minecraft.util.profiler.Profiler
 import net.minecraft.world.WorldEvents
 import net.minecraft.world.chunk.WorldChunk
 import net.minecraft.world.event.GameEvent
+import kotlin.jvm.optionals.getOrNull
+
 object BlocksAreModifiedLogic {
     private fun blockChanges(blockOne: Block, blockTwo: Block, serverWorld: ServerWorld, blockPos: BlockPos, instance: BlockState) {
         when {
-            blockOne is SlabBlock && blockTwo is SlabBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(SlabBlock.TYPE, instance.getNullable(SlabBlock.TYPE) ?: SlabType.BOTTOM).with(SlabBlock.WATERLOGGED, instance.getNullable(SlabBlock.WATERLOGGED) ?: false))
-            blockOne is StairsBlock && blockTwo is StairsBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(StairsBlock.FACING, instance.getNullable(StairsBlock.FACING) ?: Direction.NORTH).with(StairsBlock.HALF, instance.getNullable(StairsBlock.HALF) ?: BlockHalf.BOTTOM).with(StairsBlock.SHAPE, instance.getNullable(StairsBlock.SHAPE) ?: StairShape.STRAIGHT).with(StairsBlock.WATERLOGGED, instance.getNullable(StairsBlock.WATERLOGGED) ?: false))
-            blockOne is WallBlock && blockTwo is WallBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(WallBlock.UP, instance.getNullable(WallBlock.UP) ?: true).with(WallBlock.NORTH_SHAPE, instance.getNullable(WallBlock.NORTH_SHAPE) ?: WallShape.NONE).with(WallBlock.EAST_SHAPE, instance.getNullable(WallBlock.EAST_SHAPE) ?: WallShape.NONE).with(WallBlock.SOUTH_SHAPE, instance.getNullable(WallBlock.SOUTH_SHAPE) ?: WallShape.NONE).with(WallBlock.WEST_SHAPE, instance.getNullable(WallBlock.WEST_SHAPE) ?: WallShape.NONE).with(WallBlock.WATERLOGGED, instance.getNullable(WallBlock.WATERLOGGED) ?: false))
+            blockOne is SlabBlock && blockTwo is SlabBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(SlabBlock.TYPE, instance.getOrEmpty(SlabBlock.TYPE).getOrNull() ?: SlabType.BOTTOM).with(SlabBlock.WATERLOGGED, instance.getOrEmpty(SlabBlock.WATERLOGGED).getOrNull() ?: false))
+            blockOne is StairsBlock && blockTwo is StairsBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(StairsBlock.FACING, instance.getOrEmpty(StairsBlock.FACING).getOrNull() ?: Direction.NORTH).with(StairsBlock.HALF, instance.getOrEmpty(StairsBlock.HALF).getOrNull() ?: BlockHalf.BOTTOM).with(StairsBlock.SHAPE, instance.getOrEmpty(StairsBlock.SHAPE).getOrNull() ?: StairShape.STRAIGHT).with(StairsBlock.WATERLOGGED, instance.getOrEmpty(StairsBlock.WATERLOGGED).getOrNull() ?: false))
+            blockOne is WallBlock && blockTwo is WallBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(WallBlock.UP, instance.getOrEmpty(WallBlock.UP).getOrNull() ?: true).with(WallBlock.NORTH_WALL_SHAPE, instance.getOrEmpty(WallBlock.NORTH_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.EAST_WALL_SHAPE, instance.getOrEmpty(WallBlock.EAST_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.SOUTH_WALL_SHAPE, instance.getOrEmpty(WallBlock.SOUTH_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.WEST_WALL_SHAPE, instance.getOrEmpty(WallBlock.WEST_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.WATERLOGGED, instance.getOrEmpty(WallBlock.WATERLOGGED).getOrNull() ?: false))
             blockOne == Blocks.WET_SPONGE && blockTwo == Blocks.SPONGE -> {
                 serverWorld.setBlockState(blockPos, Blocks.SPONGE.defaultState, Block.NOTIFY_ALL)
                 serverWorld.syncWorldEvent(WorldEvents.WET_SPONGE_DRIES_OUT, blockPos, 0)
@@ -44,7 +46,6 @@ object BlocksAreModifiedLogic {
     }
     fun apocalypseRandomTicks(world: ServerWorld, profiler: Profiler, chunk: WorldChunk, startX: Int, startZ: Int) {
         profiler.swap("tickApocalypseBlocks")
-        @Suppress("KotlinConstantConditions")
         if (config.apocalypseRandomTickSpeed < 1) {
             profiler.pop()
             return

@@ -20,21 +20,30 @@ public abstract class BlockCacheImplementation implements BlockCache {
     @Unique
     private boolean cacheShouldBurn = false;
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public @NotNull String getCacheIdentifier() { return cacheIdentifier; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setCacheIdentifier(@NotNull String s) { cacheIdentifier = s; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public @NotNull HashSet<String> getCacheTags() { return cacheTags; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public @NotNull HashSet<String> getCacheCorrectClasses() { return cacheCorrectClasses; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public @NotNull HashSet<String> getCacheIncorrectClasses() { return cacheIncorrectClasses; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public boolean getCacheShouldRandomTick() { return cacheShouldRandomTick; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setCacheShouldRandomTick(boolean b) { cacheShouldRandomTick = b; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public boolean getCacheShouldBurn() { return cacheShouldBurn; }
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public void setCacheShouldBurn(boolean b) { cacheShouldBurn = b; }
 }

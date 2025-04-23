@@ -1,5 +1,4 @@
 package com.smushytaco.solar_apocalypse.mixins;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
 import net.minecraft.entity.Entity;
@@ -12,6 +11,8 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public abstract class ExperienceOrbsItemsAndProjectilesBurn {
     @Shadow
@@ -20,9 +21,14 @@ public abstract class ExperienceOrbsItemsAndProjectilesBurn {
     public abstract boolean isAlive();
     @Shadow
     public abstract BlockPos getBlockPos();
-    @ModifyReturnValue(method = "isInLava", at = @At("RETURN"))
-    private boolean hookIsInLava(boolean original) {
+    @Inject(method = "tick", at = @At("RETURN"))
+    private void hookTick(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
-        return original || (entity instanceof ExperienceOrbEntity || entity instanceof ItemEntity || entity instanceof PersistentProjectileEntity || entity instanceof SnowballEntity) && WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && (getWorld().isSkyVisible(getBlockPos()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(entity, getWorld()));
+        if (entity.isOnFire() || entity.isFireImmune()) return;
+        boolean conditions = (entity instanceof ExperienceOrbEntity || entity instanceof ItemEntity || entity instanceof PersistentProjectileEntity || entity instanceof SnowballEntity) && WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && (getWorld().isSkyVisible(getBlockPos()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(entity, getWorld()));
+        if (conditions) {
+            entity.setOnFireFromLava();
+            entity.setOnFireForTicks(300);
+        }
     }
 }

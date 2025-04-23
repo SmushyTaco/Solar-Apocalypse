@@ -18,6 +18,7 @@ public abstract class ChuckSectionApocalypseTicks implements ApocalypseTickable 
     @Unique
     private int randomApocalypseTickableBlockCount = 0;
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getRandomApocalypseTickableBlockCount() { return randomApocalypseTickableBlockCount; }
     @WrapOperation(method = "calculateCounts", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/PalettedContainer;count(Lnet/minecraft/world/chunk/PalettedContainer$Counter;)V"))
     private void hookCalculateCounts(PalettedContainer<BlockState> instance, PalettedContainer.Counter<BlockState> counter, Operation<Void> original) {

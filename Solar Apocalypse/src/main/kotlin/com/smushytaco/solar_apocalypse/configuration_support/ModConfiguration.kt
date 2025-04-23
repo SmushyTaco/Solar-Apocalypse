@@ -12,6 +12,15 @@ class ModConfiguration: ConfigData {
     val turnToAirInsteadOfBurn = true
     val burnableBlockIdentifiers = listOf(
         Blocks.CACTUS.stringIdentifier,
+        Blocks.CACTUS_FLOWER.stringIdentifier,
+        Blocks.SHORT_DRY_GRASS.stringIdentifier,
+        Blocks.SHORT_GRASS.stringIdentifier,
+        Blocks.TALL_DRY_GRASS.stringIdentifier,
+        Blocks.TALL_GRASS.stringIdentifier,
+        Blocks.BUSH.stringIdentifier,
+        Blocks.FIREFLY_BUSH.stringIdentifier,
+        Blocks.LEAF_LITTER.stringIdentifier,
+        Blocks.WILDFLOWERS.stringIdentifier,
         Blocks.PUMPKIN.stringIdentifier,
         Blocks.CARVED_PUMPKIN.stringIdentifier,
         Blocks.JACK_O_LANTERN.stringIdentifier,

@@ -12,6 +12,7 @@ public abstract class BlockStateCounterApocalypseTicks implements ApocalypseTick
     @Unique
     private int randomApocalypseTickableBlockCount = 0;
     @Override
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getRandomApocalypseTickableBlockCount() { return randomApocalypseTickableBlockCount; }
     @Inject(method = "accept", at = @At("RETURN"))
     private void hookAccept(BlockState blockState, int i, CallbackInfo ci) {
