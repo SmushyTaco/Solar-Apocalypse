@@ -11,6 +11,7 @@ class ModConfiguration: ConfigData {
     val phaseOneDay = 20.0
     val turnToAirInsteadOfBurn = true
     val burnableBlockIdentifiers = listOf(
+        Blocks.DRIED_GHAST.stringIdentifier,
         Blocks.CACTUS.stringIdentifier,
         Blocks.CACTUS_FLOWER.stringIdentifier,
         Blocks.SHORT_DRY_GRASS.stringIdentifier,

@@ -24,19 +24,18 @@ import net.minecraft.world.WorldEvents
 import net.minecraft.world.chunk.WorldChunk
 import net.minecraft.world.event.GameEvent
 import kotlin.jvm.optionals.getOrNull
-
 object BlocksAreModifiedLogic {
     private fun blockChanges(blockOne: Block, blockTwo: Block, serverWorld: ServerWorld, blockPos: BlockPos, instance: BlockState) {
-        when {
-            blockOne is SlabBlock && blockTwo is SlabBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(SlabBlock.TYPE, instance.getOrEmpty(SlabBlock.TYPE).getOrNull() ?: SlabType.BOTTOM).with(SlabBlock.WATERLOGGED, instance.getOrEmpty(SlabBlock.WATERLOGGED).getOrNull() ?: false))
-            blockOne is StairsBlock && blockTwo is StairsBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(StairsBlock.FACING, instance.getOrEmpty(StairsBlock.FACING).getOrNull() ?: Direction.NORTH).with(StairsBlock.HALF, instance.getOrEmpty(StairsBlock.HALF).getOrNull() ?: BlockHalf.BOTTOM).with(StairsBlock.SHAPE, instance.getOrEmpty(StairsBlock.SHAPE).getOrNull() ?: StairShape.STRAIGHT).with(StairsBlock.WATERLOGGED, instance.getOrEmpty(StairsBlock.WATERLOGGED).getOrNull() ?: false))
-            blockOne is WallBlock && blockTwo is WallBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(WallBlock.UP, instance.getOrEmpty(WallBlock.UP).getOrNull() ?: true).with(WallBlock.NORTH_WALL_SHAPE, instance.getOrEmpty(WallBlock.NORTH_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.EAST_WALL_SHAPE, instance.getOrEmpty(WallBlock.EAST_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.SOUTH_WALL_SHAPE, instance.getOrEmpty(WallBlock.SOUTH_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.WEST_WALL_SHAPE, instance.getOrEmpty(WallBlock.WEST_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.WATERLOGGED, instance.getOrEmpty(WallBlock.WATERLOGGED).getOrNull() ?: false))
-            blockOne == Blocks.WET_SPONGE && blockTwo == Blocks.SPONGE -> {
+        when (blockOne) {
+            is SlabBlock if blockTwo is SlabBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(SlabBlock.TYPE, instance.getOrEmpty(SlabBlock.TYPE).getOrNull() ?: SlabType.BOTTOM).with(SlabBlock.WATERLOGGED, instance.getOrEmpty(SlabBlock.WATERLOGGED).getOrNull() ?: false))
+            is StairsBlock if blockTwo is StairsBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(StairsBlock.FACING, instance.getOrEmpty(StairsBlock.FACING).getOrNull() ?: Direction.NORTH).with(StairsBlock.HALF, instance.getOrEmpty(StairsBlock.HALF).getOrNull() ?: BlockHalf.BOTTOM).with(StairsBlock.SHAPE, instance.getOrEmpty(StairsBlock.SHAPE).getOrNull() ?: StairShape.STRAIGHT).with(StairsBlock.WATERLOGGED, instance.getOrEmpty(StairsBlock.WATERLOGGED).getOrNull() ?: false))
+            is WallBlock if blockTwo is WallBlock -> serverWorld.setBlockState(blockPos, blockTwo.defaultState.with(WallBlock.UP, instance.getOrEmpty(WallBlock.UP).getOrNull() ?: true).with(WallBlock.NORTH_WALL_SHAPE, instance.getOrEmpty(WallBlock.NORTH_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.EAST_WALL_SHAPE, instance.getOrEmpty(WallBlock.EAST_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.SOUTH_WALL_SHAPE, instance.getOrEmpty(WallBlock.SOUTH_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.WEST_WALL_SHAPE, instance.getOrEmpty(WallBlock.WEST_WALL_SHAPE).getOrNull() ?: WallShape.NONE).with(WallBlock.WATERLOGGED, instance.getOrEmpty(WallBlock.WATERLOGGED).getOrNull() ?: false))
+            Blocks.WET_SPONGE if blockTwo == Blocks.SPONGE -> {
                 serverWorld.setBlockState(blockPos, Blocks.SPONGE.defaultState, Block.NOTIFY_ALL)
                 serverWorld.syncWorldEvent(WorldEvents.WET_SPONGE_DRIES_OUT, blockPos, 0)
                 serverWorld.playSound(null, blockPos, SoundEvents.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, (1.0F + serverWorld.getRandom().nextFloat() * 0.2F) * 0.7F)
             }
-            blockOne == Blocks.FARMLAND -> {
+            Blocks.FARMLAND -> {
                 val blockState = Block.pushEntitiesUpBeforeBlockChange(instance, blockTwo.defaultState, serverWorld, blockPos)
                 serverWorld.setBlockState(blockPos, blockState)
                 serverWorld.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(null, blockState))
