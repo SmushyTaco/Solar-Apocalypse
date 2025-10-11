@@ -16,5 +16,5 @@ public abstract class PlayersBurn extends LivingEntity {
     @Shadow
     public abstract boolean isCreative();
     @Inject(method = "tickMovement", at = @At("HEAD"))
-    private void hookTickMovement(CallbackInfo ci) { if (WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !isOnFire() && !getWorld().isRaining() && !isSpectator() && !isCreative() && !getWorld().isNight() && !getWorld().isClient && (getWorld().isSkyVisible(getBlockPos()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, getWorld())) && !hasStatusEffect(SolarApocalypse.INSTANCE.getSunscreen())) setOnFireFor(8); }
+    private void hookTickMovement(CallbackInfo ci) { if (WorldDayCalculation.INSTANCE.isOldEnough(getEntityWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !isOnFire() && !getEntityWorld().isRaining() && !isSpectator() && !isCreative() && !getEntityWorld().isNight() && !getEntityWorld().isClient() && (getEntityWorld().isSkyVisible(getBlockPos()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, getEntityWorld())) && !hasStatusEffect(SolarApocalypse.INSTANCE.getSunscreen())) setOnFireFor(8); }
 }

@@ -56,7 +56,7 @@ object SolarApocalypse : ModInitializer {
             stringToBlock[this] = block
             return block
         }
-    fun World.apocalypseChecks(pos: BlockPos) = isOldEnough(config.phaseOneDay) && !isNight && !isRaining && (isSkyVisible(pos.up()) || pos.shouldHeatLayerDamage(this))
+    fun World.apocalypseChecks(pos: BlockPos, forFiniteWater: Boolean = false) = isOldEnough(config.phaseOneDay) && (forFiniteWater || !isNight) && !isRaining && (isSkyVisible(pos.up()) || pos.shouldHeatLayerDamage(this))
     private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
         if (!condition) return false
         for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
@@ -201,7 +201,7 @@ object SolarApocalypse : ModInitializer {
         Registry.register(Registries.STATUS_EFFECT, Identifier.of(MOD_ID, "sunscreen"), Sunscreen)
         sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier.of(MOD_ID, "sunscreen")).get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
-            val world = newPlayer.world
+            val world = newPlayer.entityWorld
             if (!world.isOldEnough(config.phaseTwoDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || (!world.isSkyVisible(newPlayer.blockPos) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
             newPlayer.addStatusEffect(StatusEffectInstance(sunscreen, 2400, 0, false, false, true))
         })

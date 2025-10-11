@@ -99,12 +99,12 @@ object SolarApocalypseClient: ClientModInitializer {
     }
     private fun ClientPlayerEntity.updateCloudFade(value: Float, time: Double, day: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
-        val should = world.transitionConditions(day)
+        val should = entityWorld.transitionConditions(day)
         if (totalTicks <= 0) return if (should) 1.0F else 0.0F
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
     private fun World.transitionConditions(day: Double) = isOldEnough(day) && !isRaining && !isNight
-    private fun ClientPlayerEntity.transitionConditions(day: Double) = world.isOldEnough(day) && isAlive && !world.isRaining && !isSpectator && !isCreative && !world.isNight && (world.isSkyVisible(blockPos) || shouldHeatLayerDamage(world)) && !hasStatusEffect(sunscreen)
+    private fun ClientPlayerEntity.transitionConditions(day: Double) = entityWorld.isOldEnough(day) && isAlive && !entityWorld.isRaining && !isSpectator && !isCreative && !entityWorld.isNight && (entityWorld.isSkyVisible(blockPos) || shouldHeatLayerDamage(entityWorld)) && !hasStatusEffect(sunscreen)
     @Suppress("SameParameterValue")
     private fun updateTransition(value: Float, time: Double): Float {
         val totalTicks = ceil(time * 20).toInt()

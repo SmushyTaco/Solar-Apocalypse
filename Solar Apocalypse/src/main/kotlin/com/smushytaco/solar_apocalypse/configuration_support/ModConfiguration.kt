@@ -54,10 +54,26 @@ class ModConfiguration: ConfigData {
         Blocks.CAVE_VINES_PLANT.stringIdentifier,
         Blocks.SPORE_BLOSSOM.stringIdentifier,
         Blocks.COBWEB.stringIdentifier,
+        Blocks.OAK_SHELF.stringIdentifier,
+        Blocks.SPRUCE_SHELF.stringIdentifier,
+        Blocks.BIRCH_SHELF.stringIdentifier,
+        Blocks.JUNGLE_SHELF.stringIdentifier,
+        Blocks.ACACIA_SHELF.stringIdentifier,
+        Blocks.DARK_OAK_SHELF.stringIdentifier,
+        Blocks.MANGROVE_SHELF.stringIdentifier,
+        Blocks.CHERRY_SHELF.stringIdentifier,
+        Blocks.PALE_OAK_SHELF.stringIdentifier,
+        Blocks.BAMBOO_SHELF.stringIdentifier,
         Blocks.TORCH.stringIdentifier,
         Blocks.WALL_TORCH.stringIdentifier,
+        Blocks.SOUL_TORCH.stringIdentifier,
+        Blocks.SOUL_WALL_TORCH.stringIdentifier,
+        Blocks.COPPER_TORCH.stringIdentifier,
+        Blocks.COPPER_WALL_TORCH.stringIdentifier,
+        Blocks.REDSTONE_TORCH.stringIdentifier,
+        Blocks.REDSTONE_WALL_TORCH.stringIdentifier,
         Blocks.GLASS.stringIdentifier,
-        Blocks.GLASS_PANE.stringIdentifier,
+        Blocks.GLASS_PANE.stringIdentifier
     )
     val burnableBlockTags = listOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors", "minecraft:beds")
     val burnableBlockClasses = listOf("class_2261", "class_2504", "class_2506")

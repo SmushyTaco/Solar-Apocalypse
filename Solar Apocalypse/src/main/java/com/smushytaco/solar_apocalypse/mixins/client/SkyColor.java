@@ -23,13 +23,13 @@ public abstract class SkyColor {
     @ModifyReturnValue(method = "canSetIce(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;Z)Z", at = @At("RETURN"))
     public boolean hookCanSetIce(boolean original, WorldView world, BlockPos pos, boolean doWaterCheck) {
         if (!(world instanceof World realWorld)) return original;
-        if (SolarApocalypse.INSTANCE.apocalypseChecks(realWorld, pos)) return false;
+        if (SolarApocalypse.INSTANCE.apocalypseChecks(realWorld, pos, false)) return false;
         return original;
     }
     @ModifyReturnValue(method = "canSetSnow", at = @At("RETURN"))
     public boolean hookCanSetSnow(boolean original, WorldView world, BlockPos pos) {
         if (!(world instanceof World realWorld)) return original;
-        if (SolarApocalypse.INSTANCE.apocalypseChecks(realWorld, pos)) return false;
+        if (SolarApocalypse.INSTANCE.apocalypseChecks(realWorld, pos, false)) return false;
         return original;
     }
 }

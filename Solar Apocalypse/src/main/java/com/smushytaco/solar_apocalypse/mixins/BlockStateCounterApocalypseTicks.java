@@ -14,6 +14,7 @@ public abstract class BlockStateCounterApocalypseTicks implements ApocalypseTick
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getRandomApocalypseTickableBlockCount() { return randomApocalypseTickableBlockCount; }
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "accept", at = @At("RETURN"))
     private void hookAccept(BlockState blockState, int i, CallbackInfo ci) {
         if (blockState.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount += i;

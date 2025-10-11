@@ -4,9 +4,9 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse
 import com.smushytaco.solar_apocalypse.SolarApocalypseClient
 import com.smushytaco.solar_apocalypse.WorldDayCalculation.isOldEnough
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.VertexConsumer
 import net.minecraft.world.World
 import org.joml.Matrix4f
+import org.joml.Matrix4fStack
 object BigSunLogic {
     val World.sunSize: Float
         get() {
@@ -20,12 +20,12 @@ object BigSunLogic {
             if (multiplier == 0.0F) multiplier = 1.0F
             return multiplier
         }
-    fun bigSunGenerator(instance: VertexConsumer, matrix: Matrix4f, x: Float, y: Float, z: Float, original: Operation<VertexConsumer>): VertexConsumer {
-        val world = MinecraftClient.getInstance().world ?: return original.call(instance, matrix, x, y, z)
+    fun bigSunGenerator(instance: Matrix4fStack, x: Float, y: Float, z: Float, original: Operation<Matrix4f>): Matrix4f {
+        val world = MinecraftClient.getInstance().world ?: return original.call(instance, x, y, z)
         var multiplier = world.sunSize
         if (multiplier == 0.0F) multiplier = 1.0F
         SolarApocalypseClient.currentSunMultiplier = multiplier
         multiplier = SolarApocalypseClient.previousSunMultiplier + (SolarApocalypseClient.currentSunMultiplier - SolarApocalypseClient.previousSunMultiplier) * SolarApocalypseClient.sunTransition
-        return original.call(instance, matrix, x * multiplier, y, z * multiplier)
+        return original.call(instance, x * multiplier, y, z * multiplier)
     }
 }

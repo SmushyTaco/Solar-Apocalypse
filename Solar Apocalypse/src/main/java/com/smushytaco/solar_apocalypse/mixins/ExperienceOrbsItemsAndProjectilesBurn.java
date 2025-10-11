@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public abstract class ExperienceOrbsItemsAndProjectilesBurn {
     @Shadow
-    public abstract World getWorld();
+    public abstract World getEntityWorld();
     @Shadow
     public abstract boolean isAlive();
     @Shadow
@@ -25,7 +25,7 @@ public abstract class ExperienceOrbsItemsAndProjectilesBurn {
     private void hookTick(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
         if (entity.isOnFire() || entity.isFireImmune()) return;
-        boolean conditions = (entity instanceof ExperienceOrbEntity || entity instanceof ItemEntity || entity instanceof PersistentProjectileEntity || entity instanceof SnowballEntity) && WorldDayCalculation.INSTANCE.isOldEnough(getWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !getWorld().isRaining() && !getWorld().isNight() && !getWorld().isClient && (getWorld().isSkyVisible(getBlockPos()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(entity, getWorld()));
+        boolean conditions = (entity instanceof ExperienceOrbEntity || entity instanceof ItemEntity || entity instanceof PersistentProjectileEntity || entity instanceof SnowballEntity) && WorldDayCalculation.INSTANCE.isOldEnough(getEntityWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !getEntityWorld().isRaining() && !getEntityWorld().isNight() && !getEntityWorld().isClient() && (getEntityWorld().isSkyVisible(getBlockPos()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(entity, getEntityWorld()));
         if (conditions) {
             entity.setOnFireFromLava();
             entity.setOnFireForTicks(300);
