@@ -1,22 +1,22 @@
 package com.smushytaco.solar_apocalypse.mixins.client;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.SolarApocalypseClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-@Mixin(InGameHud.class)
+@Mixin(Gui.class)
 public abstract class HeatOverlay {
     @Shadow
-    protected abstract void renderOverlay(DrawContext context, Identifier texture, float opacity);
-    @Inject(method = "renderMiscOverlays", at = @At("RETURN"))
-    private void hookRenderMiscOverlays(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+    protected abstract void renderTextureOverlay(GuiGraphics context, ResourceLocation texture, float opacity);
+    @Inject(method = "renderCameraOverlays", at = @At("RETURN"))
+    private void hookRenderMiscOverlays(GuiGraphics context, DeltaTracker tickCounter, CallbackInfo ci) {
         if (!SolarApocalypse.INSTANCE.getConfig().getEnableHeatOverlay() || SolarApocalypseClient.INSTANCE.getOverlayOpacity() == 0.0F) return;
-        renderOverlay(context, SolarApocalypse.INSTANCE.getHEAT_OVERLAY(), SolarApocalypseClient.INSTANCE.getOverlayOpacity());
+        renderTextureOverlay(context, SolarApocalypse.INSTANCE.getHEAT_OVERLAY(), SolarApocalypseClient.INSTANCE.getOverlayOpacity());
     }
 }

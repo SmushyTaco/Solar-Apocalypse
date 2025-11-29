@@ -1,9 +1,9 @@
 package com.smushytaco.solar_apocalypse
-import net.minecraft.world.World
+import net.minecraft.world.level.Level
 object WorldDayCalculation {
-    fun World.isOldEnough(days: Double): Boolean {
-        if (!SolarApocalypse.dimensionWhitelist.contains(registryKey.value.toString())) return false
-        val worldAgeInMinecraftDays = this.timeOfDay / 24000.0
+    fun Level.isOldEnough(days: Double): Boolean {
+        if (!SolarApocalypse.dimensionWhitelist.contains(dimension().location().toString())) return false
+        val worldAgeInMinecraftDays = this.dayTime / 24000.0
         return days in 0.0..worldAgeInMinecraftDays
     }
 }

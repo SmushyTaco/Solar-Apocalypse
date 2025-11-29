@@ -1,18 +1,23 @@
 package com.smushytaco.solar_apocalypse.mixin_logic
 import com.smushytaco.solar_apocalypse.SolarApocalypse.apocalypseChecks
-import net.minecraft.block.*
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.BucketPickup
+import net.minecraft.world.level.block.LiquidBlock
+import net.minecraft.world.level.block.state.BlockState
 object WaterEvaporatesLogic {
-    fun randomTick(serverWorld: ServerWorld, blockState: BlockState, blockPos: BlockPos) {
+    fun randomTick(serverWorld: ServerLevel, blockState: BlockState, blockPos: BlockPos) {
         if (!serverWorld.apocalypseChecks(blockPos)) return
         val block = blockState.block
         when {
-            block is FluidDrainable && block.tryDrainFluid(null, serverWorld, blockPos, blockState).isEmpty && block is FluidBlock -> serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState, Block.NOTIFY_ALL)
-            blockState.isOf(Blocks.KELP) || blockState.isOf(Blocks.KELP_PLANT) || blockState.isOf(Blocks.SEAGRASS) || blockState.isOf(Blocks.TALL_SEAGRASS) -> {
+            block is BucketPickup && block.pickupBlock(null, serverWorld, blockPos, blockState).isEmpty && block is LiquidBlock -> serverWorld.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL)
+            blockState.`is`(Blocks.KELP) || blockState.`is`(Blocks.KELP_PLANT) || blockState.`is`(Blocks.SEAGRASS) || blockState.`is`(
+                Blocks.TALL_SEAGRASS) -> {
                 val blockEntity = if (blockState.hasBlockEntity()) serverWorld.getBlockEntity(blockPos) else null
-                Block.dropStacks(blockState, serverWorld, blockPos, blockEntity)
-                serverWorld.setBlockState(blockPos, Blocks.AIR.defaultState, Block.NOTIFY_ALL)
+                Block.dropResources(blockState, serverWorld, blockPos, blockEntity)
+                serverWorld.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL)
             }
         }
     }

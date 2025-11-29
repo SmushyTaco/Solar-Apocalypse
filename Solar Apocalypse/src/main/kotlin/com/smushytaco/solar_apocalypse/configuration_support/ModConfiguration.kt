@@ -4,7 +4,7 @@ import com.smushytaco.solar_apocalypse.SolarApocalypse.rgbToInt
 import com.smushytaco.solar_apocalypse.SolarApocalypse.stringIdentifier
 import me.shedaniel.autoconfig.ConfigData
 import me.shedaniel.autoconfig.annotation.Config
-import net.minecraft.block.Blocks
+import net.minecraft.world.level.block.Blocks
 @Config(name = SolarApocalypse.MOD_ID)
 class ModConfiguration: ConfigData {
     val apocalypseRandomTickSpeed = 3

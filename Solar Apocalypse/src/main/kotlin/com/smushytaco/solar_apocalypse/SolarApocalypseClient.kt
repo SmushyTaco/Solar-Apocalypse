@@ -7,9 +7,9 @@ import com.smushytaco.solar_apocalypse.mixin_logic.BigSunLogic.sunSize
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.network.ClientPlayerEntity
-import net.minecraft.world.World
+import net.minecraft.client.Minecraft
+import net.minecraft.client.player.LocalPlayer
+import net.minecraft.world.level.Level
 import kotlin.math.ceil
 object SolarApocalypseClient: ClientModInitializer {
     var hasInitialized = false
@@ -66,13 +66,13 @@ object SolarApocalypseClient: ClientModInitializer {
         ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick { world ->
             if (hasInitialized) return@EndWorldTick
             cloudFade = if (world.transitionConditions(config.noCloudsDay)) 1.0F else 0.0F
-            MinecraftClient.getInstance().player?.let { player ->
+            Minecraft.getInstance().player?.let { player ->
                 fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
                 overlayOpacity = if (player.transitionConditions(config.phaseTwoDay)) 1.0F else 0.0F
-                _currentSkyColor = world.biomeAccess.getBiome(player.blockPos).value().skyColor
+                _currentSkyColor = world.biomeManager.getBiome(player.blockPosition()).value().skyColor
                 previousSkyColor = _currentSkyColor
                 originalSkyColor = _currentSkyColor
-                _currentFogColor = world.biomeAccess.getBiome(player.blockPos).value().fogColor
+                _currentFogColor = world.biomeManager.getBiome(player.blockPosition()).value().fogColor
                 previousFogColor = _currentFogColor
             }
             _currentSunMultiplier = world.sunSize
@@ -91,32 +91,34 @@ object SolarApocalypseClient: ClientModInitializer {
             if (fogTransition != 1.0F) fogTransition = updateTransition(fogTransition, config.fogColorTransitionTime)
         })
     }
-    private fun ClientPlayerEntity.updateFade(value: Float, time: Double, day: Double): Float {
+    private fun LocalPlayer.updateFade(value: Float, time: Double, day: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
         val should = transitionConditions(day)
         if (totalTicks <= 0) return if (should) 1.0F else 0.0F
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
-    private fun ClientPlayerEntity.updateCloudFade(value: Float, time: Double, day: Double): Float {
+    private fun LocalPlayer.updateCloudFade(value: Float, time: Double, day: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
-        val should = entityWorld.transitionConditions(day)
+        val should = level().transitionConditions(day)
         if (totalTicks <= 0) return if (should) 1.0F else 0.0F
         return if (should) (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F) else (value - (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
-    private fun World.transitionConditions(day: Double) = isOldEnough(day) && !isRaining && !isNight
-    private fun ClientPlayerEntity.transitionConditions(day: Double) = entityWorld.isOldEnough(day) && isAlive && !entityWorld.isRaining && !isSpectator && !isCreative && !entityWorld.isNight && (entityWorld.isSkyVisible(blockPos) || shouldHeatLayerDamage(entityWorld)) && !hasStatusEffect(sunscreen)
+    private fun Level.transitionConditions(day: Double) = isOldEnough(day) && !isRaining && !isDarkOutside
+    private fun LocalPlayer.transitionConditions(day: Double) = level().isOldEnough(day) && isAlive && !level().isRaining && !isSpectator && !isCreative && !level().isDarkOutside && (level().canSeeSky(
+        blockPosition()
+    ) || shouldHeatLayerDamage(level())) && !hasEffect(sunscreen)
     @Suppress("SameParameterValue")
     private fun updateTransition(value: Float, time: Double): Float {
         val totalTicks = ceil(time * 20).toInt()
         if (totalTicks <= 0) return 1.0F
         return (value + (1.0F / totalTicks)).coerceIn(0.0F, 1.0F)
     }
-    private fun updateColor(originalColor: Int?, world: World?): Int? {
-        val theWorld = world ?: MinecraftClient.getInstance().world ?: return originalColor
+    private fun updateColor(originalColor: Int?, world: Level?): Int? {
+        val theWorld = world ?: Minecraft.getInstance().level ?: return originalColor
         for (skyColorPhase in SolarApocalypse.skyColorPhases) if (theWorld.isOldEnough(skyColorPhase.day)) return skyColorPhase.skyColor
         return originalColor
     }
-    fun updateSkyColor(originalColor: Int?, world: World? = null) {
+    fun updateSkyColor(originalColor: Int?, world: Level? = null) {
         val color = updateColor(originalColor, world)
         if (color != null) {
             if (color == originalColor) originalSkyColor = color
@@ -128,7 +130,7 @@ object SolarApocalypseClient: ClientModInitializer {
             }
         }
     }
-    fun updateFogColor(originalColor: Int?, world: World? = null) {
+    fun updateFogColor(originalColor: Int?, world: Level? = null) {
         val color = updateColor(originalColor, world)
         if (color != null) {
             if (hasInitialized) {

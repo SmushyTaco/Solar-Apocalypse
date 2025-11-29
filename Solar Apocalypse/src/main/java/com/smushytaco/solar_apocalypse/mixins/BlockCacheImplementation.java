@@ -1,11 +1,11 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.smushytaco.solar_apocalypse.BlockCache;
-import net.minecraft.block.AbstractBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import java.util.HashSet;
-@Mixin(AbstractBlock.class)
+@Mixin(BlockBehaviour.class)
 public abstract class BlockCacheImplementation implements BlockCache {
     @Unique
     private String cacheIdentifier = "";

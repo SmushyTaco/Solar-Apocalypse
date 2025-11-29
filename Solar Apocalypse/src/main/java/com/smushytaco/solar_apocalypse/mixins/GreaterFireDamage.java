@@ -1,29 +1,30 @@
 package com.smushytaco.solar_apocalypse.mixins;
 import com.smushytaco.solar_apocalypse.SolarApocalypse;
 import com.smushytaco.solar_apocalypse.WorldDayCalculation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(LivingEntity.class)
 public abstract class GreaterFireDamage extends Entity {
-    protected GreaterFireDamage(EntityType<?> type, World world) { super(type, world); }
+    protected GreaterFireDamage(EntityType<?> type, Level world) { super(type, world); }
     @Shadow
-    public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
-    @ModifyVariable(method = "damage", at = @At("HEAD"), index = 3, argsOnly = true)
-    private float modifyDamageAmount(float value, ServerWorld world, DamageSource source) {
-        if (!source.isIn(DamageTypeTags.IS_FIRE) || hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(getEntityWorld(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || !isAlive() || getEntityWorld().isRaining() || getEntityWorld().isNight() || getEntityWorld().isClient() || (!getEntityWorld().isSkyVisible(getBlockPos()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, getEntityWorld()))) return value;
-        return value * MathHelper.clamp(SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier(), 1.0F, Float.MAX_VALUE);
+    public abstract boolean hasEffect(Holder<MobEffect> effect);
+    @SuppressWarnings("resource")
+    @ModifyVariable(method = "hurtServer", at = @At("HEAD"), index = 3, argsOnly = true)
+    private float modifyDamageAmount(float value, ServerLevel world, DamageSource source) {
+        if (!source.is(DamageTypeTags.IS_FIRE) || hasEffect(MobEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(level(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || !isAlive() || level().isRaining() || level().isDarkOutside() || level().isClientSide() || (!level().canSeeSky(blockPosition()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, level()))) return value;
+        return value * Mth.clamp(SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier(), 1.0F, Float.MAX_VALUE);
     }
 }

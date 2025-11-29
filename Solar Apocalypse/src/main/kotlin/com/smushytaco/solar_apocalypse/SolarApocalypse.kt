@@ -9,32 +9,36 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
-import net.minecraft.block.*
-import net.minecraft.block.enums.NoteBlockInstrument
-import net.minecraft.entity.Entity
-import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemGroups
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.registry.entry.RegistryEntry
-import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.util.ActionResult
-import net.minecraft.util.ColorCode
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.util.ColorRGBA
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.CreativeModeTabs
+import net.minecraft.world.item.Item
+import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.ColoredFallingBlock
+import net.minecraft.world.level.block.SoundType
+import net.minecraft.world.level.block.state.BlockBehaviour
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument
+import net.minecraft.world.level.material.MapColor
 object SolarApocalypse : ModInitializer {
     fun rgbToInt(red: Int, green: Int, blue: Int) = (red.coerceIn(0, 255) shl 16) or (green.coerceIn(0, 255) shl 8) or blue.coerceIn(0, 255)
     val Block.stringIdentifier: String
         get() {
             this as BlockCache
             if (cacheIdentifier != "") return cacheIdentifier
-            val identifier = Registries.BLOCK.getId(this).toString()
+            val identifier = BuiltInRegistries.BLOCK.getKey(this).toString()
             cacheIdentifier = identifier
             return identifier
         }
@@ -42,7 +46,7 @@ object SolarApocalypse : ModInitializer {
         this as BlockCache
         if (cacheTags.contains(tag)) return true
         @Suppress("DEPRECATION")
-        if (registryEntry.streamTags().use { it.anyMatch { theTag -> theTag.id.toString() == tag } }) {
+        if (builtInRegistryHolder().tags().use { it.anyMatch { theTag -> theTag.location.toString() == tag } }) {
             cacheTags.add(tag)
             return true
         }
@@ -52,18 +56,18 @@ object SolarApocalypse : ModInitializer {
     val String.block: Block
         get() {
             stringToBlock[this]?.let { return it }
-            val block = Registries.BLOCK[Identifier.of(this)]
+            val block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(this))
             stringToBlock[this] = block
             return block
         }
-    fun World.apocalypseChecks(pos: BlockPos, forFiniteWater: Boolean = false) = isOldEnough(config.phaseOneDay) && (forFiniteWater || !isNight) && !isRaining && (isSkyVisible(pos.up()) || pos.shouldHeatLayerDamage(this))
-    private fun heatLayerCheck(world: World, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
+    fun Level.apocalypseChecks(pos: BlockPos, forFiniteWater: Boolean = false) = isOldEnough(config.phaseOneDay) && (forFiniteWater || !isDarkOutside) && !isRaining && (canSeeSky(pos.above()) || pos.shouldHeatLayerDamage(this))
+    private fun heatLayerCheck(world: Level, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
         if (!condition) return false
         for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
         return false
     }
-    fun Entity.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y)
-    fun BlockPos.shouldHeatLayerDamage(world: World) = heatLayerCheck(world, y.toDouble(), config.enableHeatLayers && config.enableHeatLayersOnBlocks)
+    fun Entity.shouldHeatLayerDamage(world: Level) = heatLayerCheck(world, y)
+    fun BlockPos.shouldHeatLayerDamage(world: Level) = heatLayerCheck(world, y.toDouble(), config.enableHeatLayers && config.enableHeatLayersOnBlocks)
     fun isInstanceOfClassByName(block: Block, className: String): Boolean {
         val name = if (!className.contains('.')) "net.minecraft.$className" else className
         block as BlockCache
@@ -81,13 +85,13 @@ object SolarApocalypse : ModInitializer {
         block.cacheIncorrectClasses.add(name)
         return false
     }
-    val World.lightningMultiplier: Double
+    val Level.lightningMultiplier: Double
         get() {
             for (lightningPhase in lightningPhases) if (isOldEnough(lightningPhase.day)) return lightningPhase.multiplier.coerceAtLeast(1.0)
             return 1.0
         }
     const val MOD_ID = "solar_apocalypse"
-    val HEAT_OVERLAY: Identifier = Identifier.of(MOD_ID, "textures/misc/heat_overlay_outline.png")
+    val HEAT_OVERLAY: ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/misc/heat_overlay_outline.png")
     private var burnableBlockIdentifiers = hashSetOf<String>()
     private var burnableBlockTags = hashSetOf<String>()
     private var burnableBlockClasses = hashSetOf<String>()
@@ -112,7 +116,7 @@ object SolarApocalypse : ModInitializer {
         private set
     lateinit var config: ModConfiguration
         private set
-    lateinit var sunscreen: RegistryEntry.Reference<StatusEffect>
+    lateinit var sunscreen: Holder.Reference<MobEffect>
         private set
     private fun calculateBlocks() {
         val identifiers = hashSetOf<String>()
@@ -127,9 +131,9 @@ object SolarApocalypse : ModInitializer {
         classes.addAll(blockTransformationClassToBlock.map { it.className })
         classes.addAll(burnableBlockClasses)
         classes.addAll(lavaBlockClasses)
-        Registries.BLOCK.forEach {
+        BuiltInRegistries.BLOCK.forEach {
             it as BlockCache
-            val isBurnable = (it.defaultState as BlockStateAccessor).burnable
+            val isBurnable = (it.defaultBlockState() as BlockStateAccessor).ignitedByLava
             it.cacheShouldBurn = ConfigurationLogic.isWhitelisted(isBurnable, it, burnableBlockIdentifiers, burnableBlockTags, burnableBlockClasses)
             it.cacheShouldRandomTick = ConfigurationLogic.isWhitelisted(isBurnable, it, identifiers, tags, classes) || it == Blocks.WATER
             for (tagAndBlock in blockTransformationTagToBlock) {
@@ -190,22 +194,26 @@ object SolarApocalypse : ModInitializer {
         }.registerSaveListener { _, modConfiguration ->
             configCache(modConfiguration)
             calculateBlocks()
-            ActionResult.PASS
+            InteractionResult.PASS
         }
         config = AutoConfig.getConfigHolder(ModConfiguration::class.java).config
         configCache(config)
         ServerLifecycleEvents.SERVER_STARTING.register(ServerLifecycleEvents.ServerStarting { calculateBlocks() })
-        Registry.register(Registries.BLOCK, DUST_IDENTIFIER, DUST)
-        val dustBlockItem = Registry.register(Registries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Settings().useBlockPrefixedTranslationKey().registryKey(RegistryKey.of(RegistryKeys.ITEM, DUST_IDENTIFIER))))
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.add(dustBlockItem) })
-        Registry.register(Registries.STATUS_EFFECT, Identifier.of(MOD_ID, "sunscreen"), Sunscreen)
-        sunscreen = Registries.STATUS_EFFECT.getEntry(Identifier.of(MOD_ID, "sunscreen")).get()
+        Registry.register(BuiltInRegistries.BLOCK, DUST_IDENTIFIER, DUST)
+        val dustBlockItem = Registry.register(
+            BuiltInRegistries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Properties().useBlockDescriptionPrefix().setId(
+                ResourceKey.create(Registries.ITEM, DUST_IDENTIFIER))))
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.accept(dustBlockItem) })
+        Registry.register(BuiltInRegistries.MOB_EFFECT, ResourceLocation.fromNamespaceAndPath(MOD_ID, "sunscreen"), Sunscreen)
+        sunscreen = BuiltInRegistries.MOB_EFFECT[ResourceLocation.fromNamespaceAndPath(MOD_ID, "sunscreen")].get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
-            val world = newPlayer.entityWorld
-            if (!world.isOldEnough(config.phaseTwoDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isNight || world.isClient || (!world.isSkyVisible(newPlayer.blockPos) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasStatusEffect(sunscreen)) return@AfterRespawn
-            newPlayer.addStatusEffect(StatusEffectInstance(sunscreen, 2400, 0, false, false, true))
+            val world = newPlayer.level()
+            if (!world.isOldEnough(config.phaseTwoDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isDarkOutside || world.isClientSide || (!world.canSeeSky(newPlayer.blockPosition()) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasEffect(sunscreen)) return@AfterRespawn
+            newPlayer.addEffect(MobEffectInstance(sunscreen, 2400, 0, false, false, true))
         })
     }
-    val DUST_IDENTIFIER: Identifier = Identifier.of(MOD_ID, "dust")
-    private val DUST = ColoredFallingBlock(ColorCode(0x191919), AbstractBlock.Settings.create().mapColor(MapColor.BLACK).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND).registryKey(RegistryKey.of(RegistryKeys.BLOCK, DUST_IDENTIFIER)))
+    val DUST_IDENTIFIER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust")
+    private val DUST = ColoredFallingBlock(
+        ColorRGBA(0x191919), BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instrument(
+            NoteBlockInstrument.SNARE).strength(0.5F).sound(SoundType.SAND).setId(ResourceKey.create(Registries.BLOCK, DUST_IDENTIFIER)))
 }
