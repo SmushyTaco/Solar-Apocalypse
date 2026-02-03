@@ -21,6 +21,7 @@
     "LightningPhases",
     "PhaseOne",
     "PlayersBurn",
+    "SnowAndIce",
     "WaterIsFinite"
   ],
   "client": [
@@ -29,6 +30,7 @@
     "client.BigSun",
     "client.CloudOptimization",
     "client.ColoredSkyLight",
+    "client.FogColor",
     "client.HeatOverlay",
     "client.SkyColor"
   ]

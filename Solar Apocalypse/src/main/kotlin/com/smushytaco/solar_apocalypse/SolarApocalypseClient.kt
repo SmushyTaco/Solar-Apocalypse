@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
 import net.minecraft.client.player.LocalPlayer
+import net.minecraft.world.attribute.EnvironmentAttributes
 import net.minecraft.world.level.Level
 import kotlin.math.ceil
 object SolarApocalypseClient: ClientModInitializer {
@@ -69,10 +70,10 @@ object SolarApocalypseClient: ClientModInitializer {
             Minecraft.getInstance().player?.let { player ->
                 fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
                 overlayOpacity = if (player.transitionConditions(config.phaseTwoDay)) 1.0F else 0.0F
-                _currentSkyColor = world.biomeManager.getBiome(player.blockPosition()).value().skyColor
+                _currentSkyColor = world.biomeManager.getBiome(player.blockPosition()).value().attributes.applyModifier(EnvironmentAttributes.SKY_COLOR, 0)
                 previousSkyColor = _currentSkyColor
                 originalSkyColor = _currentSkyColor
-                _currentFogColor = world.biomeManager.getBiome(player.blockPosition()).value().fogColor
+                _currentFogColor = world.biomeManager.getBiome(player.blockPosition()).value().attributes.applyModifier(EnvironmentAttributes.FOG_COLOR, 0)
                 previousFogColor = _currentFogColor
             }
             _currentSunMultiplier = world.sunSize

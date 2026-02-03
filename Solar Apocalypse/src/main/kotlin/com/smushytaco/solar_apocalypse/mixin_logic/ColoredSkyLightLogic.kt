@@ -11,12 +11,12 @@ import net.minecraft.util.Mth
 import org.joml.Vector3f
 import org.joml.Vector3fc
 object ColoredSkyLightLogic {
-    fun hookUpdate(instance: Std140Builder, vec: Vector3fc, original: Operation<Std140Builder>): Std140Builder {
+    fun hookUpdate(instance: Std140Builder, vec: Vector3fc, original: Operation<Std140Builder>, unclampedSkyBrightnessFactor: Float): Std140Builder {
         if (!config.enableCustomSkyLight) return original.call(instance, vec)
         val skylight = SolarApocalypseClient.skyColor
         val clientWorld = Minecraft.getInstance().level
         if (skylight == SolarApocalypseClient.originalSkyColor || clientWorld == null || vec !is Vector3f) return original.call(instance, vec)
-        val skyBrightnessFactor = Mth.clamp(clientWorld.getSkyDarken(1.0F), 0.0F, 1.0F)
+        val skyBrightnessFactor = Mth.clamp(unclampedSkyBrightnessFactor, 0.0F, 1.0F)
         return original.call(instance, vec.lerp(Vector3f(skylight.redToFloat, skylight.greenToFloat, skylight.blueToFloat), skyBrightnessFactor))
     }
 }
