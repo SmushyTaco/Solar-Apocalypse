@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AllMobsBurnInDaylight extends LivingEntity {
     protected AllMobsBurnInDaylight(EntityType<? extends LivingEntity> entityType, Level world) { super(entityType, world); }
     @Shadow
-    protected boolean isSunBurnTick() { throw new AssertionError(); }
+    private boolean isSunBurnTick() { throw new AssertionError(); }
     @SuppressWarnings("resource")
     @ModifyReturnValue(method = "isSunBurnTick", at = @At("RETURN"))
     private boolean hookIsAffectedByDaylight(boolean original) { return original || WorldDayCalculation.INSTANCE.isOldEnough(level(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !isOnFire() && !level().isRaining() && !level().isDarkOutside() && !level().isClientSide() && (level().canSeeSky(blockPosition()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, level())) && !hasEffect(SolarApocalypse.INSTANCE.getSunscreen()); }
-    @SuppressWarnings("resource")
+    @SuppressWarnings({"resource", "ConstantValue"})
     @Inject(method = "aiStep", at = @At("HEAD"))
     private void hookTickMovement(CallbackInfo ci) { if (WorldDayCalculation.INSTANCE.isOldEnough(level(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) && isAlive() && !isOnFire() && !level().isRaining() && !level().isDarkOutside() && isSunBurnTick() && !level().isClientSide() && (level().canSeeSky(blockPosition()) || SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, level())) && !hasEffect(SolarApocalypse.INSTANCE.getSunscreen())) igniteForSeconds(8); }
 }

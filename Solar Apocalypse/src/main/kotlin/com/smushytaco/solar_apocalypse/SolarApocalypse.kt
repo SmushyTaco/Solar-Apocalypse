@@ -14,8 +14,8 @@ import net.minecraft.core.Holder
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.ColorRGBA
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.effect.MobEffect
@@ -56,7 +56,7 @@ object SolarApocalypse : ModInitializer {
     val String.block: Block
         get() {
             stringToBlock[this]?.let { return it }
-            val block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(this))
+            val block = BuiltInRegistries.BLOCK.getValue(Identifier.parse(this))
             stringToBlock[this] = block
             return block
         }
@@ -91,7 +91,7 @@ object SolarApocalypse : ModInitializer {
             return 1.0
         }
     const val MOD_ID = "solar_apocalypse"
-    val HEAT_OVERLAY: ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/misc/heat_overlay_outline.png")
+    val HEAT_OVERLAY: Identifier = Identifier.fromNamespaceAndPath(MOD_ID, "textures/misc/heat_overlay_outline.png")
     private var burnableBlockIdentifiers = hashSetOf<String>()
     private var burnableBlockTags = hashSetOf<String>()
     private var burnableBlockClasses = hashSetOf<String>()
@@ -204,15 +204,15 @@ object SolarApocalypse : ModInitializer {
             BuiltInRegistries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Properties().useBlockDescriptionPrefix().setId(
                 ResourceKey.create(Registries.ITEM, DUST_IDENTIFIER))))
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.accept(dustBlockItem) })
-        Registry.register(BuiltInRegistries.MOB_EFFECT, ResourceLocation.fromNamespaceAndPath(MOD_ID, "sunscreen"), Sunscreen)
-        sunscreen = BuiltInRegistries.MOB_EFFECT[ResourceLocation.fromNamespaceAndPath(MOD_ID, "sunscreen")].get()
+        Registry.register(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MOD_ID, "sunscreen"), Sunscreen)
+        sunscreen = BuiltInRegistries.MOB_EFFECT[Identifier.fromNamespaceAndPath(MOD_ID, "sunscreen")].get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->
             val world = newPlayer.level()
             if (!world.isOldEnough(config.phaseTwoDay) || !newPlayer.isAlive || world.isRaining || newPlayer.isSpectator || newPlayer.isCreative || world.isDarkOutside || world.isClientSide || (!world.canSeeSky(newPlayer.blockPosition()) && !newPlayer.shouldHeatLayerDamage(world)) || newPlayer.hasEffect(sunscreen)) return@AfterRespawn
             newPlayer.addEffect(MobEffectInstance(sunscreen, 2400, 0, false, false, true))
         })
     }
-    val DUST_IDENTIFIER: ResourceLocation = ResourceLocation.fromNamespaceAndPath(MOD_ID, "dust")
+    val DUST_IDENTIFIER: Identifier = Identifier.fromNamespaceAndPath(MOD_ID, "dust")
     private val DUST = ColoredFallingBlock(
         ColorRGBA(0x191919), BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instrument(
             NoteBlockInstrument.SNARE).strength(0.5F).sound(SoundType.SAND).setId(ResourceKey.create(Registries.BLOCK, DUST_IDENTIFIER)))
