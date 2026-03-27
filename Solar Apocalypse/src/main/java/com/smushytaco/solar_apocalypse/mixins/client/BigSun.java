@@ -9,6 +9,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SkyRenderer.class)
 public abstract class BigSun {
-    @WrapOperation(method = "renderSun", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix4fStack;scale(FFF)Lorg/joml/Matrix4f;", remap = false))
+    @WrapOperation(method = "renderSun", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix4fStack;scale(FFF)Lorg/joml/Matrix4f;"))
     private Matrix4f hookRenderSun(Matrix4fStack instance, float x, float y, float z, Operation<Matrix4f> original) { return BigSunLogic.INSTANCE.bigSunGenerator(instance, x, y, z, original); }
 }

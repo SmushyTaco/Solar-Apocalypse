@@ -14,6 +14,7 @@ class ModConfiguration: ConfigData {
         Blocks.DRIED_GHAST.stringIdentifier,
         Blocks.CACTUS.stringIdentifier,
         Blocks.CACTUS_FLOWER.stringIdentifier,
+        Blocks.GOLDEN_DANDELION.stringIdentifier,
         Blocks.SHORT_DRY_GRASS.stringIdentifier,
         Blocks.SHORT_GRASS.stringIdentifier,
         Blocks.TALL_DRY_GRASS.stringIdentifier,

@@ -6,9 +6,9 @@ import me.shedaniel.autoconfig.AutoConfig
 import me.shedaniel.autoconfig.annotation.Config
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.Registry
@@ -203,7 +203,7 @@ object SolarApocalypse : ModInitializer {
         val dustBlockItem = Registry.register(
             BuiltInRegistries.ITEM, DUST_IDENTIFIER, BlockItem(DUST, Item.Properties().useBlockDescriptionPrefix().setId(
                 ResourceKey.create(Registries.ITEM, DUST_IDENTIFIER))))
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.BUILDING_BLOCKS).register(ItemGroupEvents.ModifyEntries { it.accept(dustBlockItem) })
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register(CreativeModeTabEvents.ModifyOutput { it.accept(dustBlockItem) })
         Registry.register(BuiltInRegistries.MOB_EFFECT, Identifier.fromNamespaceAndPath(MOD_ID, "sunscreen"), Sunscreen)
         sunscreen = BuiltInRegistries.MOB_EFFECT[Identifier.fromNamespaceAndPath(MOD_ID, "sunscreen")].get()
         ServerPlayerEvents.AFTER_RESPAWN.register(ServerPlayerEvents.AfterRespawn { _, newPlayer, _ ->

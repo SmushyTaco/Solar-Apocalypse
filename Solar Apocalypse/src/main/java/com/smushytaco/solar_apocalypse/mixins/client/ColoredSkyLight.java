@@ -1,15 +1,14 @@
 package com.smushytaco.solar_apocalypse.mixins.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.buffers.Std140Builder;
 import com.smushytaco.solar_apocalypse.mixin_logic.ColoredSkyLightLogic;
-import net.minecraft.client.renderer.LightTexture;
-import org.joml.Vector3fc;
+import net.minecraft.client.renderer.LightmapRenderStateExtractor;
+import net.minecraft.client.renderer.state.LightmapRenderState;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-@Mixin(LightTexture.class)
+@Mixin(LightmapRenderStateExtractor.class)
 public abstract class ColoredSkyLight {
-    @WrapOperation(method = "updateLightTexture", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/buffers/Std140Builder;putVec3(Lorg/joml/Vector3fc;)Lcom/mojang/blaze3d/buffers/Std140Builder;", ordinal = 0, remap = false))
-    private Std140Builder hookUpdate(Std140Builder instance, Vector3fc vec, Operation<Std140Builder> original, @Local(ordinal = 2) float h) { return ColoredSkyLightLogic.INSTANCE.hookUpdate(instance, vec, original, h); }
+    @WrapOperation(method = "extract", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
+    private void hookExtract(ProfilerFiller instance, Operation<Void> original, LightmapRenderState renderState, float partialTicks) { ColoredSkyLightLogic.INSTANCE.hookExtract(renderState); }
 }

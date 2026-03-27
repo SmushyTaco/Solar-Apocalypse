@@ -31,7 +31,7 @@ public abstract class ChuckSectionApocalypseTicks implements ApocalypseTickable 
         if (section instanceof ApocalypseTickable apocalypseTickable) randomApocalypseTickableBlockCount = apocalypseTickable.getRandomApocalypseTickableBlockCount();
     }
     @Inject(method = "setBlockState(IIILnet/minecraft/world/level/block/state/BlockState;Z)Lnet/minecraft/world/level/block/state/BlockState;", at = @At("RETURN"))
-    private void hookSetBlockState(int x, int y, int z, BlockState state, boolean lock, CallbackInfoReturnable<BlockState> cir, @Local(ordinal = 1) BlockState blockState) {
+    private void hookSetBlockState(int x, int y, int z, BlockState state, boolean lock, CallbackInfoReturnable<BlockState> cir, @Local(name = "previous") BlockState blockState) {
         if (blockState.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount--;
         if (state.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount++;
     }

@@ -23,12 +23,11 @@ repositories {
 }
 dependencies {
     minecraft(libs.minecraft)
-    mappings(loom.officialMojangMappings())
-    modImplementation(libs.loader)
-    modImplementation(libs.fabric.api)
-    modImplementation(libs.fabric.language.kotlin)
-    modImplementation(libs.modMenu)
-    modApi(libs.clothConfig) { libs.fabric.api.get().apply { this@modApi.exclude(group) } }
+    implementation(libs.loader)
+    implementation(libs.fabric.api)
+    implementation(libs.fabric.language.kotlin)
+    implementation(libs.modMenu)
+    api(libs.clothConfig) { libs.fabric.api.get().apply { this@api.exclude(group) } }
 }
 java {
     toolchain {
@@ -103,7 +102,7 @@ tasks {
         group = "publishing"
         disableVersionDetection()
         apiToken = env.fetch("CURSEFORGE_TOKEN", "")
-        val file = upload(480660, remapJar)
+        val file = upload(480660, jar)
         file.displayName = "[${libs.versions.minecraft.get()}] Solar Apocalypse"
         file.addEnvironment("Client", "Server")
         file.changelog = ""
@@ -115,7 +114,7 @@ tasks {
 modrinth {
     token = env.fetch("MODRINTH_TOKEN", "")
     projectId = "solar-apocalypse"
-    uploadFile.set(tasks.remapJar)
+    uploadFile.set(tasks.jar)
     gameVersions.add(libs.versions.minecraft)
     versionName = libs.versions.minecraft.map { "[$it] Solar Apocalypse" }
     dependencies {

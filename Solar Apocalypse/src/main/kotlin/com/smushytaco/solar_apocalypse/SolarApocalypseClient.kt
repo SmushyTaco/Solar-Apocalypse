@@ -64,8 +64,8 @@ object SolarApocalypseClient: ClientModInitializer {
         get() = lerpColor(previousFogColor, currentFogColor, fogTransition)
     override fun onInitializeClient() {
         ClientPlayConnectionEvents.DISCONNECT.register(ClientPlayConnectionEvents.Disconnect { _, _ -> hasInitialized = false })
-        ClientTickEvents.END_WORLD_TICK.register(ClientTickEvents.EndWorldTick { world ->
-            if (hasInitialized) return@EndWorldTick
+        ClientTickEvents.END_LEVEL_TICK.register(ClientTickEvents.EndLevelTick { world ->
+            if (hasInitialized) return@EndLevelTick
             cloudFade = if (world.transitionConditions(config.noCloudsDay)) 1.0F else 0.0F
             Minecraft.getInstance().player?.let { player ->
                 fogFade = if (player.transitionConditions(config.apocalypseFogDay)) 1.0F else 0.0F
