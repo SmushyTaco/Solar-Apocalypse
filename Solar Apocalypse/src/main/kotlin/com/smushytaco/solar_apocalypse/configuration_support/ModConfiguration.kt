@@ -77,7 +77,7 @@ class ModConfiguration: ConfigData {
         Blocks.GLASS_PANE.stringIdentifier
     )
     val burnableBlockTags = listOf("minecraft:wooden_doors", "minecraft:wooden_trapdoors", "minecraft:beds")
-    val burnableBlockClasses = listOf("class_2261", "class_2504", "class_2506")
+    val burnableBlockClasses = listOf("VegetationBlock", "StainedGlassPaneBlock", "StainedGlassBlock")
     val blockTransformationBlockToBlock = listOf(
         BlockPair(Blocks.CLAY, Blocks.TERRACOTTA),
         BlockPair(Blocks.MUD, Blocks.DIRT),
