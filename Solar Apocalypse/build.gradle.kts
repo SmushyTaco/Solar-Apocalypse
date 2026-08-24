@@ -61,9 +61,9 @@ loom {
                 }
             register("clientAuth") {
                 inherit(getByName("client"))
-                configName = "Minecraft Client (Auth)"
+                displayName = "Minecraft Client (Auth)"
                 val acc = account.get()
-                programArgs("--username", acc.profile.name, "--uuid", acc.profile.id, "--accessToken", acc.ygg.token)
+                programArguments.addAll("--username", acc.profile.name, "--uuid", acc.profile.id, "--accessToken", acc.ygg.token)
             }
         }
     }
@@ -124,6 +124,7 @@ tasks {
     withType<Test>().configureEach { defaultCharacterEncoding = "UTF-8" }
     withType<KotlinCompile>().configureEach {
         compilerOptions {
+            moduleName = project.name
             extraWarnings = true
             jvmTarget = javaVersion.map { JvmTarget.valueOf("JVM_${if (it == 8) "1_8" else it}") }
         }
@@ -153,7 +154,7 @@ tasks {
     register<TaskPublishCurseForge>("publishCurseForge") {
         group = "publishing"
         disableVersionDetection()
-        apiToken = env.fetch("CURSEFORGE_TOKEN", "")
+        apiToken = env.fetch("CURSEFORGE_TOKEN").getOrElse("")
         val file = upload(480660, jar)
         file.displayName = "[${libs.versions.minecraft.get()}] Solar Apocalypse"
         file.addEnvironment("Client", "Server")
@@ -164,7 +165,7 @@ tasks {
     }
 }
 modrinth {
-    token = env.fetch("MODRINTH_TOKEN", "")
+    token = env.fetch("MODRINTH_TOKEN").orElse("")
     projectId = "solar-apocalypse"
     uploadFile.set(tasks.jar)
     gameVersions.add(libs.versions.minecraft)

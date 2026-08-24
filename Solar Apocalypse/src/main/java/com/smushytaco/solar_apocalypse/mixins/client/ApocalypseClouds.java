@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(CloudRenderer.class)
 public abstract class ApocalypseClouds {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target= "Lnet/minecraft/util/ARGB;vector4fFromARGB32(I)Lorg/joml/Vector4f;"))
-    private Vector4f hookRenderClouds(int i, Operation<Vector4f> original) {
-        Vector4f vector4f = original.call(i);
+    private Vector4f hookRenderClouds(int color, Operation<Vector4f> original) {
+        Vector4f vector4f = original.call(color);
         vector4f.w *= 1.0F - SolarApocalypseClient.INSTANCE.getCloudFade();
         return vector4f;
     }

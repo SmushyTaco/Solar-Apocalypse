@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerLevel.class)
 public abstract class BlocksAreModified {
     @Inject(method = "tickChunk", at = @At("RETURN"))
-    private void hookRandomTick(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci, @Local(name = "profiler") ProfilerFiller profiler, @Local(name = "minX") int minX, @Local(name = "minZ") int minZ) {
+    private void hookRandomTick(LevelChunk chunk, int tickSpeed, CallbackInfo ci, @Local(name = "profiler") ProfilerFiller profiler, @Local(name = "minX") int minX, @Local(name = "minZ") int minZ) {
         BlocksAreModifiedLogic.INSTANCE.apocalypseRandomTicks((ServerLevel) (Object) this, profiler, chunk, minX, minZ);
     }
 }

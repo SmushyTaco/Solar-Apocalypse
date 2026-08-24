@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(CropBlock.class)
 public abstract class CropGrowthSlowDown {
     @WrapOperation(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
-    private boolean hookSetBlockState(ServerLevel instance, BlockPos blockPos, BlockState blockState, int i, Operation<Boolean> original, BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!WorldDayCalculation.INSTANCE.isOldEnough(world, SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownDay()) || world.isDarkOutside() || world.isRaining() || world.canSeeSky(blockPos) || SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownMultiplier() < 2) return original.call(instance, blockPos, blockState, i);
+    private boolean hookSetBlockState(ServerLevel instance, BlockPos blockPos, BlockState blockState, int i, Operation<Boolean> original, BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!WorldDayCalculation.INSTANCE.isOldEnough(level, SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownDay()) || level.isDarkOutside() || level.isRaining() || level.canSeeSky(blockPos) || SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownMultiplier() < 2) return original.call(instance, blockPos, blockState, i);
         if (random.nextInt(SolarApocalypse.INSTANCE.getConfig().getCropGrowthSlowDownMultiplier()) == 0) return original.call(instance, blockPos, blockState, i);
         return false;
     }

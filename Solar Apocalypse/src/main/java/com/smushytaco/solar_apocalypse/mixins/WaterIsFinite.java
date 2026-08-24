@@ -12,5 +12,5 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(FlowingFluid.class)
 public abstract class WaterIsFinite {
     @WrapOperation(method = "getNewLiquid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FlowingFluid;canConvertToSource(Lnet/minecraft/server/level/ServerLevel;)Z"))
-    private boolean hookGetUpdatedState(FlowingFluid instance, ServerLevel serverWorld, Operation<Boolean> original, ServerLevel world, BlockPos pos, BlockState state) { return instance instanceof WaterFluid ? !SolarApocalypse.INSTANCE.apocalypseChecks(serverWorld, pos, true) && original.call(instance, serverWorld) : original.call(instance, serverWorld); }
+    private boolean hookGetUpdatedState(FlowingFluid instance, ServerLevel serverWorld, Operation<Boolean> original, ServerLevel level, BlockPos pos, BlockState state) { return instance instanceof WaterFluid ? !SolarApocalypse.INSTANCE.apocalypseChecks(serverWorld, pos, true) && original.call(instance, serverWorld) : original.call(instance, serverWorld); }
 }

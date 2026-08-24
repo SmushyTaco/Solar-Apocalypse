@@ -15,7 +15,7 @@ public abstract class BlockStateCounterApocalypseTicks implements ApocalypseTick
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getRandomApocalypseTickableBlockCount() { return randomApocalypseTickableBlockCount; }
     @Inject(method = "accept(Lnet/minecraft/world/level/block/state/BlockState;I)V", at = @At("RETURN"))
-    private void hookAccept(BlockState blockState, int i, CallbackInfo ci) {
-        if (blockState.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount += i;
+    private void hookAccept(BlockState state, int count, CallbackInfo ci) {
+        if (state.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount += count;
     }
 }

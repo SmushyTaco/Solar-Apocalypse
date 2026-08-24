@@ -11,9 +11,9 @@ object BigSunLogic {
     val Level.sunSize: Float
         get() {
             var multiplier = 1.0F
-            for (sunMultiplierPhase in SolarApocalypse.sunMultiplierPhases) {
-                if (isOldEnough(sunMultiplierPhase.day)) {
-                    multiplier = sunMultiplierPhase.sunSizeMultiplier
+            for ((day, sunSizeMultiplier) in SolarApocalypse.sunMultiplierPhases) {
+                if (isOldEnough(day)) {
+                    multiplier = sunSizeMultiplier
                     break
                 }
             }

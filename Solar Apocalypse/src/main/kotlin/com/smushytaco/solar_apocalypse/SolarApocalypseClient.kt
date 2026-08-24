@@ -116,7 +116,7 @@ object SolarApocalypseClient: ClientModInitializer {
     }
     private fun updateColor(originalColor: Int?, world: Level?): Int? {
         val theWorld = world ?: Minecraft.getInstance().level ?: return originalColor
-        for (skyColorPhase in SolarApocalypse.skyColorPhases) if (theWorld.isOldEnough(skyColorPhase.day)) return skyColorPhase.skyColor
+        for ((day, skyColor1) in SolarApocalypse.skyColorPhases) if (theWorld.isOldEnough(day)) return skyColor1
         return originalColor
     }
     fun updateSkyColor(originalColor: Int?, world: Level? = null) {

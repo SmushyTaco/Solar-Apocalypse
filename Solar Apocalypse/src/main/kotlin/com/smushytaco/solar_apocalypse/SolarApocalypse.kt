@@ -63,7 +63,7 @@ object SolarApocalypse : ModInitializer {
     fun Level.apocalypseChecks(pos: BlockPos, forFiniteWater: Boolean = false) = isOldEnough(config.phaseOneDay) && (forFiniteWater || !isDarkOutside) && !isRaining && (canSeeSky(pos.above()) || pos.shouldHeatLayerDamage(this))
     private fun heatLayerCheck(world: Level, y: Double, condition: Boolean = config.enableHeatLayers): Boolean {
         if (!condition) return false
-        for (heatLayer in heatLayers) if (y > heatLayer.layer && world.isOldEnough(heatLayer.day)) return true
+        for ((day, layer) in heatLayers) if (y > layer && world.isOldEnough(day)) return true
         return false
     }
     fun Entity.shouldHeatLayerDamage(world: Level) = heatLayerCheck(world, y)
@@ -87,7 +87,7 @@ object SolarApocalypse : ModInitializer {
     }
     val Level.lightningMultiplier: Double
         get() {
-            for (lightningPhase in lightningPhases) if (isOldEnough(lightningPhase.day)) return lightningPhase.multiplier.coerceAtLeast(1.0)
+            for ((day, multiplier) in lightningPhases) if (isOldEnough(day)) return multiplier.coerceAtLeast(1.0)
             return 1.0
         }
     const val MOD_ID = "solar_apocalypse"
@@ -136,15 +136,15 @@ object SolarApocalypse : ModInitializer {
             val isBurnable = (it.defaultBlockState() as BlockStateAccessor).ignitedByLava
             it.cacheShouldBurn = ConfigurationLogic.isWhitelisted(isBurnable, it, burnableBlockIdentifiers, burnableBlockTags, burnableBlockClasses)
             it.cacheShouldRandomTick = ConfigurationLogic.isWhitelisted(isBurnable, it, identifiers, tags, classes) || it == Blocks.WATER
-            for (tagAndBlock in blockTransformationTagToBlock) {
-                if (!it.containsTag(tagAndBlock.tag)) continue
+            for ((tag, block) in blockTransformationTagToBlock) {
+                if (!it.containsTag(tag)) continue
                 blockTransformationBlockToBlockMap.putIfAbsent(it.stringIdentifier, hashSetOf())
-                blockTransformationBlockToBlockMap[it.stringIdentifier]?.add(tagAndBlock.block)
+                blockTransformationBlockToBlockMap[it.stringIdentifier]?.add(block)
             }
-            for (classAndBlock in blockTransformationClassToBlock) {
-                if (!isInstanceOfClassByName(it, classAndBlock.className)) continue
+            for ((className, block) in blockTransformationClassToBlock) {
+                if (!isInstanceOfClassByName(it, className)) continue
                 blockTransformationBlockToBlockMap.putIfAbsent(it.stringIdentifier, hashSetOf())
-                blockTransformationBlockToBlockMap[it.stringIdentifier]?.add(classAndBlock.block)
+                blockTransformationBlockToBlockMap[it.stringIdentifier]?.add(block)
             }
             for (tag in lavaBlockTags) {
                 if (!it.containsTag(tag)) continue

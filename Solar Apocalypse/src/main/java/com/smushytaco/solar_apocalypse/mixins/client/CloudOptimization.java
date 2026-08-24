@@ -12,7 +12,7 @@ public abstract class CloudOptimization {
     @Definition(id = "optionsRenderState", field = "Lnet/minecraft/client/renderer/LevelRenderer;optionsRenderState:Lnet/minecraft/client/renderer/state/OptionsRenderState;")
     @Definition(id = "cloudStatus", field = "Lnet/minecraft/client/renderer/state/OptionsRenderState;cloudStatus:Lnet/minecraft/client/CloudStatus;")
     @Expression("this.optionsRenderState.cloudStatus")
-    @ModifyExpressionValue(method = "renderLevel", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @ModifyExpressionValue(method = "render", at = @At("MIXINEXTRAS:EXPRESSION"))
     private CloudStatus hookRender(CloudStatus original) {
         if (SolarApocalypseClient.INSTANCE.getCloudFade() != 1.0F) return original;
         return CloudStatus.OFF;

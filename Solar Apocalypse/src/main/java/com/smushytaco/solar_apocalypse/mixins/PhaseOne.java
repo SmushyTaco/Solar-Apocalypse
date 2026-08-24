@@ -12,5 +12,5 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SpreadingSnowyBlock.class)
 public abstract class PhaseOne {
     @ModifyReturnValue(method = "canStayAlive", at = @At("RETURN"))
-    private static boolean hookCanSurvive(boolean original, BlockState state, LevelReader world, BlockPos pos) { return (world instanceof Level realWorld && (!WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()) || realWorld.isDarkOutside() || !realWorld.canSeeSky(pos.above()))) && original; }
+    private static boolean hookCanSurvive(boolean original, BlockState state, LevelReader level, BlockPos pos) { return (level instanceof Level realWorld && (!WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()) || realWorld.isDarkOutside() || !realWorld.canSeeSky(pos.above()))) && original; }
 }

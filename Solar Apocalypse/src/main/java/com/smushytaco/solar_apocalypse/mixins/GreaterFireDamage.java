@@ -22,9 +22,9 @@ public abstract class GreaterFireDamage extends Entity {
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
     @SuppressWarnings("resource")
-    @ModifyVariable(method = "hurtServer", at = @At("HEAD"), index = 3, argsOnly = true)
-    private float modifyDamageAmount(float value, ServerLevel world, DamageSource source) {
-        if (!source.is(DamageTypeTags.IS_FIRE) || hasEffect(MobEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(level(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || !isAlive() || level().isRaining() || level().isDarkOutside() || level().isClientSide() || (!level().canSeeSky(blockPosition()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, level()))) return value;
-        return value * Mth.clamp(SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier(), 1.0F, Float.MAX_VALUE);
+    @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true, name = "damage")
+    private float modifyDamageAmount(float damage, ServerLevel level, DamageSource source) {
+        if (!source.is(DamageTypeTags.IS_FIRE) || hasEffect(MobEffects.FIRE_RESISTANCE) || !WorldDayCalculation.INSTANCE.isOldEnough(level(), SolarApocalypse.INSTANCE.getConfig().getPhaseTwoDay()) || !isAlive() || level().isRaining() || level().isDarkOutside() || level().isClientSide() || (!level().canSeeSky(blockPosition()) && !SolarApocalypse.INSTANCE.shouldHeatLayerDamage(this, level()))) return damage;
+        return damage * Mth.clamp(SolarApocalypse.INSTANCE.getConfig().getSolarFireDamageMultiplier(), 1.0F, Float.MAX_VALUE);
     }
 }

@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LavaFluid.class)
 public abstract class LavaModification {
     @ModifyReturnValue(method = "isFastLava", at = @At("RETURN"))
-    private static boolean hookGetMaxFlowDistance(boolean original, LevelReader levelReader) { return original || levelReader instanceof Level realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()); }
+    private static boolean hookGetMaxFlowDistance(boolean original, LevelReader level) { return original || level instanceof Level realWorld && WorldDayCalculation.INSTANCE.isOldEnough(realWorld, SolarApocalypse.INSTANCE.getConfig().getPhaseOneDay()); }
 }

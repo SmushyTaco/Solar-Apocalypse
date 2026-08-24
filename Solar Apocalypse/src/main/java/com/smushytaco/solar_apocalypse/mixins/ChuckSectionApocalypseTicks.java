@@ -21,18 +21,18 @@ public abstract class ChuckSectionApocalypseTicks implements ApocalypseTickable 
     @SuppressWarnings("AddedMixinMembersNamePattern")
     public int getRandomApocalypseTickableBlockCount() { return randomApocalypseTickableBlockCount; }
     @WrapOperation(method = "recalcBlockCounts", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/PalettedContainer;count(Lnet/minecraft/world/level/chunk/PalettedContainer$CountConsumer;)V"))
-    private void hookCalculateCounts(PalettedContainer<BlockState> instance, PalettedContainer.CountConsumer<BlockState> counter, Operation<Void> original) {
-        original.call(instance, counter);
-        if (!(counter instanceof ApocalypseTickable apocalypseTickable)) return;
+    private void hookCalculateCounts(PalettedContainer<BlockState> instance, PalettedContainer.CountConsumer<BlockState> output, Operation<Void> original) {
+        original.call(instance, output);
+        if (!(output instanceof ApocalypseTickable apocalypseTickable)) return;
         randomApocalypseTickableBlockCount = apocalypseTickable.getRandomApocalypseTickableBlockCount();
     }
     @Inject(method = "<init>(Lnet/minecraft/world/level/chunk/LevelChunkSection;)V", at = @At("RETURN"))
-    private void hookInitialize(LevelChunkSection section, CallbackInfo ci) {
-        if (section instanceof ApocalypseTickable apocalypseTickable) randomApocalypseTickableBlockCount = apocalypseTickable.getRandomApocalypseTickableBlockCount();
+    private void hookInitialize(LevelChunkSection source, CallbackInfo ci) {
+        if (source instanceof ApocalypseTickable apocalypseTickable) randomApocalypseTickableBlockCount = apocalypseTickable.getRandomApocalypseTickableBlockCount();
     }
     @Inject(method = "setBlockState(IIILnet/minecraft/world/level/block/state/BlockState;Z)Lnet/minecraft/world/level/block/state/BlockState;", at = @At("RETURN"))
-    private void hookSetBlockState(int x, int y, int z, BlockState state, boolean lock, CallbackInfoReturnable<BlockState> cir, @Local(name = "previous") BlockState blockState) {
-        if (blockState.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount--;
+    private void hookSetBlockState(int sectionX, int sectionY, int sectionZ, BlockState state, boolean checkThreading, CallbackInfoReturnable<BlockState> cir, @Local(name = "previous") BlockState previous) {
+        if (previous.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount--;
         if (state.getBlock() instanceof BlockCache blockCache && blockCache.getCacheShouldRandomTick()) randomApocalypseTickableBlockCount++;
     }
 }
